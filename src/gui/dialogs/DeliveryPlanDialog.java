@@ -1,9 +1,9 @@
 /*
  * 
  *  Somado (System Optymalizacji Małych Dostaw)
- *  Program jest częścią pracy dyplomowej inżynierskiej zrealizowanej
- *  na Wydziale Elektrycznym Politechniki Warszawskiej.
- *  Autor: Maciej Kawecki 2016
+ *  Optymalizacja dostaw towarów, dane OSM, problem VRP
+ * 
+ *  Autor: Maciej Kawecki 2016 (praca inż. EE PW)
  * 
  */
 package gui.dialogs;
@@ -15,7 +15,6 @@ import datamodel.tablemodels.OrdersDeliveryPlanTableModel;
 import datamodel.tablemodels.RoutePointsTableModel;
 import gui.GUI;
 import gui.ImageRes;
-import gui.SimpleDialog;
 import gui.formfields.FormRowPad;
 import gui.formfields.FormTabbedPane;
 import gui.loader.IProgress;

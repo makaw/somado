@@ -1,9 +1,9 @@
 /*
  * 
  *  Somado (System Optymalizacji Małych Dostaw)
- *  Program jest częścią pracy dyplomowej inżynierskiej zrealizowanej
- *  na Wydziale Elektrycznym Politechniki Warszawskiej.
- *  Autor: Maciej Kawecki 2016
+ *  Optymalizacja dostaw towarów, dane OSM, problem VRP
+ * 
+ *  Autor: Maciej Kawecki 2016 (praca inż. EE PW)
  * 
  */
 package gui.dialogs;
@@ -99,8 +99,8 @@ public class AboutDialog extends SimpleDialog {
       // umieszczenie tekstu
       try {
         doc.insertString(doc.getLength(), IConf.APP_NAME + " wersja " + IConf.APP_VERSION + sep, style2);
-        doc.insertString(doc.getLength(), "Praca dyplomowa in\u017cynierska" +  sep, style);
-        doc.insertString(doc.getLength(), "Wydzia\u0142 Elektryczny Politechniki Warszawskiej" + sep, style);
+        doc.insertString(doc.getLength(), "Optymalizacja dostaw towarów (problem VRP), " +  sep, style);
+        doc.insertString(doc.getLength(), "dane przestrzenne: OpenStreetMap" + sep, style);
         doc.insertString(doc.getLength(), "Autor: Maciej Kawecki 2016", style);
       }
       catch(BadLocationException e) {
