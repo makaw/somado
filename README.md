@@ -66,12 +66,10 @@ log4j-core 2.5
 
 mysql-connector-java 5.1.23
 
-nominatim-java-api
+nominatim-api 3.2
 
 slf4j.api 1.6.1
 
 slf4j-simple 1.7.18
 
 sqlite-jdbc 3.8.11.2
-
-VerticalLabelUI
