@@ -243,10 +243,15 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
          }        
         
         
-         if (progress != null) 
-         progress.setProgress(progress.getProgress()
-                            + (int) ((Double.valueOf(i*size+j)/totalSize) * 100.0));   
+         if (progress != null) {
+        	 
+           int prog = progress.getProgress() 
+        		   + (int) ((Double.valueOf(i*size+j)/totalSize) * 100.0);
+           if (prog >= 100) prog = 99;
+           progress.setProgress(prog);   
        
+         }
+         
        }
                        
        

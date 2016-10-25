@@ -14,6 +14,9 @@ import gui.GUI;
 import gui.loader.IProgress;
 import gui.loader.IProgressInvoker;
 import gui.loader.Loader;
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collection;
@@ -92,8 +95,13 @@ public class VRPSolver implements IProgressInvoker {
     
     // przestawienie standardowego wyjścia na plik z logami VRP
     PrintStream stdout = System.out;
+    PrintStream stderr = System.err;
+    
     try {       
-       System.setOut(new PrintStream("somado_vrp.log"));
+    	
+      System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream("somado_vrp.log"))));
+      System.setErr(new PrintStream(new BufferedOutputStream(new FileOutputStream("somado_vrp.log"))));
+       
     } catch (IOException e) {
        System.err.println(e);
     } 
@@ -157,19 +165,7 @@ public class VRPSolver implements IProgressInvoker {
   
     problem = vrpBuilder.build();          
         
-    
-    // konfigurowalny algorytm, lub (jeżeli brak pliku XML) standardowy algorytm z fabryki
-    VehicleRoutingAlgorithm algorithm = null;
-      
-    /**try {      
-      algorithm = VehicleRoutingAlgorithms.readAndCreateAlgorithm(problem, 
-              getClass().getResource("/resources/schrimpf.xml"));
-    }
-    catch (Exception e) {
-      System.err.println(e);
-      algorithm = new SchrimpfFactory().createAlgorithm(problem);
-    }*/
-    algorithm = new SchrimpfFactory().createAlgorithm(problem);
+    VehicleRoutingAlgorithm algorithm = new SchrimpfFactory().createAlgorithm(problem);
         
     // listener algorytmu dla macierzy kosztów
     algorithm.addListener(new VRPListener(observer));
@@ -181,9 +177,12 @@ public class VRPSolver implements IProgressInvoker {
     // wydruk rozwiązania do logów
     SolutionPrinter.print(problem, bestSolution, Print.VERBOSE);
     
+    stdout.flush();
+    stderr.flush();
+    
     // przywrócenie standardowego wyjścia 
     System.setOut(stdout);
-    
+    System.setErr(stderr);
       
   }
   
