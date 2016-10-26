@@ -175,7 +175,8 @@ public class MapPanel extends JXMapKit {
     
     // dla całego zestawu punktów nie działa ...
     Set<GeoPosition> pos = new HashSet<>();
-    pos.add(new GeoPosition(Settings.getDepot().getLatitude(), Settings.getDepot().getLongitude()));
+    pos.add(new GeoPosition(routePoints.get(0).getCustomerLatitude(), 
+    		routePoints.get(0).getCustomerLongitude()));
     getMainMap().zoomToBestFit(pos, 0.3);
    
     for (WaypointPainter<Waypoint> p : wpPainters) painters.add(p);

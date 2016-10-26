@@ -85,7 +85,9 @@ public class Geocoding {
         
      JsonNominatimClient nominatimClient = new JsonNominatimClient(httpclient, IConf.EMAIL_NOMINATIM);
      NominatimSearchRequest nominatimRequest = new NominatimSearchRequest();
-     nominatimRequest.addCountryCode("PL");
+     nominatimRequest.setLimit(50);
+     nominatimRequest.setAcceptLanguage("pl");
+     nominatimRequest.addCountryCode("pl");
      
      nominatimRequest.setViewBox(Settings.getWestBoxCoord(), Settings.getNorthBoxCoord(), 
              Settings.getEastBoxCoord(), Settings.getSouthBoxCoord());    
