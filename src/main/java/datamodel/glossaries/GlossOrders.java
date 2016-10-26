@@ -68,7 +68,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
       
       try {
           
-         database.doUpdate("START TRANSACTION;");
+         database.begin();
           
          // numer zamówienia jest tworzony w bazie przez trigger
          PreparedStatement ps = database.prepareQuery("INSERT INTO dat_orders "
@@ -85,7 +85,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          
          ResultSet rs = ps.getGeneratedKeys();
          if (!rs.next()) {         
-           database.doUpdate("ROLLBACK;");
+           database.rollback();
            throw new SQLException("b\u0142ad zapisu"); 
          }             
          order.setId(rs.getInt(1));  
@@ -93,7 +93,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          
          insertProducts(order);
     
-         database.doUpdate("COMMIT;");         
+         database.commit();       
          
          Audit audit = new Audit(order, order, AuditDiff.AM_ADD, "Dodano zam\u00f3wienie");
          (new DocAudit(database, order)).addElement(audit, user);          
@@ -101,9 +101,14 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          
       } catch (SQLException e) {
       
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
-        return false;
+    	 try {  
+           database.rollback();
+         }
+         catch (SQLException ex2) {  System.err.println(ex2); } 
+    	  
+         System.err.println("B\u0142\u0105d SQL: "+e);
+         lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+         return false;
        
       }          
       
@@ -264,7 +269,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
       
       try {
           
-         database.doUpdate("START TRANSACTION;");
+         database.begin();
           
          PreparedStatement ps = database.prepareQuery("UPDATE dat_orders SET customer_id = ?, "
                  + "comment = ?, date_mod = NOW(), user_mod_id = ? WHERE id = ? LIMIT 1;");
@@ -281,11 +286,16 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          ps.executeUpdate();
          
          insertProducts(order);
-         database.doUpdate("COMMIT;");        
+         database.commit(); 
          
          
       } catch (SQLException e) {
       
+    	 try {  
+           database.rollback();
+         }
+         catch (SQLException ex2) {  System.err.println(ex2); }  
+    	  
         System.err.println("B\u0142\u0105d SQL: "+e);
         lastError = "B\u0142\u0105d SQL: "+e.getMessage();
         return false;
@@ -311,7 +321,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
       
       try {
           
-        database.doUpdate("START TRANSACTION;");
+        database.begin();
           
         PreparedStatement ps = database.prepareQuery("DELETE FROM dat_orders WHERE id = ? LIMIT 1;");
         ps.setInt(1, order.getId());
@@ -321,10 +331,15 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
         ps.setInt(1, order.getId());
         ps.executeUpdate();
         
-        database.doUpdate("COMMIT;");
+        database.commit();
         
       } catch (SQLException e) {
           
+    	 try {  
+           database.rollback();
+         }
+         catch (SQLException ex2) {  System.err.println(ex2); }  
+    	  
         System.err.println("B\u0142\u0105d SQL: "+e);
         lastError = "B\u0142\u0105d SQL: "+e.getMessage();
         return false;

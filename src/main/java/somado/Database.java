@@ -96,12 +96,24 @@ public abstract class Database {
     
     
     /**
+     * Na start transakcji
+     * @throws SQLException Błąd SQL
+     */
+    public void begin() throws SQLException {
+    	
+      connection.setAutoCommit(false);
+    	
+    }
+    
+    
+    /**
      * Commit
      * @throws SQLException Błąd SQL
      */    
     public void commit() throws SQLException {
     	
       connection.commit(); 	
+      connection.setAutoCommit(true);
     	
     }
     
@@ -113,6 +125,7 @@ public abstract class Database {
     public void rollback() throws SQLException {
     	
       connection.rollback(); 	
+      connection.setAutoCommit(true);
     	
     }
     

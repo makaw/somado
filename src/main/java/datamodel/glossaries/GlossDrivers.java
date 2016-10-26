@@ -223,7 +223,7 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
       
       try {
           
-         database.doUpdate("START TRANSACTION;");
+         database.begin();
           
          PreparedStatement ps;
          
@@ -245,11 +245,16 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
          
          ps.executeUpdate();  
          
-         database.doUpdate("COMMIT;");
+         database.commit();
          
          
       } catch (SQLException e) {
       
+        try {  
+          database.rollback();
+        }
+        catch (SQLException ex2) {  System.err.println(ex2); }
+        
         System.err.println("B\u0142\u0105d SQL: "+e);
         lastError = "B\u0142\u0105d SQL: "+e.getMessage();
         return false;

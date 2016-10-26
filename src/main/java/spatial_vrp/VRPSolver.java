@@ -96,17 +96,19 @@ public class VRPSolver implements IProgressInvoker {
     // przestawienie standardowego wyjścia na plik z logami VRP
     PrintStream stdout = System.out;
     PrintStream stderr = System.err;
-    
+    PrintStream ps = stdout;
+   
     try {       
     	
-      System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream("somado_vrp.log"))));
-      System.setErr(new PrintStream(new BufferedOutputStream(new FileOutputStream("somado_vrp.log"))));
+      ps = new PrintStream(new BufferedOutputStream(new FileOutputStream("somado_vrp.log")));
+      System.setOut(ps);
+      System.setErr(ps);
        
     } catch (IOException e) {
        System.err.println(e);
     } 
     
-    
+   
     AppObserver observer = new AppObserver();
     observer.addObserver(costMatrix);
     
@@ -177,8 +179,7 @@ public class VRPSolver implements IProgressInvoker {
     // wydruk rozwiązania do logów
     SolutionPrinter.print(problem, bestSolution, Print.VERBOSE);
     
-    stdout.flush();
-    stderr.flush();
+    ps.flush();
     
     // przywrócenie standardowego wyjścia 
     System.setOut(stdout);

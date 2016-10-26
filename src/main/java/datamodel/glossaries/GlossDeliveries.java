@@ -54,7 +54,7 @@ public class GlossDeliveries extends GlossaryAdapter<Delivery> {
     
     try {
            
-      database.doUpdate("START TRANSACTION;");
+      database.begin();
     
       PreparedStatement ps = database.prepareQuery("UPDATE dat_deliveries SET active = 0, date_end = NOW()"
               + " WHERE id = ?;");
@@ -77,7 +77,7 @@ public class GlossDeliveries extends GlossaryAdapter<Delivery> {
       
       rs.close();
       
-      database.doUpdate("COMMIT;");            
+      database.commit();       
       
       Audit audit = new Audit(delivery, delivery, AuditDiff.AM_ADD, "Zamkni\u0119to dostaw\u0119");
       (new DocAudit(database, delivery)).addElement(audit, user); 
@@ -87,7 +87,7 @@ public class GlossDeliveries extends GlossaryAdapter<Delivery> {
     catch (SQLException ex) {
         
       try {  
-         database.doUpdate("ROLLBACK;");
+         database.rollback();
       }
       catch (SQLException ex2) {  System.err.println(ex2); }
       

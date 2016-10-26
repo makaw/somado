@@ -220,7 +220,7 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
       
       try {
           
-        database.doUpdate("START TRANSACTION;");
+        database.begin();
           
         PreparedStatement ps = database.prepareQuery("DELETE FROM dat_vehicles WHERE id = ? LIMIT 1;");
         ps.setInt(1, vehicle.getId());
@@ -231,11 +231,16 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
         ps.executeUpdate();  
                 
         
-        database.doUpdate("COMMIT;");
+        database.commit();
         
         
       } catch (SQLException e) {
           
+    	 try {  
+           database.rollback();
+          }
+          catch (SQLException ex2) {  System.err.println(ex2); }  
+    	  
         System.err.println("B\u0142\u0105d SQL: "+e);
         lastError = "B\u0142\u0105d SQL: "+e.getMessage();
         return false;

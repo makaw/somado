@@ -284,7 +284,7 @@ public class DeliveryPlan {
       
     try {      
     
-      database.doUpdate("START TRANSACTION;"); 
+      database.begin();
     
       boolean addGeo = false;
       try {
@@ -419,7 +419,7 @@ public class DeliveryPlan {
           
       }        
     
-      database.doUpdate("COMMIT;");
+      database.commit();
       
       ps = database.prepareQuery("SELECT * FROM dat_deliveries WHERE id = ?");
       ps.setInt(1, deliveryId);
@@ -434,7 +434,7 @@ public class DeliveryPlan {
     }
     
     catch (SQLException ex) {
-       database.doUpdate("ROLLBACK;"); 
+       database.rollback();
        throw ex; 
     }
       
