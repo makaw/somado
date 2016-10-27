@@ -102,16 +102,21 @@ public class Settings extends HashMap<String, String> {
     clear();
        
     Properties props = new Properties();
-     
+    
     try {
       props.load(new FileReader("conf.properties"));      
     } catch (IOException | NullPointerException e) {
       try {        
-         props.load(Settings.class.getClassLoader().getResourceAsStream("conf.default.properties"));  
+         props.load(Settings.class.getResourceAsStream("/conf.default.properties"));  
       }  
       catch (IOException | NullPointerException ex) {
-        System.err.println(ex);
-        throw new SettingsException("Nie mo\u017cna odczyta\u0107 podstawowej konfiguracji (b\u0142\u0105d I/O).");       
+    	try {
+    	   props.load(Settings.class.getResourceAsStream("/resources/conf.default.properties"));  
+    	}
+    	catch (IOException | NullPointerException ex2) {
+          System.err.println(ex2);
+          throw new SettingsException("Nie mo\u017cna odczyta\u0107 podstawowej konfiguracji (b\u0142\u0105d I/O).");
+    	}
       }
     }    
         

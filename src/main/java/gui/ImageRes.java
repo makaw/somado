@@ -37,10 +37,15 @@ public final class ImageRes  {
     ImageIcon icon = null; 
       
     try {    	
-      icon = (new ImageIcon(ImageRes.class.getClassLoader().getResource("img/"+fileName)));
+      icon = (new ImageIcon(ImageRes.class.getResource("/img/"+fileName)));     
     }
     catch (NullPointerException e) {
-       System.err.println("Brak pliku /resources/img/"+fileName);      
+       try {
+    	 icon = (new ImageIcon(ImageRes.class.getResource("/resources/img/"+fileName))); 
+       }
+       catch (NullPointerException ex) {
+         System.err.println("Brak pliku /resources/img/"+fileName);
+       }
     }
         
     return icon;  
