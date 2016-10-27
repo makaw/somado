@@ -37,7 +37,6 @@ import com.graphhopper.jsprit.core.problem.job.Job;
 import com.graphhopper.jsprit.core.problem.vehicle.Vehicle;
 import somado.AppObserver;
 import somado.Database;
-import somado.DatabaseLocal;
 import somado.IConf;
 import somado.Settings;
 import somado.SettingsException;
@@ -91,12 +90,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
   public CostMatrix(GUI frame, List<Pack> packs) throws SettingsException {
           
     this.frame = frame;
-    try {
-      database = DatabaseLocal.getInstance();
-    }
-    catch (SQLException | ClassNotFoundException | NullPointerException e) {              
-      throw new SettingsException("B\u0142\u0105d bazy danych przestrzennych: " + e);            
-    }  
+    database = frame.getDatabase();  
     
     currentJobs = new HashMap<>();
     
@@ -145,7 +139,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
     int totalSize = size*size;
     
     // ustawienie algorytmu wyznaczania najkrótszej ścieżki
-    PreparedStatement ps = database.prepareQuery("UPDATE roads_net SET algorithm = ? ;");
+    PreparedStatement ps = database.prepareQuery("UPDATE spatial.roads_net SET algorithm = ? ;");
     ps.setString(1, algorithm.toString());
     ps.executeUpdate();
     
@@ -162,10 +156,6 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
       try {
         Thread.sleep(10);
       } catch (InterruptedException ex) {
-        try {  
-          database.close();
-        }
-        catch (Exception e) {}
         return;
       }
         
@@ -189,7 +179,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
 
           // wyznaczenie najkrótszej ścieżki
           ps = database.prepareQuery("SELECT Cost, AsText(Geometry) AS geom, ArcRowId "
-                  + "FROM roads_net where NodeFrom=? AND NodeTo=? ");
+                  + "FROM spatial.roads_net where NodeFrom=? AND NodeTo=? ");
           ps.setInt(1, customersArray[i].getRoadNodeId());
           ps.setInt(2, customersArray[j].getRoadNodeId());
           ResultSet rs = ps.executeQuery();
@@ -224,7 +214,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
          
           while (rs.next()) {
              
-             ps = database.prepareQuery("SELECT length FROM roads WHERE id = ?");
+             ps = database.prepareQuery("SELECT length FROM spatial.roads WHERE id = ?");
              ps.setInt(1, rs.getInt("ArcRowId"));
              ResultSet rs2 = ps.executeQuery();
              if (rs2.next()) distance += rs2.getDouble("length");   
@@ -274,11 +264,11 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
     // Uzywany system odniesienia WGS-84 (EPSG:4326)  
     PreparedStatement ps = database.prepareQuery("SELECT rpath, node_from FROM (SELECT "
               + "AsText(Line_Substring(r.geometry, 0.0, Line_Locate_Point(r.geometry, MakePoint(?, ?, 4326)))) "
-              + "AS rpath, r.node_from FROM roads AS r "
+              + "AS rpath, r.node_from FROM spatial.roads AS r "
               + "WHERE r.node_from = ?  AND oneway_fromto = 1 "
               + "UNION SELECT "
               + "AsText(Line_Substring(r.geometry, Line_Locate_Point(r.geometry, MakePoint(?, ?, 4326)), 1.0)) "
-              + "AS rpath, r.node_from FROM roads AS r "
+              + "AS rpath, r.node_from FROM spatial.roads AS r "
               + "WHERE r.node_to = ?  AND oneway_tofrom = 1) "
               + "WHERE rpath IS NOT NULL ORDER BY Distance(rpath, MakePoint(?, ?, 4326)) LIMIT 1");
       
@@ -408,8 +398,8 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
     // Uzywany system odniesienia WGS-84 (EPSG:4326)
     PreparedStatement ps = database.prepareQuery("SELECT node_id,"
             + " Distance(geometry, MakePoint(?, ?, 4326)) AS dist  "
-            + "FROM roads_nodes WHERE ROWID IN "
-              + "(SELECT ROWID FROM SpatialIndex WHERE f_table_name = 'roads_nodes' AND "
+            + "FROM spatial.roads_nodes WHERE ROWID IN "
+              + "(SELECT ROWID FROM spatial.SpatialIndex WHERE f_table_name = 'roads_nodes' AND "
               + "search_frame = BuildCircleMbr(?, ?, 0.1, 4326)) "
               + "ORDER BY dist LIMIT 1;");
      
@@ -512,12 +502,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
         
       new ErrorDialog(frame, "B\u0142\u0105d bazy danych przestrzennych: " + e, true);  
      
-    }
-    
-    try {  
-      database.close();
-    }
-    catch (Exception e) {}
+    }    
      
     progress.hideComponent();
       

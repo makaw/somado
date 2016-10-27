@@ -12,6 +12,7 @@ package gui.dialogs.gloss;
 import datamodel.Customer;
 import datamodel.glossaries.GlossCustomers;
 import gui.GUI;
+import gui.SimpleDialog;
 import gui.dialogs.ErrorDialog;
 import gui.dialogs.GlossDialog;
 import java.awt.GridLayout;
@@ -24,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import gui.formfields.FormRow;
-import gui.dialogs.EditLockableDataDialog;
 import gui.dialogs.GeocodeDialog;
 import gui.mapview.MapDialog;
 import java.awt.Dimension;
@@ -42,7 +42,7 @@ import somado.Settings;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class GlossCustomerEditDialog extends EditLockableDataDialog {
+public abstract class GlossCustomerEditDialog extends SimpleDialog {
     
   /** Referencja do obiektu powiazanego slownika */  
   final protected GlossCustomers glossCustomers;
@@ -62,7 +62,7 @@ public abstract class GlossCustomerEditDialog extends EditLockableDataDialog {
   public GlossCustomerEditDialog(GUI frame, GlossDialog<Customer> parentDialog, String title, int customerIndex) {
         
     super(frame, IConf.APP_NAME + " - " + title);
-    glossCustomers = parentDialog == null ? new GlossCustomers(frame.getDatabaseShared())
+    glossCustomers = parentDialog == null ? new GlossCustomers(frame.getDatabase())
             : (GlossCustomers)(parentDialog.getGlossary());
     this.parentDialog = parentDialog;
     
@@ -70,7 +70,6 @@ public abstract class GlossCustomerEditDialog extends EditLockableDataDialog {
     this.customer = (customerIndex == -2) ? Settings.getDepot() : 
            ((customerIndex == -1) ? new Customer() : glossCustomers.getItem(customerIndex));
     
-    checkLock(this.customer);
     super.showDialog(530, 315);
          
   }
@@ -130,32 +129,26 @@ public abstract class GlossCustomerEditDialog extends EditLockableDataDialog {
 
         final JTextField nameField = new JTextField(22);
         nameField.setText(customer.getName());
-        nameField.setEditable(!locked);
         dataTabPane.add(new FormRow("Nazwa:", nameField));
         
         final JTextField streetField = new JTextField(22);
         streetField.setText(customer.getStreet());
-        streetField.setEditable(!locked);
         dataTabPane.add(new FormRow("Ulica i nr:", streetField));        
         
         final JTextField cityField = new JTextField(22);
         cityField.setText(customer.getCity());
-        cityField.setEditable(!locked);
         dataTabPane.add(new FormRow("Miejscowo\u015b\u0107:", cityField)); 
         
         final JTextField postcodeField = new JTextField(12);
         postcodeField.setText(customer.getPostcode());
-        postcodeField.setEditable(!locked);
         dataTabPane.add(new FormRow("Kod pocztowy:", postcodeField));        
         
         longitudeField = new JTextField(12);
         longitudeField.setText(String.format("%.8f", customer.getLongitude()));
-        longitudeField.setEditable(!locked);
         dataTabPane.add(new FormRow("D\u0142ugo\u015b\u0107 geogr.:", longitudeField));   
         
         latitudeField = new JTextField(12);
         latitudeField.setText(String.format("%.8f", customer.getLatitude()));
-        latitudeField.setEditable(!locked);
         dataTabPane.add(new FormRow("Szeroko\u015b\u0107 geogr.:", latitudeField));          
 
         JPanel p = new JPanel(new FlowLayout());
@@ -262,8 +255,6 @@ public abstract class GlossCustomerEditDialog extends EditLockableDataDialog {
 
         });            
         
-        geocodeButton.setEnabled(!locked);
-        saveButton.setEnabled(!locked);
         
         p.add(mapButton);
         p.add(new JLabel(" "));

@@ -8,13 +8,10 @@
  */
 package datamodel.glossaries;
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
 import datamodel.Order;
 import datamodel.OrderItem;
 import datamodel.OrderState;
 import datamodel.Product;
-import datamodel.docs.DocAudit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,7 +71,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          PreparedStatement ps = database.prepareQuery("INSERT INTO dat_orders "
                  + "(id, state_id, customer_id, comment, "
                  + "date_add, user_add_id) VALUES "
-                 + "(NULL, ?, ?, ?, NOW(), ?);", true);
+                 + "(NULL, ?, ?, ?, DATETIME('now'), ?);", true);
         
          ps.setInt(1, order.getState().getId());
          ps.setInt(2, order.getCustomer().getId());
@@ -93,10 +90,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          
          insertProducts(order);
     
-         database.commit();       
-         
-         Audit audit = new Audit(order, order, AuditDiff.AM_ADD, "Dodano zam\u00f3wienie");
-         (new DocAudit(database, order)).addElement(audit, user);          
+         database.commit();                      
 
          
       } catch (SQLException e) {
@@ -218,13 +212,13 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
    */  
   public boolean changeState(Order order, OrderState state, User user) {
       
-    Order orderOld = new Order(order);
     order.setState(state);
       
     try {  
       
       PreparedStatement ps = database.prepareQuery("UPDATE dat_orders SET state_id = ?, "
-              + "date_state_mod = NOW(), date_mod = NOW(), user_mod_id = ? WHERE id = ? LIMIT 1;");
+              + "date_state_mod = DATETIME('now'), date_mod = DATETIME('now'),"
+              + " user_mod_id = ? WHERE id = ?;");
         
       ps.setInt(1, state.getId());
       ps.setInt(2, user.getId());
@@ -240,9 +234,6 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
     }                
           
     
-    Audit audit = new Audit(orderOld, order, order, AuditDiff.AM_MOD, "Zmodyfikowano zam\u00f3wienie (stan)");
-        (new DocAudit(database, order)).addElement(audit, user); 
-            
     return true;      
          
       
@@ -258,7 +249,6 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
   @Override
   public boolean updateItem(Order order, User user) {
       
-      Order orderOld = getItem(order.getId());
       
       try {
         order.verify();
@@ -272,7 +262,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          database.begin();
           
          PreparedStatement ps = database.prepareQuery("UPDATE dat_orders SET customer_id = ?, "
-                 + "comment = ?, date_mod = NOW(), user_mod_id = ? WHERE id = ? LIMIT 1;");
+                 + "comment = ?, date_mod = DATETIME('now'), user_mod_id = ? WHERE id = ?;");
         
          ps.setInt(1, order.getCustomer().getId());
          ps.setString(2, order.getComment());
@@ -302,8 +292,6 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
        
       }                
           
-      Audit audit = new Audit(orderOld, order, order, AuditDiff.AM_MOD, "Zmodyfikowano zam\u00f3wienie");
-      (new DocAudit(database, order)).addElement(audit, user); 
             
       return true;
       
@@ -323,7 +311,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
           
         database.begin();
           
-        PreparedStatement ps = database.prepareQuery("DELETE FROM dat_orders WHERE id = ? LIMIT 1;");
+        PreparedStatement ps = database.prepareQuery("DELETE FROM dat_orders WHERE id = ?;");
         ps.setInt(1, order.getId());
         ps.executeUpdate();      
         
@@ -345,9 +333,6 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
         return false;
           
       }
-      
-      Audit audit = new Audit(order, order, AuditDiff.AM_DEL, "Usuni\u0119to zam\u00f3wienie");
-      (new DocAudit(database, order)).addElement(audit, user); 
       
       return true;
       

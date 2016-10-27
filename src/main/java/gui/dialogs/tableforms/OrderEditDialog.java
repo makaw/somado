@@ -13,6 +13,8 @@ import datamodel.Order;
 import datamodel.OrderItem;
 import datamodel.OrderState;
 import gui.GUI;
+import gui.SimpleDialog;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -32,17 +34,13 @@ import gui.formfields.FormRowPad;
 import gui.formfields.FormTabbedPane;
 import gui.TableFilters;
 import gui.TablePanel;
-import gui.dialogs.EditLockableDataDialog;
 import gui.dialogs.ErrorDialog;
 import gui.formfields.CustomerField;
 import gui.formfields.OrderProductsField;
 import gui.tablepanels.TableOrdersPanel;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import somado.IConf;
 import somado.Settings;
 
@@ -56,7 +54,7 @@ import somado.Settings;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class OrderEditDialog extends EditLockableDataDialog implements IDialogForm {
+public abstract class OrderEditDialog extends SimpleDialog implements IDialogForm {
     
    /** Model tabeli z listą zamówień */ 
    private final OrdersTableModel tableModel;  
@@ -99,7 +97,6 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
      
      if (this.order.getState() != OrderState.NEW) return;
      
-     checkLock(this.order);
       
      super.showDialog(645, edit ? 490 : 470);
          
@@ -140,7 +137,7 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
       
      // wyczyszczenie filtrow i nowy model 
      parentTableFilters.clearFields(true);
-     OrdersTableModel oModel = new OrdersTableModel(frame.getDatabaseShared(), parentTableFilters.getParams());
+     OrdersTableModel oModel = new OrdersTableModel(frame.getDatabase(), parentTableFilters.getParams());
      parentTablePanel.getTable().setModel(oModel);
        
      // domyslne sortowanie
@@ -168,8 +165,7 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
   private class FormPanel extends JPanel {
       
      /** Kolor tla aktywnej zakladki */
-     private final Color bgColor = new Color(0xddecfa);  
-     private final JPanel tabPaneAudit;
+     private final Color bgColor = new Color(0xddecfa); 
      
      
      FormPanel(JDialog dialog) {
@@ -181,19 +177,7 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
         final JPanel buttonsPanel = new JPanel();
         
         JTabbedPane tabPane = new FormTabbedPane(bgColor);        
-        JPanel tabPane1 = (JPanel)tabPane.add("Dane zam\u00f3wienia", new JPanel());
-        tabPaneAudit = (frame.getUser().isAdmin() && order.getId()!=0) ?  
-                (JPanel)tabPane.add("Historia zmian", new JPanel()) : new JPanel();     
-
-        
-        tabPane.addChangeListener(new ChangeListener() { 
-            @Override
-            public void stateChanged(ChangeEvent evt) { 
-                JTabbedPane pane = (JTabbedPane) evt.getSource(); 
-                Component sel = pane.getSelectedComponent();
-                buttonsPanel.setVisible(!sel.equals(tabPaneAudit));
-            } 
-        });
+        JPanel tabPane1 = (JPanel)tabPane.add("Dane zam\u00f3wienia", new JPanel());  
         
         
         tabPane1.add(new JLabel(" "));
@@ -219,18 +203,15 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
         tabPane1.add(new FormRowPad("Stan zam\u00f3wienia:", txt));           
         
         final CustomerField customerField = new CustomerField(frame, order.getCustomer());
-        customerField.setEditable(!locked);
         tabPane1.add(new FormRowPad("Odbiorca towaru:", customerField));
         
         final OrderProductsField productsField = new OrderProductsField(frame, order);
-        productsField.setEnabled(!locked);
         tabPane1.add(new FormRowPad("Produkty:               ", productsField));            
         
         final JTextArea commentField = new JTextArea(order.getComment());
         commentField.setLineWrap(true);
         commentField.setWrapStyleWord(true);
         commentField.setRows(3);
-        commentField.setEditable(!locked);
       
         JScrollPane sp = new JScrollPane(commentField);
         sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -240,8 +221,6 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
         tabPane1.add(new FormRowPad("Uwagi:                      ", sp));
         
         
-        if (order.getId()!=0) refreshAuditPanel();
-       
         add(tabPane);
                         
         
@@ -251,7 +230,6 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
 
         JButton saveButton = new JButton(" Zapisz ");
         saveButton.setFocusPainted(false);
-        saveButton.setEnabled(!locked);
                
         saveButton.addActionListener(new ActionListener() {
         @Override
@@ -290,27 +268,10 @@ public abstract class OrderEditDialog extends EditLockableDataDialog implements 
          
      }
      
-     
-     private void refreshAuditPanel()  {
-      
-       tabPaneAudit.removeAll();
-       tabPaneAudit.add(new JLabel(" "));   
-       try {
-         tabPaneAudit.add(getAuditPanel(bgColor));
-       }
-       catch (NullPointerException e) {}
-
-    }
           
       
   }
     
-  
-  /** Metoda ma zwracac panel z historia zmian
-   * @param bgColor Kolor tla
-   * @return Panel z historia zmian
-   */
-  protected abstract JPanel getAuditPanel(Color bgColor);
   
   
   /**

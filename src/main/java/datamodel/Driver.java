@@ -23,8 +23,10 @@ public class Driver implements IDataEditable {
   
    /** ID w bazie danych */
    private Integer id;
-   /** Użytkownik systemowy */
-   private UserData userData;
+   /** Imię */
+   private String firstname;
+   /** Nazwisko */
+   private String surname;
    /** Przypisany pojazd */
    private Vehicle vehicle;
    /** Komentarz */
@@ -44,7 +46,8 @@ public class Driver implements IDataEditable {
    public Driver(ResultSet rs, String prefix) throws SQLException {
        
      this.id = rs.getInt(prefix+"id");  
-     this.userData = new UserData(rs, prefix+"user_");
+     this.firstname = rs.getString(prefix + "firstname");
+     this.surname = rs.getString(prefix + "surname");
      this.vehicle = new Vehicle(rs, new VehicleModel(rs, prefix+"vehicle_model_"),  prefix+"vehicle_");
      this.comment = rs.getString(prefix+"comment");
      this.available = rs.getBoolean(prefix+"available");
@@ -67,15 +70,17 @@ public class Driver implements IDataEditable {
    /**
     * Konstruktor obiektu kierowcy 
     * @param id Id rekordu w bazie danych
-    * @param userData Dane użytkownika systemowego - kierowcy
+    * @param firstname Imię
+    * z
     * @param vehicle Pojazd
     * @param comment Komentarz
     * @param available Dostępność kierowcy
     */
-   public Driver(int id, UserData userData, Vehicle vehicle, String comment, boolean available) {
+   public Driver(int id, String firstname, String surname, Vehicle vehicle, String comment, boolean available) {
        
      this.id = id;  
-     this.userData = userData;
+     this.firstname = firstname;
+     this.surname = surname;
      this.vehicle = vehicle;
      this.comment = comment;
      this.available = available;
@@ -89,7 +94,7 @@ public class Driver implements IDataEditable {
     */
    public Driver(Driver driver) {
        
-      this(driver.id, driver.userData, driver.vehicle, driver.comment, driver.available); 
+      this(driver.id, driver.firstname, driver.surname, driver.vehicle, driver.comment, driver.available); 
        
    }
    
@@ -99,7 +104,7 @@ public class Driver implements IDataEditable {
     */
    public Driver() {
        
-     this(0, new UserData(), new Vehicle(), "", true);  
+     this(0, "", "", new Vehicle(), "", true);  
        
    }
    
@@ -107,7 +112,7 @@ public class Driver implements IDataEditable {
    @Override
    public String toString() {
        
-      return userData.getSurname() + " " + userData.getFirstname() + " (" + vehicle.getRegistrationNo() + ")";
+      return surname + " " + firstname + " (" + vehicle.getRegistrationNo() + ")";
        
    }
             
@@ -121,13 +126,6 @@ public class Driver implements IDataEditable {
         this.id = id;
     }
 
-    public UserData getUserData() {
-        return userData;
-    }
-
-    public void setUserData(UserData userData) {
-        this.userData = userData;
-    }
    
 
     public Vehicle getVehicle() {
@@ -167,7 +165,28 @@ public class Driver implements IDataEditable {
     
     
     
-    /**
+    public String getFirstname() {
+		return firstname;
+	}
+
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+
+	public String getSurname() {
+		return surname;
+	}
+
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	
+
+	/**
      * Weryfikacja wprowadzonych danych
      * @throws Exception Wyjatek: komunikat bledu
      */    

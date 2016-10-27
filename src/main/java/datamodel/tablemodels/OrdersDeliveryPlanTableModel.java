@@ -75,7 +75,8 @@ public class OrdersDeliveryPlanTableModel extends TableModel<Order> {
        
        ResultSet rs = ps.executeQuery();
        
-       if (rs.first()) num = rs.getInt(1);
+       if (rs.next()) num = rs.getInt(1);
+       rs.close();
        
     
     } catch (SQLException e) {

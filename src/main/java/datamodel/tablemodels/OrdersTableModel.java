@@ -93,7 +93,7 @@ public class OrdersTableModel extends TableModel<Order> {
        
        ResultSet rs = ps.executeQuery();
        
-       if (rs.first()) num = rs.getInt(1);
+       if (rs.next()) num = rs.getInt(1);
        
     
     } catch (SQLException e) {

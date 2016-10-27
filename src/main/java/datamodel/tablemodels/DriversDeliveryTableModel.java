@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import somado.Database;
-import somado.UserRole;
 
 /**
  *
@@ -48,20 +47,18 @@ public class DriversDeliveryTableModel extends TableModel<Driver> {
     int num = 0;    
         
         
-    String query = "SELECT COUNT(DISTINCT(d.id)) FROM sys_users AS u "
-          + "INNER JOIN dat_drivers AS d ON d.user_id=u.id "
+    String query = "SELECT COUNT(DISTINCT(d.id)) FROM  dat_drivers AS d "
           + "LEFT OUTER JOIN dat_vehicles AS v ON v.id=d.vehicle_id "
-          + "WHERE u.role = ? AND v.capable='1' AND d.available='1'";
+          + "WHERE v.capable='1' AND d.available='1'";
     
     try {
 
-       PreparedStatement ps = database.prepareQuery(query);
-       
-       ps.setInt(1, UserRole.DRIVER.getId());
+       PreparedStatement ps = database.prepareQuery(query);       
        
        ResultSet rs = ps.executeQuery();
        
-       if (rs.first()) num = rs.getInt(1);
+       if (rs.next()) num = rs.getInt(1);
+       rs.close();
        
     
     } catch (SQLException e) {
@@ -74,22 +71,18 @@ public class DriversDeliveryTableModel extends TableModel<Driver> {
     
     data = new Object[num][columnNames.length];
     
-    query = "SELECT u.id AS user_id, u.login AS user_login, u.firstname AS user_firstname, u.surname AS user_surname, "
-          + "u.role AS user_role, u.blocked AS user_blocked, d.id, d.comment, d.available, "
+    query = "SELECT d.firstname, d.surname, d.id, d.comment, d.available, "
           + "vm.id AS vehicle_model_id, vm.name AS vehicle_model_name, vm.maximum_load AS vehicle_model_maximum_load, "
           + "vm.avg_fuel_consumption AS vehicle_model_avg_fuel_consumption, "
           + "v.id AS vehicle_id, v.year AS vehicle_year, v.registration_no AS vehicle_registration_no, "
-          + "v.comment AS vehicle_comment, v.capable AS vehicle_capable FROM sys_users AS u "
-          + "INNER JOIN dat_drivers AS d ON d.user_id=u.id "
+          + "v.comment AS vehicle_comment, v.capable AS vehicle_capable FROM dat_drivers AS d "
           + "LEFT OUTER JOIN dat_vehicles AS v ON v.id=d.vehicle_id "
           + "LEFT OUTER JOIN glo_vehicle_models AS vm ON vm.id=v.vehicle_model_id "
-          + "WHERE u.role = ? AND v.capable='1' AND d.available='1';";
+          + "WHERE v.capable='1' AND d.available='1';";
     
     try {
                 
-      PreparedStatement ps = database.prepareQuery(query);
-      
-      ps.setInt(1, UserRole.DRIVER.getId());
+      PreparedStatement ps = database.prepareQuery(query);      
               
       ResultSet rs = ps.executeQuery();
             
@@ -99,7 +92,7 @@ public class DriversDeliveryTableModel extends TableModel<Driver> {
       while(rs.next()) {          
                      
          data[i][0] = true;
-         data[i][1] = rs.getString("user_surname") + " " + rs.getString("user_firstname");
+         data[i][1] = rs.getString("surname") + " " + rs.getString("firstname");
          data[i][2] = rs.getString("vehicle_registration_no");
          data[i][3] = rs.getString("vehicle_model_name");  
          data[i][4] = rs.getDouble("vehicle_model_maximum_load");

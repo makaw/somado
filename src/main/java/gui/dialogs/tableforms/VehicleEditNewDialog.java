@@ -11,8 +11,6 @@ package gui.dialogs.tableforms;
 import datamodel.Vehicle;
 import datamodel.glossaries.GlossVehicles;
 import gui.GUI;
-import java.awt.Color;
-import javax.swing.JPanel;
 
 
 /**
@@ -40,7 +38,7 @@ public class VehicleEditNewDialog extends VehicleEditDialog {
     @Override
     protected boolean saveItem(Vehicle vehicle) {
 
-       GlossVehicles glossVehicles =  new GlossVehicles(frame.getDatabaseShared());                             
+       GlossVehicles glossVehicles =  new GlossVehicles(frame.getDatabase());                             
        boolean tmp = glossVehicles.addItem(vehicle, frame.getUser());
        lastError = glossVehicles.getLastError();
        return tmp;       
@@ -48,18 +46,6 @@ public class VehicleEditNewDialog extends VehicleEditDialog {
     }
     
     
-    
-   /**
-    * (Niezaimplementowana) Metoda zwraca panel z lista historii zmian
-    * @param bgColor Kolor tla
-    * @return Panel z lista szkolen
-    */    
-    @Override
-    protected JPanel getAuditPanel(Color bgColor) {   
-        
-      return null;
-        
-    }     
     
     
 }

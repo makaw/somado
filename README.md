@@ -7,9 +7,8 @@ Geokodowanie przy użyciu usługi OSM Nominatim, mapa podkładowa - wybrana usł
 W folderze dist umieszczono skompresowany plik bazy SQLite + Spatialite, zawierającej dane sieci drogowej woj. mazowieckiego, przygotowane na podstawie danych OpenStreetMap (dist/roads.sqlite.zip)
 
 ### Konfiguracja 
-- Import bazy danych MySQL (plik mysql_dump.sql.zip w folderze dist)
-- Ustawienie dostępu do bazy MySQL, ew. zmiana serwera TMS i współrzędnych obsługiwanego obszaru w pliku dist/conf.properties
-- Rozpakowanie lokalnej bazy danych przestrzennych do katalogu z archiwum jar (plik dist/roads.sqlite.zip)
+- Ew. zmiana serwera TMS i współrzędnych obsługiwanego obszaru w pliku dist/conf.properties
+- Rozpakowanie lokalnych baz danych do katalogu z archiwum jar (pliki dist/*.sqlite.zip)
 - Windows: rozpakowanie bibliotek DLL do katalogu z archiwum jar (plik dist/windows_dll.zip)
 
 ----------

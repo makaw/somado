@@ -8,15 +8,14 @@
  */
 package somado;
 
-import datamodel.glossaries.GlossLocks;
+
 import gui.GUI;
+import gui.dialogs.AboutDialog;
 import gui.dialogs.ErrorDialog;
-import gui.dialogs.PasswordDialog;
 import gui.dialogs.WarningDialog;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -41,20 +40,11 @@ public final class Somado implements Observer {
   
   /** Obiekt reprezentujący graficzny interfejs */
   private GUI gui;  
-  /** Obiekt współdzielonej bazy danych */
-  private DatabaseShared databaseShared;
-  /** Obiekt użytkownika */
-  private User user;
+  /** Obiekt bazy danych */
+  private Database database;
   /** Obiekt obserwatora */
   private AppObserver appObserver;
-  /** Login (pobierany od użytkownika) */
-  private String appLogin = "";
-  /** Hasło aplikacyjne (pobierane od użytkownika) */
-  private String appPass = "";
   
-
-  /** PID @ host */
-  public static final String APP_PID =  ManagementFactory.getRuntimeMXBean().getName();
   
   /**
    * Konstruktor klasy głównej, bezpieczne wywołanie interfejsu graficznego
@@ -82,29 +72,23 @@ public final class Somado implements Observer {
   /**
    * Metoda próbuje ustalić połączenie z globalna bazą danych przy pomocy podanego hasła aplikacji 
    * i laduje ustawienia
-   * @param appPass Hasło aplikacyjne
-   * @param reconnect True jeżeli to próba ponownego połączenia
-   * @return false błąd uwierzytelnienia DB (złe hasło), lub true jeżeli OK
+   * @return false błąd uwierzytelnienia DB, lub true jeżeli OK
    */
-  private boolean connectDb(String appPass, boolean reconnect) {     
+  private boolean connectDb() {     
       
      try {
 
        // załadowanie ustawień i otwarcie globalnej bazy danych
        Settings.getInstance().loadBasic();
-       databaseShared = new DatabaseShared();  
-       databaseShared.doUpdate("SET NAMES 'utf8' COLLATE 'utf8_polish_ci';");  
-       Settings.getInstance().load(databaseShared);
+       database = new Database();        
+       Settings.getInstance().load(database);
        
-       // otwarcie lokalnej bazy danych SQLite tylko dla sprawdzenia, każdorazowo będzie tworzone nowe połączenie
-       DatabaseLocal.getInstance().close();
           
      } catch (FileNotFoundException e) {
         
          String error = "Nie mo\u017cna odczyta\u0107 podstawowej konfiguracji "
                  + " (brak pliku .conf).\n"
-                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n"
-                  + "Skontaktuj si\u0119 z administratorem.";
+                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n";
           
           new ErrorDialog(gui, error, true);             
           quitApp();         
@@ -112,42 +96,25 @@ public final class Somado implements Observer {
      } catch (SettingsException e) {
        
           String error = e.getMessage() + "\n"
-                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n"
-                  + "Skontaktuj si\u0119 z administratorem.";
+                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n";
           
           new ErrorDialog(gui, error, true);             
           quitApp();
            
      }  catch (SQLException e) {
-       
-        // podano nieprawidłowe hasło do bazy danych 
-        if (e.getErrorCode()==1045) {
-            
-          String error = new UserException(UserException.AUTH).getMessage();
-          new ErrorDialog(gui, error); 
-
-          return false;
-            
-        }
-         
-        // inny problem z połączeniem
-        else {
-         
+               
           System.err.println("Problem z po\u0142\u0105czeniem z baz\u0105 danych: "+e);
           String error = "Problem z po\u0142\u0105czeniem z baz\u0105 danych. "
-                  + (!reconnect ? "Program teraz zako\u0144czy dzia\u0142anie.\n\n"
-                  + "Skontaktuj si\u0119 z administratorem." : "");
+                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n";
           new ErrorDialog(gui, error, true);
-          if (!reconnect) quitApp();
-          
-        }
+          quitApp();
+                  
          
      } catch (ClassNotFoundException | NullPointerException e) {
           
           System.err.println("Problem ze sterownikiem bazy danych: "+e);
           String error = "Problem ze sterownikiem bazy danych, "
-                  + "program teraz zako\u0144czy dzia\u0142anie.\n\n"
-                  + "Skontaktuj si\u0119 z administratorem.";
+                  + "program teraz zako\u0144czy dzia\u0142anie.\n\n";
           
           new ErrorDialog(gui, error, true);
           quitApp();
@@ -159,19 +126,7 @@ public final class Somado implements Observer {
  
       
   }
-  
-  
-  /**
-   * Metoda próbuje ustalić połączenie z globalna bazą danych przy pomocy podanego hasła aplikacji 
-   * i laduje ustawienia
-   * @param appPass Hasło aplikacyjne
-   * @return false błąd uwierzytelnienia DB (złe hasło), lub true jeżeli OK
-   */  
-  private boolean connectDb(String appPass) {
-      
-     return connectDb(appPass, false);  
-      
-  }
+    
     
   
   /**
@@ -184,35 +139,8 @@ public final class Somado implements Observer {
        
      AppObserver obs = (AppObserver)object;
      switch (obs.getKey()) {
-         
-         // użytkownik podał hasło aplikacyjne
-         case "app_pass":
-
-            try { 
-              Object[] obj = (Object[]) obs.getObject();
-              appLogin = (String) obj[0];
-              appPass = (String) obj[1];
-            }
-            catch (NullPointerException e) {
-              System.err.println(e.getMessage());  
-            }
-            break;   
              
-         // ponowne połączenie ze współdzieloną bazą danych
-         case "db_connect":
-             
-            if (connectDb(appPass, true)) {
-                
-              // przekazanie do GUI referencji do obiektu globalnej bazy danych i nowego pingowania
-              appObserver.sendObject("db_shared", databaseShared); 
-              if (Settings.getIntValue("ping_db") == 1) {    
-                appObserver.sendObject("ping", new PingDb(gui, databaseShared));
-              }                  
-                
-            }
-            
-            break;
-            
+        
      }
             
         
@@ -226,35 +154,21 @@ public final class Somado implements Observer {
   private void startApp() {
       
      appObserver.addObserver(this);   
-      
-     // zapytanie o login i haslo/BD, autoryzacja, proba polaczenia z BD
-     do {                  
-         
-        new PasswordDialog(gui);  
-        if (!connectDb(appPass)) continue;
-        try {
-          user = new User(appLogin, appPass, databaseShared);
-        } catch (UserException ex) {
-          new ErrorDialog(gui, ex.getMessage());
-        }
-        
-     } while (user == null || !user.isAuthorized());              
-
      
-     // przekazanie do GUI referencji do obiektu zdalnej bazy danych
-     appObserver.sendObject("db_shared", databaseShared); 
+     connectDb();
+      
+     // przekazanie do GUI referencji do obiektu b.d.
+     appObserver.sendObject("db_shared", database); 
      
      
      // przekazanie do GUI referencji do obiektu użytkownika
-     appObserver.sendObject("user", user);  
+	 User user = new User();
+     appObserver.sendObject("user", user);   
      
-    // pingowanie zdalnej bazy danych
-     if (Settings.getIntValue("ping_db") == 1) {    
-          appObserver.sendObject("ping", new PingDb(gui, databaseShared));
-     }
+
+     new AboutDialog(gui);           
+
      
-     // zdjęcie ewentualnych blokad globalnej BD
-     GlossLocks.clearItems(databaseShared, user);
      
      // sprawdzenie dostepnosci uslugi TMS
      try{
@@ -286,19 +200,7 @@ public final class Somado implements Observer {
       
   }
   
-        
   
-  
-  /**
-   * Statyczna metoda kończąca działanie programu
-   * @param ping Timer wysyłający pingi do serwera BD
-   */
-  public static void quitApp(PingDb ping) {
-      
-     if (ping != null) ping.stop(); 
-     System.exit(0); 
-      
-  }
   
   
   /**
@@ -306,7 +208,7 @@ public final class Somado implements Observer {
    */
   public static void quitApp() {
       
-     quitApp(null);
+	  System.exit(0); 
       
   }  
   

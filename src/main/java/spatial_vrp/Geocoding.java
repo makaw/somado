@@ -115,7 +115,7 @@ public class Geocoding {
     response.clear();
     
     PreparedStatement ps = database.prepareQuery("SELECT id, display_name, longitude, latitude "
-            + " FROM ncache.nominatim_cache WHERE request = ? ");
+            + " FROM nominatim_cache WHERE request = ? ");
     ps.setString(1, request);
     
     ResultSet rs = ps.executeQuery();
@@ -139,7 +139,7 @@ public class Geocoding {
    */
   private void cacheAddr(GeoAddress addr) throws SQLException {
    
-     PreparedStatement ps = database.prepareQuery("INSERT INTO ncache.nominatim_cache (request, display_name, "
+     PreparedStatement ps = database.prepareQuery("INSERT INTO nominatim_cache (request, display_name, "
              + "longitude, latitude, date_add) VALUES (?, ?, ?, ?, DATE('now'));");
      ps.setString(1, request);
      ps.setString(2, addr.getDisplayName());   

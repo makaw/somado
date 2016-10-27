@@ -9,7 +9,6 @@
 package gui;
  
 import addon.carbon.VerticalLabelUI;
-import datamodel.glossaries.GlossLocks;
 import gui.menus.*;
 import gui.tablepanels.TableDeliveriesPanel;
 import gui.tablepanels.TableDriversPanel;
@@ -21,13 +20,13 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.sql.SQLException;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,11 +37,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.OceanTheme;
 import somado.AppObserver;
-import somado.DatabaseLocal;
-import somado.DatabaseShared;
+import somado.Database;
 import somado.IConf;
 import somado.Somado;
-import somado.PingDb;
 import somado.User;
 
 
@@ -84,21 +81,17 @@ public class GUI extends JFrame implements Observer {
   /** Referencja do obserwatora z głównej klasy */
   private final AppObserver appObserver;
   /** Referencja do obiektu zdalnej, globalnej bazy danych */
-  private DatabaseShared databaseShared;
+  private Database database;
   /** Panel początkowy (pusty) */
   private JPanel startPanel;
   /** Panel z zakładkami (po autoryzacji) */
   private JTabbedPane tabPane;
   /** Belka glownego menu aplikacji */
   private JMenuBar menu;
-  /** Referencja do zadania pingowania BD */
-  private PingDb ping;
   /** Czy interfejs juz zostal zbudowany */
   private boolean built = false;
   /** Watek do uruchomienia w momencie zakonczenia dzialania aplikacji */
   private Thread onQuitHook;
-  /** Menu administracyjne */
-  private JMenu menuAdmin;
 
   
   /**
@@ -136,9 +129,7 @@ public class GUI extends JFrame implements Observer {
     // stworzenie glownego menu aplikacji
     menu = new JMenuBar();
     menu.add(new MenuApplication(this));
-    menu.add(new MenuGlossaries(this));
-    menuAdmin = new MenuAdministration(this);
-    menu.add(menuAdmin);
+    menu.add(new MenuDeliveries(this));
     menu.add(new MenuHelp(this));
   
     // inicjalizacja i dodanie górnego paska narzędziowego
@@ -262,10 +253,7 @@ public class GUI extends JFrame implements Observer {
         
     tabPane.setSelectedIndex(TAB_ORDERS);
     
-    pack();    
-    
-    menuAdmin.setEnabled(user.isAdmin());
-    menuAdmin.setVisible(user.isAdmin());
+    pack();        
     
     setResizable(true);
     setVisible(true);      
@@ -295,8 +283,6 @@ public class GUI extends JFrame implements Observer {
   private void setUser(User user) {
       
     this.user = user;
-    topToolBar.getUserLabel().setText("  " + user.toString());
-    topToolBar.getUserLabel().setVisible(true);
     topToolBar.lockButtons(user);
     setDbLabel(true);
     topToolBar.getDbLabel().setVisible(true);
@@ -310,7 +296,7 @@ public class GUI extends JFrame implements Observer {
    */
   public void setDbLabel(boolean connected) {
       
-    topToolBar.getDbLabel().setText(" " + (connected ? " OK  " : " ERR"));
+    topToolBar.getDbLabel().setText(connected ? " OK  " : " ERR");
     topToolBar.getDbLabel().setForeground(connected ?  new Color(0x009933) : Color.red);
       
       
@@ -339,13 +325,10 @@ public class GUI extends JFrame implements Observer {
   }
   
   
-  /**
-   * Metoda zwraca referencję do obiektu globalnej bazy danych
-   * @return Referencja do obiektu bazy danych
-   */
-  public DatabaseShared getDatabaseShared() {
+
+  public Database getDatabase() {
       
-    return databaseShared;  
+    return database;  
       
   }  
     
@@ -366,8 +349,8 @@ public class GUI extends JFrame implements Observer {
          
         case "db_shared":
             {
-                if (ping != null) ping.stop();
-                this.databaseShared = (DatabaseShared)(obs.getObject());                
+
+            	this.database = (Database)(obs.getObject());                
                 setShutdownHook();
                 
                 break;
@@ -390,13 +373,7 @@ public class GUI extends JFrame implements Observer {
                       
                 }         
                 break;
-            }
-          
-          case "ping":
-          {
-              this.ping = (PingDb)(obs.getObject());
-              break;              
-          }
+            }     
 
           
       }
@@ -409,13 +386,16 @@ public class GUI extends JFrame implements Observer {
    */
   private void setShutdownHook() {
       
-    if (databaseShared == null) return;  
+    if (database == null) return;  
     if (onQuitHook != null) Runtime.getRuntime().removeShutdownHook(onQuitHook);
     onQuitHook = new Thread() {
        @Override
        public void run() {
-          GlossLocks.clearItems(databaseShared, user);
-          DatabaseLocal.closeLastInstance();
+          
+          try {
+            database.close();
+          }
+          catch (SQLException e) {}
        }
     };
     Runtime.getRuntime().addShutdownHook(onQuitHook);            
@@ -428,7 +408,7 @@ public class GUI extends JFrame implements Observer {
    */
   public void quitApp() {
       
-     Somado.quitApp(ping);
+     Somado.quitApp();
       
   }
  

@@ -24,8 +24,6 @@ public class DeliveryDriver implements IData {
     
    /** ID rekordu w BD */   
    private final Integer id;
-   /** Login użytkownika systemowego - kierowcy obsługującego trasę */
-   private final String userLogin;
    /** Nazwisko i imię kierowcy */
    private final String driverDesc;
    /** Nr rejestracyjny samochodu */
@@ -46,7 +44,6 @@ public class DeliveryDriver implements IData {
    public DeliveryDriver(ResultSet rs) throws SQLException {
        
       this.id = rs.getInt("id");
-      this.userLogin = rs.getString("user_login");
       this.driverDesc = rs.getString("driver_desc");
       this.vehicleRegistrationNo = rs.getString("vehicle_registration_no");
       this.vehicleDesc = rs.getString("vehicle_desc");
@@ -57,10 +54,6 @@ public class DeliveryDriver implements IData {
    @Override
     public Integer getId() {
         return id;
-    }
-
-    public String getUserLogin() {
-        return userLogin;
     }
 
     public String getDriverDesc() {
@@ -93,7 +86,7 @@ public class DeliveryDriver implements IData {
    @Override
    public String toString() {
         
-     return userLogin + ", " + driverDesc + ", " + vehicleDesc;
+     return driverDesc + ", " + vehicleDesc;
         
    }
     

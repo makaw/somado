@@ -9,10 +9,7 @@
 package datamodel.glossaries;
 
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
 import datamodel.VehicleModel;
-import datamodel.docs.DocAudit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -145,7 +142,7 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
           
          PreparedStatement ps = database.prepareQuery("INSERT INTO glo_vehicle_models (id, name, "
                  + "maximum_load, avg_fuel_consumption, date_add, user_add_id) VALUES " 
-                 + "(NULL, ?, ?, ?, NOW(), ? );", true);
+                 + "(NULL, ?, ?, ?, DATETIME('now'), ? );", true);
          ps.setString(1, vehicleModel.getName());
          ps.setDouble(2, vehicleModel.getMaximumLoad());
          ps.setDouble(3, vehicleModel.getAvgFuelConsumption());
@@ -156,9 +153,6 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
          ResultSet rs = ps.getGeneratedKeys();
          if (rs.next()) vehicleModel.setId(rs.getInt(1));
          rs.close();
-         
-         Audit audit = new Audit(vehicleModel, vehicleModel, AuditDiff.AM_ADD, "Dodano model pojazdu");
-         (new DocAudit(database, vehicleModel)).addElement(audit, user); 
          
       } catch (SQLException e) {
       
@@ -183,7 +177,6 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
   @Override
   public boolean updateItem(VehicleModel vehicleModel, User user) {
       
-      VehicleModel vmOld = getItem(getItemsIndex(vehicleModel.getId()));
       
       try {
          vehicleModel.verify();
@@ -196,7 +189,7 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
       try {
           
           PreparedStatement ps = database.prepareQuery("UPDATE glo_vehicle_models SET name=?, "
-                  + "maximum_load=?, avg_fuel_consumption=?, date_mod=NOW(), user_mod_id=? WHERE id=? LIMIT 1;");
+                  + "maximum_load=?, avg_fuel_consumption=?, date_mod=DATETIME('now'), user_mod_id=? WHERE id=?;");
           ps.setString(1, vehicleModel.getName());
           ps.setDouble(2, vehicleModel.getMaximumLoad());
           ps.setDouble(3, vehicleModel.getAvgFuelConsumption());
@@ -204,9 +197,6 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
           ps.setInt(5, vehicleModel.getId());
                     
           ps.executeUpdate();        
-          
-          Audit audit = new Audit(vmOld, vehicleModel, vehicleModel, AuditDiff.AM_MOD, "Zmodyfikowano model pojazdu");
-          (new DocAudit(database, vehicleModel)).addElement(audit, user);           
           
           
       } catch (SQLException e) {

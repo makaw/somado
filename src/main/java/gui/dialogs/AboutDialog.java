@@ -113,7 +113,7 @@ public class AboutDialog extends SimpleDialog {
       JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
       p.setBorder(new EmptyBorder(5, 0, 10, 0));
       p.setOpaque(false);
-      p.add(new CloseButton("Zamknij"));
+      p.add(new CloseButton(" OK "));
       
       
       mainPanel.add(p);

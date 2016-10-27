@@ -8,13 +8,10 @@
  */
 package spatial_vrp;
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
-import datamodel.Delivery;
+
 import datamodel.Order;
 import datamodel.OrderState;
 import datamodel.Pack;
-import datamodel.docs.DocAudit;
 import datamodel.tablemodels.RoutePointsTableModel;
 import gui.GUI;
 import gui.dialogs.ErrorDialog;
@@ -280,7 +277,7 @@ public class DeliveryPlan {
     List<Route> routes = getRoutes();
     if (routes.isEmpty()) return;
     
-    Database database = frame.getDatabaseShared();   
+    Database database = frame.getDatabase();   
       
     try {      
     
@@ -295,7 +292,7 @@ public class DeliveryPlan {
       PreparedStatement ps = database.prepareQuery("INSERT INTO dat_deliveries (id, delivery_date, "
             + "driver_max_work_time, shortest_path_algorithm, additional_geometry, "
             + "depot_desc, depot_longitude, depot_latitude, total_cost, active, date_add, user_add_id) "
-            + "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW(), ?);", true);
+            + "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 1, DATETIME('now'), ?);", true);
     
       ps.setString(1, Settings.DATE_FORMAT.format(deliveryDate));
       ps.setDouble(2, getMaxDriverWorkTime());
@@ -316,15 +313,14 @@ public class DeliveryPlan {
         
       for (Route route: routes) {
           
-         ps = database.prepareQuery("INSERT INTO dat_deliveries_drivers (id, delivery_id, driver_user_id, driver_desc, "
-                 + "vehicle_registration_no, vehicle_desc, return_to_depot) VALUES (NULL, ?, ?, ?, ?, ?, ?);", true);
+         ps = database.prepareQuery("INSERT INTO dat_deliveries_drivers (id, delivery_id, driver_desc, "
+                 + "vehicle_registration_no, vehicle_desc, return_to_depot) VALUES (NULL, ?, ?, ?, ?, ?);", true);
          ps.setInt(1, deliveryId);
-         ps.setInt(2, route.getDriver().getUserData().getId());
-         ps.setString(3, route.getDriver().getUserData().getSurname() + " " + route.getDriver().getUserData().getFirstname());
-         ps.setString(4, route.getDriver().getVehicle().getRegistrationNo());
-         ps.setString(5, "[max " + String.format("%.2f", route.getDriver().getVehicle().getVehicleModel().getMaximumLoad()) 
+         ps.setString(2, route.getDriver().getSurname() + " " + route.getDriver().getFirstname());
+         ps.setString(3, route.getDriver().getVehicle().getRegistrationNo());
+         ps.setString(4, "[max " + String.format("%.2f", route.getDriver().getVehicle().getVehicleModel().getMaximumLoad()) 
                  + "t] " + route.getDriver().getVehicle().toString());
-         ps.setBoolean(6, route.getDriver().isReturnToDepot());
+         ps.setBoolean(5, route.getDriver().isReturnToDepot());
        
          ps.executeUpdate();
        
@@ -398,7 +394,7 @@ public class DeliveryPlan {
             if (point.getOrder() != null && point.getOrder().getId()>0) {
                 
               ps = database.prepareQuery("UPDATE dat_orders SET state_id = ?, delivery_id = ?, "
-                      + "date_state_mod = NOW() WHERE id = ? ;");
+                      + "date_state_mod = DATETIME('now') WHERE id = ? ;");
               ps.setInt(1, OrderState.DELIVERY.getId());
               ps.setInt(2, deliveryId);
               ps.setInt(3, point.getOrder().getId());
@@ -419,17 +415,7 @@ public class DeliveryPlan {
           
       }        
     
-      database.commit();
-      
-      ps = database.prepareQuery("SELECT * FROM dat_deliveries WHERE id = ?");
-      ps.setInt(1, deliveryId);
-      rs = ps.executeQuery();
-      rs.next();
-      Delivery delivery = new Delivery(rs);
-      rs.close();
-      
-      Audit audit = new Audit(delivery, delivery, AuditDiff.AM_ADD, "Zatwierdzono plan nowej dostawy");
-      (new DocAudit(database, delivery)).addElement(audit, user); 
+      database.commit();      
       
     }
     

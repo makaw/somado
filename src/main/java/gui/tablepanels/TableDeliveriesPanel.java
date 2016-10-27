@@ -150,7 +150,7 @@ public class TableDeliveriesPanel extends TablePanel {
   @Override
   protected AbstractTableModel getNewTableModel(Map<String, String> params) {
 
-     return new DeliveriesTableModel(frame.getDatabaseShared(), params);
+     return new DeliveriesTableModel(frame.getDatabase(), params);
       
   }
    

@@ -15,6 +15,7 @@ import datamodel.tablemodels.OrdersDeliveryPlanTableModel;
 import datamodel.tablemodels.RoutePointsTableModel;
 import gui.GUI;
 import gui.ImageRes;
+import gui.SimpleDialog;
 import gui.formfields.FormRowPad;
 import gui.formfields.FormTabbedPane;
 import gui.loader.IProgress;
@@ -57,7 +58,7 @@ import spatial_vrp.DeliveryPlan;
  * 
  */
 @SuppressWarnings("serial")
-public class DeliveryPlanDialog extends EditLockableDataDialog implements IData, IProgressInvoker {
+public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgressInvoker {
     
    /** Plan dostawy */ 
    private final DeliveryPlan deliveryPlan;
@@ -83,22 +84,8 @@ public class DeliveryPlanDialog extends EditLockableDataDialog implements IData,
   
   @Override
   protected final void showDialog(int width, int height) {
-  
-     checkLock(this);
-     if (getLock() != null) {
-         
-       String error = "Nowa dostawa jest obecnie planowana "
-              + (getLock().getUserLogin().equals(frame.getUser().getLogin()) ? 
-                "w innym otwartym oknie aplikacji\n"
-              : "przez innego u\u017cytkownika:\n" + getLock().getUserLogin() + " ")
-              + "(start: " + Settings.DATETIME_NS_FORMAT.format(getLock().getDateAdd()) + ").\n\n"
-              + "Zatwierdzenie dostawy nie b\u0119dzie mo\u017cliwe.";
-        new WarningDialog(frame, error, 220);
-        locked = true;
-        
-      }
       
-      super.showDialogNoCheck(width, height);
+      super.showDialog(width, height);
     
    }
       
@@ -253,8 +240,8 @@ public class DeliveryPlanDialog extends EditLockableDataDialog implements IData,
           p1.setPreferredSize(new Dimension(950, 40));
           p1.setOpaque(false);
           p1.add(new JLabel("Kierowca:"));
-          txt = new JLabel(route.getDriver().getUserData().getSurname() + " "
-                  + route.getDriver().getUserData().getFirstname());
+          txt = new JLabel(route.getDriver().getSurname() + " "
+                  + route.getDriver().getFirstname());
           txt.setMaximumSize(new Dimension(140, 40));
           txt.setPreferredSize(new Dimension(140, 40));
           txt.setFont(GUI.BASE_FONT);
@@ -366,7 +353,7 @@ public class DeliveryPlanDialog extends EditLockableDataDialog implements IData,
         
            
       JButton saveButton = new JButton("Zatwierd\u017a dostaw\u0119");
-      saveButton.setEnabled(!locked && routesNumber > 0);
+      saveButton.setEnabled(routesNumber > 0);
       saveButton.setFocusPainted(false);
       saveButton.addActionListener(new ActionListener() {
          @Override

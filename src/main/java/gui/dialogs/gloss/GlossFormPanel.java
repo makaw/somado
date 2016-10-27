@@ -9,9 +9,7 @@
 package gui.dialogs.gloss;
 
 import datamodel.IDataEditable;
-import datamodel.docs.DocAudit;
 import gui.GUI;
-import gui.dialogs.docpanels.AuditPanel;
 import gui.formfields.FormTabbedPane;
 import java.awt.Color;
 import javax.swing.BoxLayout;
@@ -51,16 +49,9 @@ public class GlossFormPanel extends JPanel {
         
         JTabbedPane tabPane = new FormTabbedPane(bgColor);        
         dataTabPane =  (JPanel)tabPane.add(dataTabTitle, new JPanel());
-        JPanel auditTabPane = (object.getId()!=0) ? 
-               (JPanel)tabPane.add("Historia zmian", new JPanel()) : new JPanel();       
-  
-                
+
         dataTabPane.add(new JLabel(" "));                          
-        
-        if (frame.getUser().isAdmin() && object.getId()!=0) {          
-          auditTabPane.add(new JLabel(" "));        
-          auditTabPane.add(new AuditPanel(new DocAudit(frame.getDatabaseShared(), object), bgColor));
-        }
+      
         
         add(tabPane);
         

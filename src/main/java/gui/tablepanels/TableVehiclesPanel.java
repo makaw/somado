@@ -132,7 +132,7 @@ public class TableVehiclesPanel extends TablePanel {
   @Override
   protected AbstractTableModel getNewTableModel(Map<String, String> params) {
 
-     return new VehiclesTableModel(frame.getDatabaseShared(), params);
+     return new VehiclesTableModel(frame.getDatabase(), params);
       
   }
    

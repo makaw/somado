@@ -23,7 +23,6 @@ import java.util.Map;
 import org.jxmapviewer.viewer.GeoPosition;
 import somado.Database;
 import somado.Settings;
-import somado.UserRole;
 
 /**
  *
@@ -84,7 +83,7 @@ public class DeliveriesTableModel extends TableModel<Delivery> {
     
     
     String query = "SELECT COUNT(*) FROM dat_deliveries WHERE active = ? "
-            + "AND DATE_FORMAT(delivery_date, '%Y-%m-%d')  LIKE ? ;";
+            + "AND strftime('%Y-%m-%d', delivery_date)  LIKE ? ;";
     
     try {
 
@@ -94,7 +93,9 @@ public class DeliveriesTableModel extends TableModel<Delivery> {
        
        ResultSet rs = ps.executeQuery();
        
-       if (rs.first()) num = rs.getInt(1);
+       if (rs.next()) num = rs.getInt(1);
+       
+       rs.close();
        
     
     } catch (SQLException e) {
@@ -111,7 +112,7 @@ public class DeliveriesTableModel extends TableModel<Delivery> {
     
     query = "SELECT d.*, (SELECT COUNT(id) FROM dat_deliveries_drivers WHERE delivery_id = d.id) AS drivers_num "        
             + " FROM dat_deliveries AS d WHERE d.active = ? "
-            + " AND DATE_FORMAT(d.delivery_date, '%Y-%m-%d') LIKE ? ORDER BY d.date_add DESC LIMIT ?;";
+            + " AND strftime('%Y-%m-%d', d.delivery_date) LIKE ? ORDER BY d.date_add DESC LIMIT ?;";
     
     try {
                 
@@ -196,11 +197,9 @@ public class DeliveriesTableModel extends TableModel<Delivery> {
       
     List<DeliveryDriver> drivers = new ArrayList<>();  
       
-    PreparedStatement ps = database.prepareQuery("SELECT d.*, (SELECT login FROM sys_users WHERE id = d.driver_user_id "
-            + "AND role = ?) AS user_login FROM dat_deliveries_drivers AS d WHERE d.delivery_id = ? ORDER BY id;");
+    PreparedStatement ps = database.prepareQuery("SELECT d.* FROM dat_deliveries_drivers AS d WHERE d.delivery_id = ? ORDER BY id;");
     
-    ps.setInt(1, UserRole.DRIVER.getId());
-    ps.setInt(2, item.getId());
+    ps.setInt(1, item.getId());
     
     ResultSet rs = ps.executeQuery();
     

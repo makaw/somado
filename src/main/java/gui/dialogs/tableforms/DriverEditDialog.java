@@ -10,8 +10,9 @@ package gui.dialogs.tableforms;
 
 
 import datamodel.Driver;
-import datamodel.UserData;
 import gui.GUI;
+import gui.SimpleDialog;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -25,26 +26,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import datamodel.Vehicle;
-import datamodel.glossaries.GlossUserDataDrivers;
 import datamodel.glossaries.GlossVehicles;
 import datamodel.tablemodels.DriversTableModel;
 import gui.formfields.FormRowPad;
 import gui.formfields.FormTabbedPane;
 import gui.TableFilters;
 import gui.TablePanel;
-import gui.dialogs.EditLockableDataDialog;
 import gui.dialogs.ErrorDialog;
-import gui.dialogs.WarningDialog;
 import gui.tablepanels.TableDriversPanel;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import somado.IConf;
  
 
@@ -57,7 +53,7 @@ import somado.IConf;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class DriverEditDialog extends EditLockableDataDialog implements IDialogForm {
+public abstract class DriverEditDialog extends SimpleDialog implements IDialogForm {
     
    /** Model tabeli z lista kierowców */ 
    private final DriversTableModel tableModel;  
@@ -97,17 +93,7 @@ public abstract class DriverEditDialog extends EditLockableDataDialog implements
      selectedTableRow = edit ? parentTable.convertRowIndexToModel(parentTable.getSelectedRow()) : -1;   
      
      this.driver = edit ? new Driver(tableModel.getElement(selectedTableRow)) : new Driver();
-     
-     // sprawdzenie czy można dodać kierowcę (czy jest "wolny" użytkownik - kierowca
-     if (!edit && (new GlossUserDataDrivers(frame.getDatabaseShared()).getListModel().getSize() == 0)) {
-         
-       new WarningDialog(frame, "Nie mo\u017cna doda\u0107 nowego kierowcy, brak nieprzyporz\u0105dkowanych"
-               + " u\u017cytkownik\u00f3w o takiej roli w systemie.", 200);
-       return;
-         
-     }
-     
-     checkLock(this.driver);
+
       
      super.showDialog(645, 350);
          
@@ -148,7 +134,7 @@ public abstract class DriverEditDialog extends EditLockableDataDialog implements
       
      // wyczyszczenie filtrow i nowy model 
      parentTableFilters.clearFields();
-     DriversTableModel dModel = new DriversTableModel(frame.getDatabaseShared());
+     DriversTableModel dModel = new DriversTableModel(frame.getDatabase());
      parentTablePanel.getTable().setModel(dModel);
        
      // domyslne sortowanie
@@ -177,7 +163,6 @@ public abstract class DriverEditDialog extends EditLockableDataDialog implements
       
      /** Kolor tla aktywnej zakladki */
      private final Color bgColor = new Color(0xddecfa);  
-     private final JPanel tabPaneAudit;
      
 
      FormPanel(JDialog dialog) {
@@ -189,46 +174,28 @@ public abstract class DriverEditDialog extends EditLockableDataDialog implements
         final JPanel buttonsPanel = new JPanel();
         
         JTabbedPane tabPane = new FormTabbedPane(bgColor);        
-        JPanel tabPane1 = (JPanel)tabPane.add("Dane kierowcy", new JPanel());
-        tabPaneAudit = (frame.getUser().isAdmin() && driver.getId()!=0) ?  
-                (JPanel)tabPane.add("Historia zmian", new JPanel()) : new JPanel();     
-
-        
-        tabPane.addChangeListener(new ChangeListener() { 
-            @Override
-            public void stateChanged(ChangeEvent evt) { 
-                JTabbedPane pane = (JTabbedPane) evt.getSource(); 
-                Component sel = pane.getSelectedComponent();
-                buttonsPanel.setVisible(!sel.equals(tabPaneAudit));
-            } 
-        });
-        
+        JPanel tabPane1 = (JPanel)tabPane.add("Dane kierowcy", new JPanel());           
         
         tabPane1.add(new JLabel(" "));
         
-        GlossVehicles glossVehicles = new GlossVehicles(frame.getDatabaseShared());
+        GlossVehicles glossVehicles = new GlossVehicles(frame.getDatabase());
         final JComboBox<Vehicle> vehicleField = new JComboBox<>(glossVehicles.getListModel());
         vehicleField.setSelectedIndex(glossVehicles.getItemsIndex(driver.getVehicle().getId()));
         vehicleField.setFont(GUI.BASE_FONT);
-        vehicleField.setEditable(!locked);
         tabPane1.add(new FormRowPad("Pojazd:", vehicleField));
         
-        final JComboBox<UserData> userField = 
-                new JComboBox<>(new GlossUserDataDrivers(frame.getDatabaseShared()).getListModel());
-        userField.setFont(GUI.BASE_FONT);
-        userField.setEditable(!locked && driver.getId()==0);        
-        if (driver.getId()==0) tabPane1.add(new FormRowPad("U\u017cytkownik:", userField));      
-        else {            
-            JLabel lab = new JLabel(driver.getUserData().toString());
-            lab.setFont(GUI.BASE_FONT);
-            tabPane1.add(new FormRowPad("U\u017cytkownik:", lab));
-        }                                
+        final JTextField firstnameField = new JTextField(12);
+        firstnameField.setText(driver.getFirstname());
+        tabPane1.add(new FormRowPad("Imi\u0119", firstnameField));
+        
+        final JTextField surnameField = new JTextField(12);
+        surnameField.setText(driver.getSurname());
+        tabPane1.add(new FormRowPad("Nazwisko", surnameField));
         
         final JTextArea commentField = new JTextArea(driver.getComment());
         commentField.setLineWrap(true);
         commentField.setWrapStyleWord(true);
         commentField.setRows(3);
-        commentField.setEditable(!locked);
       
         JScrollPane sp = new JScrollPane(commentField);
         sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -239,7 +206,6 @@ public abstract class DriverEditDialog extends EditLockableDataDialog implements
         
         final JCheckBox availableField = new JCheckBox("Kierowca dost\u0119pny");
         availableField.setSelected(driver.isAvailable());
-        availableField.setEnabled(!locked);
         availableField.setOpaque(false);
         availableField.setFocusPainted(false);
         availableField.setFont(GUI.BASE_FONT);
@@ -256,14 +222,13 @@ public abstract class DriverEditDialog extends EditLockableDataDialog implements
 
         JButton saveButton = new JButton(" Zapisz ");
         saveButton.setFocusPainted(false);
-        saveButton.setEnabled(!locked);
         
         saveButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent e) {
             
          
-           Driver driverUpd = new Driver(driver.getId(), (UserData)userField.getSelectedItem(), 
+           Driver driverUpd = new Driver(driver.getId(), firstnameField.getText(), surnameField.getText(),  
                    (Vehicle)vehicleField.getSelectedItem(), commentField.getText(), availableField.isSelected());      
                    
            if (!saveItem(driverUpd)) {
@@ -295,26 +260,11 @@ public abstract class DriverEditDialog extends EditLockableDataDialog implements
      }
      
      
-     private void refreshAuditPanel()  {
-      
-       tabPaneAudit.removeAll();
-       tabPaneAudit.add(new JLabel(" "));   
-       try {
-         tabPaneAudit.add(getAuditPanel(bgColor));
-       }
-       catch (NullPointerException e) {}
-
-    }
+     private void refreshAuditPanel()  {}
           
       
   }
-    
-  
-  /** Metoda ma zwracac panel z historia zmian
-   * @param bgColor Kolor tla
-   * @return Panel z historia zmian
-   */
-  protected abstract JPanel getAuditPanel(Color bgColor);
+      
   
   
   /**

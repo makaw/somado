@@ -8,11 +8,8 @@
  */
 package datamodel.glossaries;
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
 import datamodel.Vehicle;
 import datamodel.VehicleModel;
-import datamodel.docs.DocAudit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,7 +66,7 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
          PreparedStatement ps = database.prepareQuery("INSERT INTO dat_vehicles "
                  + "(id, vehicle_model_id, year, registration_no, comment, capable, "
                  + "date_add, user_add_id) VALUES "
-                 + "(NULL, ?, ?, ?, ?, ?, NOW(), ?);", true);
+                 + "(NULL, ?, ?, ?, ?, ?, DATETIME('now'), ?);", true);
         
          ps.setInt(1, vehicle.getVehicleModel().getId());
          ps.setInt(2, vehicle.getYear());
@@ -83,10 +80,6 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
          ResultSet rs = ps.getGeneratedKeys();
          if (rs.next()) vehicle.setId(rs.getInt(1));         
          rs.close();
-         
-         Audit audit = new Audit(vehicle, vehicle, AuditDiff.AM_ADD, "Dodano pojazd");
-         (new DocAudit(database, vehicle)).addElement(audit, user);          
-
          
       } catch (SQLException e) {
       
@@ -167,7 +160,6 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
   @Override
   public boolean updateItem(Vehicle vehicle, User user) {
       
-      Vehicle vehicleOld = getItem(vehicle.getId());
       
       try {
         vehicle.verify();
@@ -180,8 +172,8 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
           
          PreparedStatement ps = database.prepareQuery("UPDATE dat_vehicles SET "
                  + "vehicle_model_id = ?, year = ?, registration_no = ?, comment = ?, capable = ?,"
-                 + " date_mod = NOW(), user_mod_id = ? "
-                 + "WHERE id = ? LIMIT 1;");
+                 + " date_mod = DATETIME('now'), user_mod_id = ? "
+                 + "WHERE id = ?;");
         
          ps.setInt(1, vehicle.getVehicleModel().getId());
          ps.setInt(2, vehicle.getYear());
@@ -200,9 +192,6 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
         return false;
        
       }                
-          
-      Audit audit = new Audit(vehicleOld, vehicle, vehicle, AuditDiff.AM_MOD, "Zmodyfikowano pojazd");
-      (new DocAudit(database, vehicle)).addElement(audit, user); 
             
       return true;
       
@@ -222,7 +211,7 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
           
         database.begin();
           
-        PreparedStatement ps = database.prepareQuery("DELETE FROM dat_vehicles WHERE id = ? LIMIT 1;");
+        PreparedStatement ps = database.prepareQuery("DELETE FROM dat_vehicles WHERE id = ?;");
         ps.setInt(1, vehicle.getId());
         ps.executeUpdate();
         
@@ -246,9 +235,6 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
         return false;
           
       }
-      
-      Audit audit = new Audit(vehicle, vehicle, AuditDiff.AM_DEL, "Usuni\u0119to pojazd");
-      (new DocAudit(database, vehicle)).addElement(audit, user); 
       
       return true;
       

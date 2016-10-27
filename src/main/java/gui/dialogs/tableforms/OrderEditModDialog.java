@@ -10,12 +10,8 @@ package gui.dialogs.tableforms;
  
 
 import datamodel.Order;
-import gui.dialogs.docpanels.DialogDocPanel;
-import datamodel.docs.DocAudit;
 import datamodel.glossaries.GlossOrders;
 import gui.GUI;
-import java.awt.Color;
-import javax.swing.JPanel;
 
 
 /**
@@ -44,29 +40,12 @@ public class OrderEditModDialog extends OrderEditDialog {
     @Override
     protected boolean saveItem(Order order) {
    
-       GlossOrders glossOrders =  new GlossOrders(frame.getDatabaseShared());                             
+       GlossOrders glossOrders =  new GlossOrders(frame.getDatabase());                             
        boolean tmp = glossOrders.updateItem(order, frame.getUser());
        lastError = glossOrders.getLastError();
        return tmp;
 
     }
-    
-    
-    
-   /**
-    * Metoda zwraca panel z lista historii zmian
-    * @param bgColor Kolor tla
-    * @return Panel z lista historii zmian
-    */    
-    @Override
-    protected JPanel getAuditPanel(Color bgColor) {
-        
-      DocAudit docAudit = new DocAudit(frame.getDatabaseShared(), order);
-
-      return new DialogDocPanel<>(docAudit, bgColor);
-        
-        
-    }        
 
 
     

@@ -10,19 +10,17 @@ package gui.dialogs;
 
 
 import datamodel.ShortestPathAlgorithm;
-import datamodel.docs.DocAudit;
 import gui.formfields.FormRowPad;
 import gui.GUI;
 import gui.IconButton;
 import gui.ImageRes;
+import gui.SimpleDialog;
 import gui.formfields.SliderField;
-import gui.dialogs.docpanels.DialogDocPanel;
 import gui.dialogs.gloss.GlossCustomerEditModDialog;
 import gui.formfields.FormRow;
 import gui.formfields.FormTabbedPane;
 import gui.mapview.MapDialog;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -44,8 +42,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import somado.Database;
 import somado.IConf;
 import somado.Settings;
@@ -62,7 +58,7 @@ import somado.User;
  * 
  */
 @SuppressWarnings("serial")
-public class SettingsDialog extends EditLockableDataDialog {
+public class SettingsDialog extends SimpleDialog {
 
     /** Ref. do globalnej bazy danych */
     private final Database database;
@@ -76,10 +72,9 @@ public class SettingsDialog extends EditLockableDataDialog {
     public SettingsDialog(GUI frame) {
      
       super(frame,  IConf.APP_NAME + " - Ustawienia");
-      this.database = frame.getDatabaseShared();
+      this.database = frame.getDatabase();
       this.user = frame.getUser();
       if (!user.isAdmin()) return;
-      checkLock(Settings.getInstance());
       super.showDialog(530, 490);
         
     }    
@@ -99,25 +94,11 @@ public class SettingsDialog extends EditLockableDataDialog {
        
        final JTabbedPane tabPane = new FormTabbedPane(bgColor);        
        JPanel tabPane1 =  (JPanel)tabPane.add("Ustawienia", new JPanel());
-       final JPanel auditPane =  (JPanel)tabPane.add("Historia zmian", new JPanel());
    
        tabPane1.setPreferredSize(new Dimension(500, 460));
        
-       auditPane.add(getAuditPanel(bgColor));
        
-       final JPanel buttonsPanel = new JPanel(new FlowLayout());
-     
-       tabPane.addChangeListener(new ChangeListener() { 
-            @Override
-            public void stateChanged(ChangeEvent evt) { 
-                JTabbedPane pane = (JTabbedPane) evt.getSource(); 
-                Component sel = pane.getSelectedComponent();
-                try {
-                  buttonsPanel.setVisible(!sel.equals(auditPane));
-                }
-                catch (NullPointerException e) {}
-            } 
-        });       
+       final JPanel buttonsPanel = new JPanel(new FlowLayout());     
        
        
        final JButton buttonChange;
@@ -157,8 +138,7 @@ public class SettingsDialog extends EditLockableDataDialog {
        depotPanel.add(mapButton);
 
        
-       final IconButton changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), "Zmie\u0144 dane");        
-       changeButton.setEnabled(!locked);
+       final IconButton changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), "Zmie\u0144 dane");            
        changeButton.addActionListener(new ActionListener() {
 
            @Override
@@ -186,8 +166,7 @@ public class SettingsDialog extends EditLockableDataDialog {
        p.setMaximumSize(new Dimension(600, 40));
        p.setOpaque(false);
        p.setBorder(new EmptyBorder(5, 0, 10, 0));
-       final JComboBox<ShortestPathAlgorithm> algorithmField  = new JComboBox<>();      
-       algorithmField.setEditable(!locked);
+       final JComboBox<ShortestPathAlgorithm> algorithmField  = new JComboBox<>();    
        algorithmField.setModel(new DefaultComboBoxModel<>(ShortestPathAlgorithm.values()));
        algorithmField.setFont(GUI.BASE_FONT);
        algorithmField.setPreferredSize(new Dimension(120, 32));
@@ -219,7 +198,6 @@ public class SettingsDialog extends EditLockableDataDialog {
        });
        
        final SliderField workTimeField = new SliderField("max", 1, 1.0, 10.0, "h");
-       workTimeField.setEnabled(!locked);
        double maxWorkTime = 1.0;
        try {
          maxWorkTime = Double.valueOf(Settings.getValue("driver_max_work_time"));
@@ -243,7 +221,6 @@ public class SettingsDialog extends EditLockableDataDialog {
        catch (NumberFormatException e) { addGeoField.setSelected(false); }
        addGeoField.setOpaque(false);
        addGeoField.setFocusPainted(false);
-       addGeoField.setEnabled(!locked);
        addGeoField.setFont(GUI.BASE_FONT);
        p0.add(addGeoField);
        tabPane1.add(new FormRowPad("<html>Dodatkowa<br />geometria: <br />&nbsp; </html>", p0));       
@@ -257,22 +234,18 @@ public class SettingsDialog extends EditLockableDataDialog {
        p0.setOpaque(false);
        
        final JTextField itemsPerPageField = new JTextField(7);  
-       itemsPerPageField.setEditable(!locked);
        itemsPerPageField.setText(Settings.getValue("items_per_page")); 
        p0.add(new FormRowPad("<html>Tabela danych:<br /> &nbsp; </html>", itemsPerPageField));
        itemsPerPageField.setMaximumSize(new Dimension(140, 25));
        
        final JTextField itemsPerPageDocField = new JTextField(7);
-       itemsPerPageDocField.setEditable(!locked);
        itemsPerPageDocField.setText(Settings.getValue("items_per_page_doc")); 
        p0.add(new FormRowPad("<html>Okno tekstowe (np. historia):</html>:",
                itemsPerPageDocField));
        itemsPerPageDocField.setMaximumSize(new Dimension(140, 25));                  
        p.add(p0);
        
-       // przygotowanie przycisków Zastosuj i Anuluj
        buttonChange = new JButton("Zastosuj");
-       buttonChange.setEnabled(!locked);
        buttonChange.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(final ActionEvent e) { 
@@ -341,20 +314,7 @@ public class SettingsDialog extends EditLockableDataDialog {
 
     }
 
-    
-   /**
-    * Metoda zwraca panel z lista historii zmian
-    * @param bgColor Kolor tla
-    * @return Panel z lista historii zmian
-    */    
-    protected JPanel getAuditPanel(Color bgColor) {
-        
-      DocAudit docAudit = new DocAudit(frame.getDatabaseShared(), Settings.getInstance());
-
-      return new DialogDocPanel<>(docAudit, bgColor);
-        
-        
-    }   
+  
     
     
 }

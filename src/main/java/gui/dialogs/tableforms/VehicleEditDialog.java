@@ -9,6 +9,8 @@
 package gui.dialogs.tableforms;
 
 import gui.GUI;
+import gui.SimpleDialog;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -32,16 +34,12 @@ import gui.formfields.FormRowPad;
 import gui.formfields.FormTabbedPane;
 import gui.TableFilters;
 import gui.TablePanel;
-import gui.dialogs.EditLockableDataDialog;
 import gui.dialogs.ErrorDialog;
 import gui.formfields.VehicleModelField;
 import gui.tablepanels.TableVehiclesPanel;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import somado.IConf;
 
 
@@ -54,7 +52,7 @@ import somado.IConf;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class VehicleEditDialog extends EditLockableDataDialog implements IDialogForm {
+public abstract class VehicleEditDialog extends SimpleDialog implements IDialogForm {
     
    /** Model tabeli z lista pojazdow */ 
    private final VehiclesTableModel tableModel;  
@@ -95,7 +93,6 @@ public abstract class VehicleEditDialog extends EditLockableDataDialog implement
      
      this.vehicle = edit ? new Vehicle(tableModel.getElement(selectedTableRow)) : new Vehicle();
      
-     checkLock(this.vehicle);
       
      super.showDialog(645, 350);
          
@@ -136,7 +133,7 @@ public abstract class VehicleEditDialog extends EditLockableDataDialog implement
       
      // wyczyszczenie filtrow i nowy model 
      parentTableFilters.clearFields();
-     VehiclesTableModel vModel = new VehiclesTableModel(frame.getDatabaseShared());
+     VehiclesTableModel vModel = new VehiclesTableModel(frame.getDatabase());
      parentTablePanel.getTable().setModel(vModel);
        
      // domyslne sortowanie
@@ -165,7 +162,6 @@ public abstract class VehicleEditDialog extends EditLockableDataDialog implement
       
      /** Kolor tla aktywnej zakladki */
      private final Color bgColor = new Color(0xddecfa);  
-     private final JPanel tabPaneAudit;
      
 
      FormPanel(JDialog dialog) {
@@ -178,41 +174,25 @@ public abstract class VehicleEditDialog extends EditLockableDataDialog implement
         
         JTabbedPane tabPane = new FormTabbedPane(bgColor);        
         JPanel tabPane1 = (JPanel)tabPane.add("Dane pojazdu", new JPanel());
-        tabPaneAudit = (frame.getUser().isAdmin() && vehicle.getId()!=0) ? 
-                (JPanel)tabPane.add("Historia zmian", new JPanel()) : new JPanel();     
-
-        
-        tabPane.addChangeListener(new ChangeListener() { 
-            @Override
-            public void stateChanged(ChangeEvent evt) { 
-                JTabbedPane pane = (JTabbedPane) evt.getSource(); 
-                Component sel = pane.getSelectedComponent();
-                buttonsPanel.setVisible(!sel.equals(tabPaneAudit));
-            } 
-        });
         
         
         tabPane1.add(new JLabel(" "));
         
         final VehicleModelField vmField = new VehicleModelField(frame, vehicle.getVehicleModel());
-        vmField.setEditable(!locked);
         tabPane1.add(new FormRowPad("Model pojazdu:", vmField));
         
         final JTextField yearField = new JTextField(22);
         yearField.setText(String.valueOf(vehicle.getYear()));
-        yearField.setEditable(!locked);
         tabPane1.add(new FormRowPad("Rok produkcji:", yearField));
         
         final JTextField regNoField = new JTextField(22);
         regNoField.setText(vehicle.getRegistrationNo());
-        regNoField.setEditable(!locked);
         tabPane1.add(new FormRowPad("Nr rejestracyjny:", regNoField));        
         
         final JTextArea commentField = new JTextArea(vehicle.getComment());
         commentField.setLineWrap(true);
         commentField.setWrapStyleWord(true);
         commentField.setRows(3);
-        commentField.setEditable(!locked);
       
         JScrollPane sp = new JScrollPane(commentField);
         sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -223,13 +203,11 @@ public abstract class VehicleEditDialog extends EditLockableDataDialog implement
         
         final JCheckBox capableField = new JCheckBox("Pojazd dost\u0119pny");
         capableField.setSelected(vehicle.isCapable());
-        capableField.setEnabled(!locked);
         capableField.setOpaque(false);
         capableField.setFocusPainted(false);
         capableField.setFont(GUI.BASE_FONT);
         tabPane1.add(new FormRowPad("Dost\u0119pno\u015b\u0107: ", capableField));
         
-        if (vehicle.getId()!=0) refreshAuditPanel();
        
         add(tabPane);
                         
@@ -240,7 +218,6 @@ public abstract class VehicleEditDialog extends EditLockableDataDialog implement
 
         JButton saveButton = new JButton(" Zapisz ");
         saveButton.setFocusPainted(false);
-        saveButton.setEnabled(!locked);
         
         saveButton.addActionListener(new ActionListener() {
         @Override
@@ -284,28 +261,10 @@ public abstract class VehicleEditDialog extends EditLockableDataDialog implement
          
      }
      
-     
-     private void refreshAuditPanel()  {
-      
-       tabPaneAudit.removeAll();
-       tabPaneAudit.add(new JLabel(" "));   
-       try {
-         tabPaneAudit.add(getAuditPanel(bgColor));
-       }
-       catch (NullPointerException e) {}
-
-    }
-          
+   
       
   }
-    
-  
-  /** Metoda ma zwracac panel z historia zmian
-   * @param bgColor Kolor tla
-   * @return Panel z historia zmian
-   */
-  protected abstract JPanel getAuditPanel(Color bgColor);
-  
+
   
   /**
    * Metoda okresla czy konieczne jest odswiezenie tabeli-rodzica

@@ -327,7 +327,7 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
             boolean res = new ConfirmDialog(frame, "Czy na pewno zako\u0144czy\u0107 dostaw\u0119 ?").isConfirmed();
             if (res) {
                 
-              GlossDeliveries gloss = new GlossDeliveries(frame.getDatabaseShared());
+              GlossDeliveries gloss = new GlossDeliveries(frame.getDatabase());
               if (gloss.deleteItem(delivery, frame.getUser())) {
               
                 new InfoDialog(frame, "Dostawa zosta\u0142a zako\u0144czona.", 140);                

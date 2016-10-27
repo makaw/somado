@@ -11,6 +11,7 @@ package gui.dialogs.gloss;
 
 import datamodel.VehicleModel;
 import gui.GUI;
+import gui.SimpleDialog;
 import gui.dialogs.ErrorDialog;
 import gui.dialogs.GlossDialog;
 import java.awt.GridLayout;
@@ -25,7 +26,6 @@ import javax.swing.border.EmptyBorder;
 import datamodel.glossaries.GlossVehicleModels;
 import gui.formfields.SliderField;
 import gui.formfields.FormRow;
-import gui.dialogs.EditLockableDataDialog;
 import gui.formfields.FormRowPad;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -41,7 +41,7 @@ import somado.IConf;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class GlossVehicleModelEditDialog extends EditLockableDataDialog {
+public abstract class GlossVehicleModelEditDialog extends SimpleDialog {
     
   /** Referencja do obiektu powiazanego slownika */  
   final protected GlossVehicleModels glossVehicleModels;
@@ -64,7 +64,6 @@ public abstract class GlossVehicleModelEditDialog extends EditLockableDataDialog
     glossVehicleModels = (GlossVehicleModels)(parentDialog.getGlossary());
     this.parentDialog = parentDialog;
     this.vehicleModel = (vmIndex == -1) ? new VehicleModel() : glossVehicleModels.getItem(vmIndex);
-    checkLock(this.vehicleModel);
     super.showDialog(480, 285);
          
   }
@@ -109,19 +108,16 @@ public abstract class GlossVehicleModelEditDialog extends EditLockableDataDialog
 
         final JTextField nameField = new JTextField(22);
         nameField.setText(vehicleModel.getName());
-        nameField.setEditable(!locked);
         dataTabPane.add(new FormRow("Nazwa:", nameField));
 
         final SliderField maximumLoadField = new SliderField("", 2, IConf.MIN_VEHICLE_MAXLOAD, 
                 IConf.MAX_VEHICLE_MAXLOAD, "t   ");
         maximumLoadField.setValue(vehicleModel.getMaximumLoad());
-        maximumLoadField.setEditable(!locked);
         dataTabPane.add(new FormRow("\u0141adowno\u015b\u0107:", maximumLoadField));
         
         final SliderField avgFuelConsumptionField = new SliderField("", 2, IConf.MIN_VEHICLE_FUEL_CONSUMPTION,
                 IConf.MAX_VEHICLE_FUEL_CONSUMPTION, "l   ");
         avgFuelConsumptionField.setValue(vehicleModel.getAvgFuelConsumption());
-        avgFuelConsumptionField.setEditable(!locked);
         dataTabPane.add(new FormRowPad("<html>\u015ar. zu\u017cycie<br />paliwa /100km:</html>:",
                 avgFuelConsumptionField));        
                
@@ -165,7 +161,6 @@ public abstract class GlossVehicleModelEditDialog extends EditLockableDataDialog
 
         });            
         
-        saveButton.setEnabled(!locked);
         
         p.add(saveButton);
         p.add(new JLabel(" "));

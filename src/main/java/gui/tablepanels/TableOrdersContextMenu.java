@@ -80,7 +80,7 @@ public class TableOrdersContextMenu extends TableContextMenu {
              if ((new ConfirmDialog(frame, "Czy na pewno usun\u0105\u0107 zam\u00f3wienie:\n"
                      + selectedOrder.toString() + " ?", 170)).isConfirmed()) {
                             
-                if (new GlossOrders(frame.getDatabaseShared()).deleteItem(selectedOrder, frame.getUser())) {
+                if (new GlossOrders(frame.getDatabase()).deleteItem(selectedOrder, frame.getUser())) {
                     ((TablePanel) frame.getActiveDataPanel()).refreshTable();
                     frame.getDataPanel(GUI.TAB_ORDERS).setChanged(true);              
                 }
@@ -105,7 +105,7 @@ public class TableOrdersContextMenu extends TableContextMenu {
              if ((new ConfirmDialog(frame, "Czy na pewno anulowa\u0107 zam\u00f3wienie:\n"
                      + selectedOrder.toString() + " ?", 170)).isConfirmed()) {
                                                                              
-                if (new GlossOrders(frame.getDatabaseShared()).changeState(selectedOrder, OrderState.CANCELLED,
+                if (new GlossOrders(frame.getDatabase()).changeState(selectedOrder, OrderState.CANCELLED,
                         frame.getUser())) {
                     ((TablePanel) frame.getActiveDataPanel()).refreshTable();
                     frame.getDataPanel(GUI.TAB_ORDERS).setChanged(true);              

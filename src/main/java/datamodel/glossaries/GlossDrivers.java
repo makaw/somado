@@ -8,10 +8,7 @@
  */
 package datamodel.glossaries;
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
 import datamodel.Driver;
-import datamodel.docs.DocAudit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +16,6 @@ import java.util.Map;
 import javax.swing.DefaultListModel;
 import somado.Database;
 import somado.User;
-import somado.UserRole;
 
 /**
  *
@@ -67,24 +63,22 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
       try {
           
          PreparedStatement ps = database.prepareQuery("INSERT INTO dat_drivers "
-                 + "(id, vehicle_id, user_id, comment, available, "
+                 + "(id, vehicle_id, firstname, surname, comment, available, "
                  + "date_add, user_add_id) VALUES "
-                 + "(NULL, ?, ?, ?, ?, NOW(), ?);", true);
+                 + "(NULL, ?, ?, ?, ?, ?, DATETIME('now'), ?);", true);
         
          ps.setInt(1, driver.getVehicle().getId());
-         ps.setInt(2, driver.getUserData().getId());
-         ps.setString(3, driver.getComment());
-         ps.setBoolean(4, driver.isAvailable());
-         ps.setInt(5, user.getId());
+         ps.setString(2, driver.getFirstname());
+         ps.setString(3, driver.getSurname());
+         ps.setString(4, driver.getComment());
+         ps.setBoolean(5, driver.isAvailable());
+         ps.setInt(6, user.getId());
          
          ps.executeUpdate();
          
          ResultSet rs = ps.getGeneratedKeys();
          if (rs.next()) driver.setId(rs.getInt(1));         
-         rs.close();
-         
-         Audit audit = new Audit(driver, driver, AuditDiff.AM_ADD, "Dodano kierowc\u0119");
-         (new DocAudit(database, driver)).addElement(audit, user);          
+         rs.close();               
 
          
       } catch (SQLException e) {
@@ -122,9 +116,9 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
   private void checkVehicle(Driver driver) throws Exception {
       
     PreparedStatement ps = database.prepareQuery("SELECT COUNT(*) AS num FROM dat_drivers WHERE "
-            + "vehicle_id = ? AND user_id <> ? AND vehicle_id > 0");
+            + "vehicle_id = ? AND id <> ? AND vehicle_id > 0");
     ps.setInt(1, driver.getVehicle().getId());
-    ps.setInt(2, driver.getUserData().getId());
+    ps.setInt(2, driver.getId());
     
     ResultSet rs = ps.executeQuery();
     int num = rs.next() ? rs.getInt("num") : 1;
@@ -149,22 +143,19 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
     try {        
         
     
-      String query = "SELECT u.id AS user_id, u.login AS user_login, u.firstname AS user_firstname, "
-          + "u.surname AS user_surname, u.role AS user_role, u.blocked AS user_blocked, d.id, d.comment, d.available, "
+      String query = "SELECT d.firstname, d.surname, d.id, d.comment, d.available, "
           + "vm.id AS vehicle_model_id, vm.name AS vehicle_model_name, "
           + "vm.maximum_load AS vehicle_model_maximum_load, "
           + "vm.avg_fuel_consumption AS vehicle_model_avg_fuel_consumption, "
           + "v.id AS vehicle_id, v.year AS vehicle_year, v.registration_no AS vehicle_registration_no, "
-          + "v.comment AS vehicle_comment, v.capable AS vehicle_capable FROM sys_users AS u "
-          + "INNER JOIN dat_drivers AS d ON d.user_id=u.id "
+          + "v.comment AS vehicle_comment, v.capable AS vehicle_capable FROM dat_drivers AS d "
           + "LEFT OUTER JOIN dat_vehicles AS v ON v.id=d.vehicle_id "
           + "LEFT OUTER JOIN glo_vehicle_models AS vm ON vm.id=v.vehicle_model_id "
-          + " WHERE " + (isVehicleId ? "v" : "d") + ".id = ? AND u.role = ?";
+          + " WHERE " + (isVehicleId ? "v" : "d") + ".id = ?";
 
             
       PreparedStatement ps = database.prepareQuery(query);
       ps.setInt(1, elementId);
-      ps.setInt(2, UserRole.DRIVER.getId());
       ResultSet rs = ps.executeQuery();
       if (rs.next()) driver = new Driver(rs);
       rs.close();
@@ -208,10 +199,7 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
    */
   
   @Override
-  public boolean updateItem(Driver driver, User user) {
-      
-      Driver driverOld = getItem(driver.getId());
-      driver.setUserData(driverOld.getUserData());
+  public boolean updateItem(Driver driver, User user) {      
       
       try {
         driver.verify();
@@ -233,15 +221,17 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
            ps.executeUpdate();
          }
          
-         ps = database.prepareQuery("UPDATE dat_drivers SET "
+         ps = database.prepareQuery("UPDATE dat_drivers SET firstname = ?, surname = ?, "
                  + "vehicle_id = ?, comment = ?, available = ?,"
-                 + " date_mod = NOW(), user_mod_id = ? WHERE id = ? LIMIT 1;");
+                 + " date_mod = DATETIME('now'), user_mod_id = ? WHERE id = ?;");
         
-         ps.setInt(1, driver.getVehicle().getId());
-         ps.setString(2, driver.getComment());
-         ps.setBoolean(3, driver.isAvailable());
-         ps.setInt(4, user.getId());
-         ps.setInt(5, driver.getId());
+         ps.setString(1,  driver.getFirstname());
+         ps.setString(2,  driver.getSurname());
+         ps.setInt(3, driver.getVehicle().getId());
+         ps.setString(4, driver.getComment());
+         ps.setBoolean(5, driver.isAvailable());
+         ps.setInt(6, user.getId());
+         ps.setInt(7, driver.getId());
          
          ps.executeUpdate();  
          
@@ -261,8 +251,6 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
        
       }                
           
-      Audit audit = new Audit(driverOld, driver, driver, AuditDiff.AM_MOD, "Zmodyfikowano kierowc\u0119");
-      (new DocAudit(database, driver)).addElement(audit, user); 
             
       return true;
       
@@ -280,7 +268,7 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
       
       try {
           
-        PreparedStatement ps = database.prepareQuery("DELETE FROM dat_drivers WHERE id = ? LIMIT 1;");
+        PreparedStatement ps = database.prepareQuery("DELETE FROM dat_drivers WHERE id = ?;");
         ps.setInt(1, driver.getId());
         ps.executeUpdate();                
         
@@ -291,9 +279,7 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
         return false;
           
       }
-      
-      Audit audit = new Audit(driver, driver, AuditDiff.AM_DEL, "Usuni\u0119to kierowc\u0119");
-      (new DocAudit(database, driver)).addElement(audit, user); 
+       
       
       return true;
       

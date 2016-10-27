@@ -11,8 +11,6 @@ package gui.dialogs.tableforms;
 import datamodel.Driver;
 import datamodel.glossaries.GlossDrivers;
 import gui.GUI;
-import java.awt.Color;
-import javax.swing.JPanel;
 
 
 /**
@@ -41,7 +39,7 @@ public class DriverEditNewDialog extends DriverEditDialog {
     @Override
     protected boolean saveItem(Driver driver) {
 
-       GlossDrivers glossDrivers =  new GlossDrivers(frame.getDatabaseShared());                             
+       GlossDrivers glossDrivers =  new GlossDrivers(frame.getDatabase());                             
        boolean tmp = glossDrivers.addItem(driver, frame.getUser());
        lastError = glossDrivers.getLastError();
        return tmp;       
@@ -49,18 +47,6 @@ public class DriverEditNewDialog extends DriverEditDialog {
     }
     
     
-    
-   /**
-    * (Niezaimplementowana) Metoda zwraca panel z lista historii zmian
-    * @param bgColor Kolor tla
-    * @return Panel z lista szkolen
-    */    
-    @Override
-    protected JPanel getAuditPanel(Color bgColor) {   
-        
-      return null;
-        
-    }     
     
     
 }

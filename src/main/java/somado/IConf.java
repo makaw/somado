@@ -20,21 +20,13 @@ public interface IConf {
   /** Nazwa aplikacji */
   String APP_NAME = "Somado";
   /** Wersja aplikacji */
-  String APP_VERSION = "1.01 [09/2016]";    
-    
-  /** Podpowiadany login (demo - administrator) */
-  String DEMO_USER = "Admin";
-  /** Podpowiadane hasło (demo - administrator) */
-  String DEMO_PASS = "12345";  
+  String APP_VERSION = "1.01 lite [10/2016]";        
   
   /** adres e-mail wymagany przy wysyłaniu zapytań do usługi Nominatim */
-  String EMAIL_NOMINATIM = "mkawecki@op.pl";
+  String EMAIL_NOMINATIM = "maciej@kaw.net.pl";
     
   /** Minimalna wymagana długość hasła */
-  int MIN_PASS_LEN = 5;
-  
-  /** Klucz do hasła BD */
-  String DB_PASS_KEY = "1wrfcx3egzv";
+  int MIN_PASS_LEN = 5;  
         
   /** Minimalna możliwa ładowność pojazdów [t] */  
   double MIN_VEHICLE_MAXLOAD = 0.1; 

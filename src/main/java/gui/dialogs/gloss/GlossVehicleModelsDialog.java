@@ -92,7 +92,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
     @Override
     public DefaultListModel<VehicleModel> getListModel() {
 
-      glossVehicleModels = new GlossVehicleModels(frame.getDatabaseShared());
+      glossVehicleModels = new GlossVehicleModels(frame.getDatabase());
         
       return glossVehicleModels.getListModel(); 
 
@@ -106,7 +106,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
     @Override
     public DefaultListModel<VehicleModel> getListModel(Map<String, String> params) {
 
-      glossVehicleModels = new GlossVehicleModels(frame.getDatabaseShared()); 
+      glossVehicleModels = new GlossVehicleModels(frame.getDatabase()); 
         
       return glossVehicleModels.getListModel(params);
         

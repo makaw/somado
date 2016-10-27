@@ -72,7 +72,7 @@ public class TableDriversContextMenu extends TableContextMenu {
              if ((new ConfirmDialog(frame, "Czy na pewno usun\u0105\u0107 kierowc\u0119:\n"
                      + dTmp.toString() + " ?", 170)).isConfirmed()) {
                             
-                if (new GlossDrivers(frame.getDatabaseShared()).deleteItem(dTmp, frame.getUser())) {
+                if (new GlossDrivers(frame.getDatabase()).deleteItem(dTmp, frame.getUser())) {
                     ((TablePanel) frame.getActiveDataPanel()).refreshTable();
                     frame.getDataPanel(GUI.TAB_DRIVERS).setChanged(true);              
                 }

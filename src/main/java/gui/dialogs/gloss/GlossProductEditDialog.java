@@ -12,6 +12,7 @@ package gui.dialogs.gloss;
 import datamodel.Product;
 import datamodel.glossaries.GlossProducts;
 import gui.GUI;
+import gui.SimpleDialog;
 import gui.dialogs.ErrorDialog;
 import gui.dialogs.GlossDialog;
 import java.awt.GridLayout;
@@ -24,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import gui.formfields.FormRow;
-import gui.dialogs.EditLockableDataDialog;
 import gui.formfields.FormRowPad;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -41,7 +41,7 @@ import somado.IConf;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class GlossProductEditDialog extends EditLockableDataDialog {
+public abstract class GlossProductEditDialog extends SimpleDialog {
     
   /** Referencja do obiektu powiazanego slownika */  
   final protected GlossProducts glossProducts;
@@ -64,7 +64,7 @@ public abstract class GlossProductEditDialog extends EditLockableDataDialog {
     glossProducts = (GlossProducts)(parentDialog.getGlossary());
     this.parentDialog = parentDialog;
     this.product = (productIndex == -1) ? new Product() : glossProducts.getItem(productIndex);
-    checkLock(this.product);
+    
     super.showDialog(480, 235);
          
   }
@@ -109,12 +109,10 @@ public abstract class GlossProductEditDialog extends EditLockableDataDialog {
 
         final JTextField nameField = new JTextField(22);
         nameField.setText(product.getName());
-        nameField.setEditable(!locked);
         dataTabPane.add(new FormRow("Nazwa:", nameField));
         
         final JTextField weightField = new JTextField(22);
         weightField.setText(String.valueOf(product.getWeight()));
-        nameField.setEditable(!locked);
         dataTabPane.add(new FormRow("Waga [kg]:", weightField));
         
         final JCheckBox availableField = new JCheckBox("Produkt dost\u0119pny w magazynie");
@@ -122,7 +120,6 @@ public abstract class GlossProductEditDialog extends EditLockableDataDialog {
         availableField.setFocusPainted(false);
         availableField.setSelected(product.isAvailable());
         availableField.setFont(GUI.BASE_FONT);
-        availableField.setEnabled(!locked);
         dataTabPane.add(new FormRowPad("Dost\u0119pno\u015b\u0107:", availableField));        
                
         JPanel p = new JPanel(new FlowLayout());
@@ -171,7 +168,6 @@ public abstract class GlossProductEditDialog extends EditLockableDataDialog {
 
         });            
         
-        saveButton.setEnabled(!locked);
         
         p.add(saveButton);
         p.add(new JLabel(" "));

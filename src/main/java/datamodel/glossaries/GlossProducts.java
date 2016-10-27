@@ -9,10 +9,7 @@
 package datamodel.glossaries;
 
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
 import datamodel.Product;
-import datamodel.docs.DocAudit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -144,7 +141,7 @@ public class GlossProducts extends Glossary<Product> implements IGlossaryEditabl
           
          PreparedStatement ps = database.prepareQuery("INSERT INTO glo_products (id, name, "
                  + "weight, available, date_add, user_add_id) VALUES " 
-                 + "(NULL, ?, ?, ?, NOW(), ? );", true);
+                 + "(NULL, ?, ?, ?, DATETIME('now'), ? );", true);
          ps.setString(1, product.getName());
          ps.setDouble(2, product.getWeight());
          ps.setBoolean(3, product.isAvailable());
@@ -156,8 +153,6 @@ public class GlossProducts extends Glossary<Product> implements IGlossaryEditabl
          if (rs.next()) product.setId(rs.getInt(1));
          rs.close();
          
-         Audit audit = new Audit(product, product, AuditDiff.AM_ADD, "Dodano produkt");
-         (new DocAudit(database, product)).addElement(audit, user); 
          
       } catch (SQLException e) {
       
@@ -182,8 +177,6 @@ public class GlossProducts extends Glossary<Product> implements IGlossaryEditabl
   @Override
   public boolean updateItem(Product product, User user) {
       
-      Product pOld = getItem(getItemsIndex(product.getId()));
-      
       try {
          product.verify();
       } catch (Exception e) {
@@ -195,7 +188,7 @@ public class GlossProducts extends Glossary<Product> implements IGlossaryEditabl
       try {
           
           PreparedStatement ps = database.prepareQuery("UPDATE glo_products SET name=?, "
-                  + "weight=?, available=?, date_mod=NOW(), user_mod_id=? WHERE id=? LIMIT 1;");
+                  + "weight=?, available=?, date_mod=DATETIME('now'), user_mod_id=? WHERE id=?;");
           ps.setString(1, product.getName());
           ps.setDouble(2, product.getWeight());
           ps.setBoolean(3, product.isAvailable());
@@ -203,9 +196,7 @@ public class GlossProducts extends Glossary<Product> implements IGlossaryEditabl
           ps.setInt(5, product.getId());
                     
           ps.executeUpdate();        
-          
-          Audit audit = new Audit(pOld, product, product, AuditDiff.AM_MOD, "Zmodyfikowano produkt");
-          (new DocAudit(database, product)).addElement(audit, user);           
+                  
           
           
       } catch (SQLException e) {

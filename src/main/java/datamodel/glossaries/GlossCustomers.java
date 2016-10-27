@@ -9,10 +9,7 @@
 package datamodel.glossaries;
 
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
 import datamodel.Customer;
-import datamodel.docs.DocAudit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -155,7 +152,7 @@ public class GlossCustomers extends Glossary<Customer> implements IGlossaryEdita
           
          PreparedStatement ps = database.prepareQuery("INSERT INTO glo_customers (id, name, "
                  + "street, city, postcode, longitude, latitude, date_add, user_add_id) VALUES " 
-                 + "(NULL, ?, ?, ?, ?, ?, ?, NOW(), ? );", true);
+                 + "(NULL, ?, ?, ?, ?, ?, ?, DATETIME('now'), ? );", true);
          ps.setString(1, customer.getName());
          ps.setString(2, customer.getStreet());
          ps.setString(3, customer.getCity());
@@ -170,8 +167,6 @@ public class GlossCustomers extends Glossary<Customer> implements IGlossaryEdita
          if (rs.next()) customer.setId(rs.getInt(1));
          rs.close();
          
-         Audit audit = new Audit(customer, customer, AuditDiff.AM_ADD, "Dodano odbiorc\u0119 towaru");
-         (new DocAudit(database, customer)).addElement(audit, user); 
          
       } catch (SQLException e) {
       
@@ -196,7 +191,6 @@ public class GlossCustomers extends Glossary<Customer> implements IGlossaryEdita
   @Override
   public boolean updateItem(Customer customer, User user) {
       
-      Customer cOld = getItem(getItemsIndex(customer.getId()));
       
       try {
          customer.verify();
@@ -209,7 +203,8 @@ public class GlossCustomers extends Glossary<Customer> implements IGlossaryEdita
       try {
           
           PreparedStatement ps = database.prepareQuery("UPDATE glo_customers SET name = ?, street = ?, "
-                  + "city = ?, postcode = ?, longitude = ?, latitude = ?, date_mod=NOW(), user_mod_id=? WHERE id=? LIMIT 1;");
+                  + "city = ?, postcode = ?, longitude = ?, latitude = ?, date_mod=DATETIME('now'),"
+                  + " user_mod_id=? WHERE id=?;");
           ps.setString(1, customer.getName());
           ps.setString(2, customer.getStreet());
           ps.setString(3, customer.getCity());
@@ -220,11 +215,7 @@ public class GlossCustomers extends Glossary<Customer> implements IGlossaryEdita
           ps.setInt(8, customer.getId());
                     
           ps.executeUpdate();        
-          
-          Audit audit = new Audit(cOld, customer, customer, AuditDiff.AM_MOD, "Zmodyfikowano " 
-              + (customer.getId().equals(Settings.getDepot().getId()) ? " dane magazynu" : "odbiorc\u0119 towaru"));
-          (new DocAudit(database, customer)).addElement(audit, user);           
-          
+         
           
       } catch (SQLException e) {
       

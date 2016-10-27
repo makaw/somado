@@ -174,7 +174,7 @@ public class TableOrdersPanel extends TablePanel {
   @Override
   protected AbstractTableModel getNewTableModel(Map<String, String> params) {
 
-     return new OrdersTableModel(frame.getDatabaseShared(), params);
+     return new OrdersTableModel(frame.getDatabase(), params);
       
   }
    

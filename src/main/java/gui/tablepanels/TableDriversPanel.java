@@ -85,30 +85,28 @@ public class TableDriversPanel extends TablePanel {
     DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
     rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
       
-    // szerokość kolumn z loginem, nazwiskiem i imieniem [0][1][2]
-    table.getColumnModel().getColumn(0).setMinWidth(100);
-    table.getColumnModel().getColumn(0).setPreferredWidth(100);
-    table.getColumnModel().getColumn(1).setMinWidth(150);
-    table.getColumnModel().getColumn(1).setPreferredWidth(150);
-    table.getColumnModel().getColumn(2).setMinWidth(100);
-    table.getColumnModel().getColumn(2).setPreferredWidth(100);
-    // zmniejszenie kolumn "dostępność"[6] i [7]    
-    table.getColumnModel().getColumn(6).setMaxWidth(80);
-    table.getColumnModel().getColumn(7).setMaxWidth(80);    
-    // wycentrowanie kolumny "nr rej." (4)
-    table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-    // szerokość kolumny z modelem pojazdu [3]
-    table.getColumnModel().getColumn(3).setMinWidth(150);
-    table.getColumnModel().getColumn(3).setPreferredWidth(150);           
-    // wycentrowanie i zmniejszenie kolumny "dostępność"[5]
-    table.getColumnModel().getColumn(5).setCellRenderer( centerRenderer );  
+    // szerokość kolumn z nazwiskiem i imieniem [0][1]
+    table.getColumnModel().getColumn(0).setMinWidth(150);
+    table.getColumnModel().getColumn(0).setPreferredWidth(150);
+    table.getColumnModel().getColumn(1).setMinWidth(100);
+    table.getColumnModel().getColumn(1).setPreferredWidth(100);
+    // zmniejszenie kolumn "dostępność"[5] i [6]    
     table.getColumnModel().getColumn(5).setMaxWidth(80);
+    table.getColumnModel().getColumn(6).setMaxWidth(80);    
+    // wycentrowanie kolumny "nr rej." (3)
+    table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+    // szerokość kolumny z modelem pojazdu [2]
+    table.getColumnModel().getColumn(2).setMinWidth(150);
+    table.getColumnModel().getColumn(2).setPreferredWidth(150);           
+    // wycentrowanie i zmniejszenie kolumny "dostępność"[4]
+    table.getColumnModel().getColumn(4).setCellRenderer( centerRenderer );  
+    table.getColumnModel().getColumn(4).setMaxWidth(80);
     
     // kolorowanie i wycentrowanie pól stanu
     setStateCellRenderer();
-    ((DefaultTableCellRenderer)table.getColumnModel().getColumn(6).getCellRenderer())
+    ((DefaultTableCellRenderer)table.getColumnModel().getColumn(5).getCellRenderer())
             .setHorizontalAlignment(JLabel.CENTER);  
-    ((DefaultTableCellRenderer)table.getColumnModel().getColumn(7).getCellRenderer())
+    ((DefaultTableCellRenderer)table.getColumnModel().getColumn(6).getCellRenderer())
             .setHorizontalAlignment(JLabel.CENTER);
                      
     refreshAllElementsCountPanel();    
@@ -142,7 +140,7 @@ public class TableDriversPanel extends TablePanel {
   @Override
   protected AbstractTableModel getNewTableModel(Map<String, String> params) {
 
-     return new DriversTableModel(frame.getDatabaseShared(), params);
+     return new DriversTableModel(frame.getDatabase(), params);
       
   }
    

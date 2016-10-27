@@ -76,7 +76,8 @@ public class VehiclesTableModel extends TableModel<Vehicle> {
        
        ResultSet rs = ps.executeQuery();
        
-       if (rs.first()) num = rs.getInt(1);
+       if (rs.next()) num = rs.getInt(1);
+       rs.close();
     
     } catch (SQLException e) {
        
@@ -182,7 +183,7 @@ public class VehiclesTableModel extends TableModel<Vehicle> {
   @Override
   public String getPopupMenuTitle(int rowIndex) {
       
-     return getValueAt(rowIndex,3).toString();
+     return getValueAt(rowIndex, 0).toString() + " (" + getValueAt(rowIndex,3).toString() + ")";
       
   }
     

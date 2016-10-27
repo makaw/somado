@@ -92,7 +92,7 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
     @Override
     public DefaultListModel<Customer> getListModel() {
 
-      glossCustomers = new GlossCustomers(frame.getDatabaseShared());
+      glossCustomers = new GlossCustomers(frame.getDatabase());
         
       return glossCustomers.getListModel(); 
 
@@ -106,7 +106,7 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
     @Override
     public DefaultListModel<Customer> getListModel(Map<String, String> params) {
 
-      glossCustomers = new GlossCustomers(frame.getDatabaseShared()); 
+      glossCustomers = new GlossCustomers(frame.getDatabase()); 
         
       return glossCustomers.getListModel(params);
         

@@ -81,7 +81,7 @@ public class DeliveryOpenDialog extends SimpleDialog {
       p.setBorder(new EmptyBorder(5, 5, 5, 5));
       p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
       
-      final OrdersDeliveryPlanTableModel ordersModel = new OrdersDeliveryPlanTableModel(frame.getDatabaseShared());
+      final OrdersDeliveryPlanTableModel ordersModel = new OrdersDeliveryPlanTableModel(frame.getDatabase());
       
       DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
       centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -127,7 +127,7 @@ public class DeliveryOpenDialog extends SimpleDialog {
       p.add(scroll);
             
       
-      final DriversDeliveryTableModel driversModel = new DriversDeliveryTableModel(frame.getDatabaseShared());
+      final DriversDeliveryTableModel driversModel = new DriversDeliveryTableModel(frame.getDatabase());
       
       driversTable = new JTable(driversModel);
       driversTable.setRowSorter(null);

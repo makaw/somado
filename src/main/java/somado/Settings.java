@@ -8,11 +8,8 @@
  */
 package somado;
 
-import datamodel.Audit;
-import datamodel.AuditDiff;
+
 import datamodel.Customer;
-import datamodel.IData;
-import datamodel.docs.DocAudit;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,7 +29,7 @@ import java.util.Properties;
  * 
  */
 @SuppressWarnings("serial")
-public class Settings extends HashMap<String, String> implements IData {
+public class Settings extends HashMap<String, String> {
           
   /** Format daty */
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -110,19 +107,16 @@ public class Settings extends HashMap<String, String> implements IData {
       props.load(new FileReader("conf.properties"));      
     } catch (IOException | NullPointerException e) {
       try {        
-         props.load(Settings.class.getResourceAsStream("/resources/conf.default.properties"));  
+         props.load(Settings.class.getClassLoader().getResourceAsStream("conf.default.properties"));  
       }  
       catch (IOException | NullPointerException ex) {
         System.err.println(ex);
         throw new SettingsException("Nie mo\u017cna odczyta\u0107 podstawowej konfiguracji (b\u0142\u0105d I/O).");       
       }
     }    
-    
-    this.put("db_localcache_name", props.getProperty("datasource.localcache.name"));
-    this.put("db_local_name", props.getProperty("datasource.local.name"));
-    this.put("db_url", props.getProperty("datasource.url"));
-    this.put("db_username", props.getProperty("datasource.username"));      
-    this.put("db_password", props.getProperty("datasource.password"));
+        
+    this.put("db_name", props.getProperty("datasource.name"));
+    this.put("db_spatial_name", props.getProperty("datasource.spatial.name"));
 
     // graniczne wspolrzedne obslugiwanego obszaru
     try {
@@ -168,9 +162,7 @@ public class Settings extends HashMap<String, String> implements IData {
     } catch (SQLException e2) {
        
        System.err.println("Settings: b\u0142\u0105d SQL: "+e2);
-       throw new SettingsException("Nie mo\u017cna odczyta\u0107 konfiguracji "
-               + (database instanceof DatabaseShared ? "globalnej" : "lokalnej") 
-               + " (b\u0142\u0105d SQL).");
+       throw new SettingsException("Nie mo\u017cna odczyta\u0107 konfiguracji (b\u0142\u0105d SQL).");
        
     } 
     
@@ -194,13 +186,6 @@ public class Settings extends HashMap<String, String> implements IData {
     ps.setString(2, key);
     ps.executeUpdate();   
     
-    if (database instanceof DatabaseShared) {
-      Audit audit = new Audit(getInstance().getKeyValue(key, value), 
-                      getInstance().getKeyValue(key, getValue(key)), getInstance(), 
-                      AuditDiff.AM_MOD, "Zmieniono ustawienia");
-      (new DocAudit(database, getInstance())).addElement(audit, user);     
-    }
-      
   }
   
   
@@ -354,11 +339,6 @@ public class Settings extends HashMap<String, String> implements IData {
   }  
   
   
-  
-  @Override
-  public Integer getId() {
-     return 1; 
-  }
   
   @Override
   public String toString() {      

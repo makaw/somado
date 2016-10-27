@@ -11,8 +11,6 @@ package gui.dialogs.tableforms;
 import datamodel.Order;
 import datamodel.glossaries.GlossOrders;
 import gui.GUI;
-import java.awt.Color;
-import javax.swing.JPanel;
 
 
 /**
@@ -40,26 +38,13 @@ public class OrderEditNewDialog extends OrderEditDialog {
     @Override
     protected boolean saveItem(Order order) {
 
-       GlossOrders glossOrders =  new GlossOrders(frame.getDatabaseShared());                             
+       GlossOrders glossOrders =  new GlossOrders(frame.getDatabase());                             
        boolean tmp = glossOrders.addItem(order, frame.getUser());
        lastError = glossOrders.getLastError();
        return tmp;       
     
     }
     
-    
-    
-   /**
-    * (Niezaimplementowana) Metoda zwraca panel z lista historii zmian
-    * @param bgColor Kolor tla
-    * @return Panel z lista szkolen
-    */    
-    @Override
-    protected JPanel getAuditPanel(Color bgColor) {   
-        
-      return null;
-        
-    }     
     
     
 }

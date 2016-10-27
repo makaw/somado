@@ -8,11 +8,15 @@
  */
 package somado;
 
+import java.io.File;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.sqlite.SQLiteConfig;
 
 /**
  *
@@ -22,12 +26,41 @@ import java.sql.Statement;
  * @version 1.0
  * 
  */
-public abstract class Database {
+public class Database {
     
     /** Połączenie z bazą danych */
-    protected Connection connection;
+    private Connection connection;
     /** Interfejs do wykonywania zapytań */
-    protected Statement statement;  
+    private Statement statement;  
+    
+    
+    public Database() throws SQLException, ClassNotFoundException, NullPointerException, SettingsException {
+        
+        File f = new File(Settings.getValue("db_name"));
+        if(!f.exists() || f.isDirectory()) throw new SettingsException("Brak pliku lokalnej bazy danych "
+                + f.getPath());        
+        f = new File(Settings.getValue("db_spatial_name"));
+        if(!f.exists() || f.isDirectory()) throw new SettingsException("Brak pliku lokalnej bazy danych "
+                + "przestrzennych: " + f.getPath());
+       
+         
+        Class.forName("org.sqlite.JDBC");         
+        SQLiteConfig config = new SQLiteConfig();
+        config.enableLoadExtension(true);
+        connection = DriverManager.getConnection("jdbc:sqlite:" 
+        		+ Settings.getValue("db_name"), config.toProperties());
+       
+        statement = connection.createStatement();
+        statement.setQueryTimeout(30);
+        
+        // załadowanie Spatialite i dołączenie b.d. przestrzennych
+        statement.execute("SELECT load_extension('mod_spatialite')" );                  
+        statement.execute("ATTACH DATABASE '" + Settings.getValue("db_spatial_name") + "' AS spatial;");
+        
+        
+    }
+    
+    
     
     /**
      * Metoda tworzy prekompilowane zapytanie

@@ -73,7 +73,7 @@ public class TableVehiclesContextMenu extends TableContextMenu {
              if ((new ConfirmDialog(frame, "Czy na pewno usun\u0105\u0107 pojazd:\n"
                      + vTmp.toString() + " ?", 170)).isConfirmed()) {
                             
-                if (new GlossVehicles(frame.getDatabaseShared()).deleteItem(vTmp, frame.getUser())) {
+                if (new GlossVehicles(frame.getDatabase()).deleteItem(vTmp, frame.getUser())) {
                     ((TablePanel) frame.getActiveDataPanel()).refreshTable();
                     frame.getDataPanel(GUI.TAB_VEHICLES).setChanged(true);   
                     frame.getDataPanel(GUI.TAB_DRIVERS).setChanged(true); 

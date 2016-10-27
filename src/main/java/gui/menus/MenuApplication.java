@@ -9,17 +9,14 @@
 package gui.menus;
 
 import gui.GUI;
-import gui.dialogs.ChangePasswordDialog;
 import gui.dialogs.ConfirmDialog;
-import gui.dialogs.DeliveryOpenDialog;
-import gui.dialogs.tableforms.OrderEditNewDialog;
+import gui.dialogs.SettingsDialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.KeyEvent;
-import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 
@@ -42,51 +39,22 @@ public class MenuApplication extends JMenu {
        
     super("Aplikacja");
     setMnemonic(KeyEvent.VK_A);    
+      
     
-    JMenuItem menuItem = new JMenuItem("Nowe zam\u00f3wienie");
-    menuItem.setPreferredSize(new Dimension(190, 20));
-    menuItem.setMnemonic(KeyEvent.VK_Z);
-    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-    add(menuItem);
-    menuItem.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-           
-        frame.setSelectedDataPanel(GUI.TAB_ORDERS);
-        new OrderEditNewDialog(frame);
-          
-       }
-    });             
-    
-    
-    menuItem = new JMenuItem("Nowa dostawa");
+    JMenuItem menuItem = new JMenuItem("Ustawienia");
     menuItem.setPreferredSize(new Dimension(160, 20));
-    menuItem.setMnemonic(KeyEvent.VK_D);
-    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+    menuItem.setMnemonic(KeyEvent.VK_T);
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
     add(menuItem);
     menuItem.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(final ActionEvent e) {
            
-        new DeliveryOpenDialog(frame);
+        new SettingsDialog(frame);
           
        }
     });              
-    
-    add(new JSeparator());
-    
-    menuItem = new JMenuItem("Zmiana has\u0142a");
-    menuItem.setPreferredSize(new Dimension(160, 20));
-    menuItem.setMnemonic(KeyEvent.VK_H);
-    add(menuItem);
-    menuItem.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(final ActionEvent e) {
-                   
-        new ChangePasswordDialog(frame);
         
-       }
-    });            
     
     
     menuItem = new JMenuItem("Koniec");

@@ -33,7 +33,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import somado.Database;
-import somado.DatabaseLocal;
 import somado.IConf;
 import spatial_vrp.Geocoding;
 
@@ -194,12 +193,11 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
    @Override
    public void start(IProgress progress) {
        
-     Database database = null;
+     Database database = frame.getDatabase();
        
      try {
          
-       Thread.sleep(10);   
-       database = DatabaseLocal.getInstance();   
+       Thread.sleep(10);         
        addresses = new Geocoding(database, request).getResponse();
        if (addresses.isEmpty()) {
          Thread.sleep(500);
@@ -223,11 +221,6 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
         
      }        
      
-     try {
-       database.close();
-     }
-     catch (Exception e) {}
-             
         
    }
 

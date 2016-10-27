@@ -9,14 +9,9 @@
 package gui.dialogs.tableforms;
  
 
-
-import gui.dialogs.docpanels.DialogDocPanel;
 import datamodel.Vehicle;
-import datamodel.docs.DocAudit;
 import datamodel.glossaries.GlossVehicles;
 import gui.GUI;
-import java.awt.Color;
-import javax.swing.JPanel;
 
 
 /**
@@ -44,30 +39,13 @@ public class VehicleEditModDialog extends VehicleEditDialog {
     @Override
     protected boolean saveItem(Vehicle vehicle) {
    
-       GlossVehicles glossVehicles =  new GlossVehicles(frame.getDatabaseShared());                             
+       GlossVehicles glossVehicles =  new GlossVehicles(frame.getDatabase());                             
        boolean tmp = glossVehicles.updateItem(vehicle, frame.getUser());
        lastError = glossVehicles.getLastError();
        return tmp;
 
     }
-    
-    
-    
-   /**
-    * Metoda zwraca panel z lista historii zmian
-    * @param bgColor Kolor tla
-    * @return Panel z lista historii zmian
-    */    
-    @Override
-    protected JPanel getAuditPanel(Color bgColor) {
-        
-      DocAudit docAudit = new DocAudit(frame.getDatabaseShared(), vehicle);
-
-      return new DialogDocPanel<>(docAudit, bgColor);
-        
-        
-    }        
-
+       
 
     
 }
