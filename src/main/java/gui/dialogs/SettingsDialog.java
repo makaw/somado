@@ -238,11 +238,11 @@ public class SettingsDialog extends SimpleDialog {
        p0.add(new FormRowPad("<html>Tabela danych:<br /> &nbsp; </html>", itemsPerPageField));
        itemsPerPageField.setMaximumSize(new Dimension(140, 25));
        
-       final JTextField itemsPerPageDocField = new JTextField(7);
-       itemsPerPageDocField.setText(Settings.getValue("items_per_page_doc")); 
-       p0.add(new FormRowPad("<html>Okno tekstowe (np. historia):</html>:",
-               itemsPerPageDocField));
-       itemsPerPageDocField.setMaximumSize(new Dimension(140, 25));                  
+       final JTextField itemsPerPageGlossField = new JTextField(7);
+       itemsPerPageGlossField.setText(Settings.getValue("items_per_page_gloss")); 
+       p0.add(new FormRowPad("<html> &nbsp; &nbsp; S\u0142ownik (lista):<br /> &nbsp; </html>:",
+               itemsPerPageGlossField));
+       itemsPerPageGlossField.setMaximumSize(new Dimension(140, 25));                  
        p.add(p0);
        
        buttonChange = new JButton("Zastosuj");
@@ -253,14 +253,14 @@ public class SettingsDialog extends SimpleDialog {
              try {
                  
                int itemsPage = Integer.parseInt(itemsPerPageField.getText());
-               int itemsPageDoc = Integer.parseInt(itemsPerPageDocField.getText());          
+               int itemsPageGloss = Integer.parseInt(itemsPerPageGlossField.getText());          
                
-               if (itemsPage<=0 || itemsPageDoc<=0) 
+               if (itemsPage<=0 || itemsPageGloss<=0) 
                    throw new NumberFormatException();
             
 
                Settings.updateKey(database, user, "items_per_page", itemsPerPageField.getText());
-               Settings.updateKey(database, user, "items_per_page_doc", itemsPerPageDocField.getText());
+               Settings.updateKey(database, user, "items_per_page_gloss", itemsPerPageGlossField.getText());
                Settings.updateKey(database, user, "shortest_path_algorithm", 
                        ShortestPathAlgorithm.get(algorithmField.getSelectedItem().toString()).toString());
                Settings.updateKey(database, user, "driver_max_work_time",

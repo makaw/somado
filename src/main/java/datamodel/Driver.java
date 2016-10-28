@@ -112,7 +112,8 @@ public class Driver implements IDataEditable {
    @Override
    public String toString() {
        
-      return surname + " " + firstname + " (" + vehicle.getRegistrationNo() + ")";
+      return surname + " " + firstname + 
+    		  (vehicle.getId() > 0 ? " (" + vehicle.getRegistrationNo() + ")" : "");
        
    }
             
@@ -193,6 +194,8 @@ public class Driver implements IDataEditable {
     @Override
     public void verify() throws Exception {
     
+      if (surname.isEmpty()) throw new Exception("Nie podano nazwiska.");	
+    	
     }
     
    

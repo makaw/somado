@@ -66,7 +66,7 @@ public class GlossDeliveries extends GlossaryAdapter<Delivery> {
       while (rs.next()) {
         
         ps = database.prepareQuery("UPDATE dat_orders SET delivery_id=0, state_id = ? WHERE id = ?;");
-        ps.setInt(1, OrderState.NEW.getId());
+        ps.setInt(1, OrderState.DONE.getId());
         ps.setInt(2, rs.getInt("id"));
         ps.executeUpdate();
         
