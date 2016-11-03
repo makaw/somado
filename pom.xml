@@ -39,6 +39,20 @@
 			<groupId>com.graphhopper</groupId>
 			<artifactId>jsprit-analysis</artifactId>
 			<version>1.7-RC1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jfree</groupId>
+					<artifactId>jfreechart</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.graphstream</groupId>
+					<artifactId>gs-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.graphstream</groupId>
+					<artifactId>gs-ui</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.graphhopper/jsprit-instances -->
 		<dependency>
