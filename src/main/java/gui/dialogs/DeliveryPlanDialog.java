@@ -36,6 +36,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -64,6 +65,8 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
    private final DeliveryPlan deliveryPlan;
    /** Data dostawy */
    private final Date deliveryDate;
+   /** Czy zmienić stan zamówień */
+   private JCheckBox changeStateField;
     
    /**
     * Konstruktor,wyświetlenie okienka
@@ -360,7 +363,9 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
          public void actionPerformed(final ActionEvent e) {   
        
            boolean res =
-              new ConfirmDialog(frame, "Czy na pewno zatwierdzi\u0107 now\u0105 dostaw\u0119 ?", 140).isConfirmed();
+              new ConfirmDialog(frame, "Czy na pewno zatwierdzi\u0107 now\u0105 dostaw\u0119 ?\n\n"
+              		+ "Stany zam\u00f3wie\u0144 " + (changeStateField.isSelected() ? "" : "nie ") + 
+              		"zostan\u0105 zmienione.\n", 180).isConfirmed();
            
            if (res) new Loader(frame, DeliveryPlanDialog.this, false).load();
               
@@ -379,13 +384,20 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
              
          }
       });
+      
+      
+      changeStateField = new JCheckBox("zmie\u0144 stany zam\u00f3wie\u0144", true);
+      changeStateField.setFocusPainted(false);
+      changeStateField.setFont(GUI.BASE_FONT);
+      changeStateField.setBorder(new EmptyBorder(0, 10, 0, 120));
 
       JPanel p2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
       p2.setOpaque(false);
       p2.setBorder(new EmptyBorder(10, 0, 5, 0)); 
 
       p2.add(saveButton);
-      p2.add(new JLabel(" "));
+      p2.add(changeStateField);
+      p2.add(new JLabel("  "));
       p2.add(againButton);
       p2.add(new JLabel(" "));
       p2.add(new CloseButton("Anuluj"));
@@ -400,7 +412,14 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
     public void start(IProgress progress) {
       
       try {
-        deliveryPlan.savePlan(deliveryDate, frame.getUser());
+    	  
+    	boolean changeState = true;  
+    	try {
+    	   changeState = changeStateField.isSelected();	
+    	}
+    	catch (NullPointerException e) {}
+    	  
+        deliveryPlan.savePlan(deliveryDate, frame.getUser(), changeState);
         progress.hideComponent();
         new InfoDialog(frame, "Nowa dostawa zosta\u0142a zatwierdzona.", 140);
         frame.getDataPanel(GUI.TAB_ORDERS).setChanged(true);

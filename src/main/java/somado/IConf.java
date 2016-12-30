@@ -20,10 +20,8 @@ public interface IConf {
   /** Nazwa aplikacji */
   String APP_NAME = "Somado";
   /** Wersja aplikacji */
-  String APP_VERSION = "1.01 lite [10/2016]";        
+  String APP_VERSION = "1.02 lite [12/2016]";        
   
-  /** adres e-mail wymagany przy wysyłaniu zapytań do usługi Nominatim */
-  String EMAIL_NOMINATIM = "maciej@kaw.net.pl";
     
   /** Minimalna wymagana długość hasła */
   int MIN_PASS_LEN = 5;  

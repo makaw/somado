@@ -268,9 +268,10 @@ public class DeliveryPlan {
    * Zatwierdzenie planu dostawy - zapis dostawy do BD
    * @param deliveryDate Data dostawy
    * @param user Ref. do obiektu zalogowanego użytkownika
+   * @param changeState Czy zmienić stan zamówień
    * @throws SQLException Błąd SQL
    */
-  public void savePlan(Date deliveryDate, User user) throws SQLException {
+  public void savePlan(Date deliveryDate, User user, boolean changeState) throws SQLException {
       
     if (!isDone()) return;
     
@@ -391,7 +392,7 @@ public class DeliveryPlan {
               }  
             
             // zmiana stanu zamówienia
-            if (point.getOrder() != null && point.getOrder().getId()>0) {
+            if (point.getOrder() != null && point.getOrder().getId()>0 && changeState) {
                 
               ps = database.prepareQuery("UPDATE dat_orders SET state_id = ?, delivery_id = ?, "
                       + "date_state_mod = DATETIME('now') WHERE id = ? ;");

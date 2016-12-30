@@ -136,6 +136,10 @@ public class Settings extends HashMap<String, String> {
     
     this.put("tms_url", props.getProperty("tms.url"));
     
+
+    // adres e-mail wymagany przy wysyłaniu zapytań do usługi Nominatim
+    this.put("email_nominatim", props.getProperty("email.nominatim"));
+    
   }  
   
     

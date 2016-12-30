@@ -9,10 +9,6 @@
 package spatial_vrp;
 
 
-import datamodel.GeoAddress;
-import fr.dudie.nominatim.client.JsonNominatimClient;
-import fr.dudie.nominatim.client.request.NominatimSearchRequest;
-import fr.dudie.nominatim.model.Address;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,10 +16,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+
+import datamodel.GeoAddress;
+import fr.dudie.nominatim.client.JsonNominatimClient;
+import fr.dudie.nominatim.client.request.NominatimSearchRequest;
+import fr.dudie.nominatim.model.Address;
 import somado.Database;
-import somado.IConf;
 import somado.Settings;
 
 
@@ -83,7 +84,7 @@ public class Geocoding {
       
      CloseableHttpClient httpclient = HttpClients.createDefault();
         
-     JsonNominatimClient nominatimClient = new JsonNominatimClient(httpclient, IConf.EMAIL_NOMINATIM);
+     JsonNominatimClient nominatimClient = new JsonNominatimClient(httpclient, Settings.getValue("email_nominatim"));
      NominatimSearchRequest nominatimRequest = new NominatimSearchRequest();
      nominatimRequest.setLimit(50);
      nominatimRequest.setAcceptLanguage("pl");

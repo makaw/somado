@@ -469,13 +469,18 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
       }                  
           
       // wartość w setkach kg
-      currentLoad /= 100.0;
-            
+      currentLoad /= 100.0;      
+
     }
-    catch (NullPointerException e) {  }     
-    
+    catch (NullPointerException e) { 
+    	
+      // nieobsluzone zamowienie
+      return 0.0;
+    	
+    }         
+
     // Dodane oszacowane dodatkowe zużycie paliwa na każde 100 kg ładunku 
-    fuelCons += fuelCons * IConf.ADDITIONAL_FUEL_CONSUMPTION_PER_100KG * currentLoad;
+    fuelCons += fuelCons * IConf.ADDITIONAL_FUEL_CONSUMPTION_PER_100KG * currentLoad;              
     
     // Koszt jako przewidywana ilość zużytego paliwa na dystansie pomiędzy lokalizacjami
     return (distance/100.0) * fuelCons;
