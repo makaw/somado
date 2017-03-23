@@ -58,7 +58,7 @@ public class OSMCreditPanel extends JPanel {
       lab.setForeground(new Color(0x330066));
       add(lab);
                 
-      addMouseListener(new MouseAdapter() {
+      lab.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
           try {

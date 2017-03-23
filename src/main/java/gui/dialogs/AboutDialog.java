@@ -12,7 +12,14 @@ import gui.BgPanel;
 import gui.SimpleDialog;
 import gui.GUI;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +32,10 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
+
+import edu.stanford.ejalbert.BrowserLauncher;
+import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
+import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 import somado.IConf;
 
 
@@ -51,7 +62,7 @@ public class AboutDialog extends SimpleDialog {
      setTitle(IConf.APP_NAME +" - o programie");
      super.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
      
-     super.showDialog(360, 395); 
+     super.showDialog(360, 420); 
             
    } 
    
@@ -109,9 +120,28 @@ public class AboutDialog extends SimpleDialog {
  
       mainPanel.add(tx);
       
+      JLabel lab = new JLabel("https://github.com/makaw/somado");
+      lab.setCursor(new Cursor(Cursor.HAND_CURSOR));
+      Map<TextAttribute, Integer> fontAttr = new HashMap<>();
+      fontAttr.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+      lab.setFont(GUI.BASE_FONT.deriveFont(fontAttr));
+      lab.setForeground(new Color(0x330066));
+      mainPanel.add(lab);
+                
+      lab.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+          try {
+             new BrowserLauncher().openURLinBrowser("https://github.com/makaw/somado");
+          }  catch (BrowserLaunchingInitializingException | UnsupportedOperatingSystemException ex) {
+             System.err.println(ex);
+          }
+        }
+      });          
+      
                    
       JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
-      p.setBorder(new EmptyBorder(5, 0, 10, 0));
+      p.setBorder(new EmptyBorder(15, 0, 10, 0));
       p.setOpaque(false);
       p.add(new CloseButton(" OK "));
       
