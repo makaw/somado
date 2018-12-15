@@ -12,6 +12,8 @@ package gui.loader;
 import gui.GUI;
 import gui.ImageRes;
 import gui.SimpleDialog;
+import somado.Lang;
+
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -54,7 +56,7 @@ public class ProgressDialog extends SimpleDialog implements IProgress {
    */
   public ProgressDialog(GUI frame, String progressBarText, boolean indeterminate) {
             
-    super(frame, "Prosz\u0119 czeka\u0107 ...");
+    super(frame, Lang.get("PleaseWait"));
     this.progressBarText = progressBarText;     
     this.indeterminate = indeterminate;
     progressBar = new JProgressBar();
@@ -62,7 +64,7 @@ public class ProgressDialog extends SimpleDialog implements IProgress {
     progressBar.setStringPainted(!indeterminate);
     setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
   
-    cancelButton = new CloseButton("Anuluj");
+    cancelButton = new CloseButton(Lang.get("Cancel"));
     cancelButton.setIcon(ImageRes.getIcon("icons/clear.png"));
     
     

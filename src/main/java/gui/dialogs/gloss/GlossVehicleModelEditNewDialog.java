@@ -13,6 +13,7 @@ package gui.dialogs.gloss;
 import datamodel.VehicleModel;
 import gui.GUI;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
 
 
 /**
@@ -37,7 +38,7 @@ public class GlossVehicleModelEditNewDialog extends GlossVehicleModelEditDialog 
    */  
   public GlossVehicleModelEditNewDialog(GUI frame, GlossDialog<VehicleModel> parentDialog) {
         
-    super(frame, parentDialog, "S\u0142ownik modeli pojazd\u00f3w - nowy model");
+    super(frame, parentDialog, Lang.get("Gloss.VehicleModelsGloss") + " - " +  Lang.get("Gloss.AddVehicleModel"));
          
   }
   

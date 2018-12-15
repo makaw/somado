@@ -37,6 +37,7 @@ import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
 import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -59,7 +60,7 @@ public class AboutDialog extends SimpleDialog {
         
      super(frame);
      
-     setTitle(IConf.APP_NAME +" - o programie");
+     setTitle(IConf.APP_NAME +" - " + Lang.get("About.About"));
      super.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
      
      super.showDialog(360, 420); 
@@ -109,10 +110,10 @@ public class AboutDialog extends SimpleDialog {
       
       // umieszczenie tekstu
       try {
-        doc.insertString(doc.getLength(), IConf.APP_NAME + " wersja " + IConf.APP_VERSION + sep, style2);
-        doc.insertString(doc.getLength(), "Optymalizacja dostaw towarów (problem VRP), " +  sep, style);
-        doc.insertString(doc.getLength(), "dane przestrzenne: OpenStreetMap" + sep, style);
-        doc.insertString(doc.getLength(), "Autor: Maciej Kawecki 2016", style);
+        doc.insertString(doc.getLength(), IConf.APP_NAME + " " + Lang.get("About.Version") + " " + IConf.APP_VERSION + sep, style2);
+        doc.insertString(doc.getLength(), Lang.get("About.Credits.Row1") +  sep, style);
+        doc.insertString(doc.getLength(), Lang.get("About.Credits.Row2") + sep, style);
+        doc.insertString(doc.getLength(), Lang.get("About.Author") + ": Maciej Kawecki 2016", style);
       }
       catch(BadLocationException e) {
         System.err.println(e.getMessage());

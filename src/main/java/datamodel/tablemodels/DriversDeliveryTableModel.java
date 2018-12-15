@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import somado.Database;
+import somado.Lang;
 
 /**
  *
@@ -30,8 +31,8 @@ import somado.Database;
 public class DriversDeliveryTableModel extends TableModel<Driver> {
        
   /** Nazwy (nagłówki) kolumn tabeli */
-  private String[] columnNames = { "", "Nazwisko i imię", "Numer rej.", "Pojazd", "\u0141adowno\u015b\u0107 [t]",
-                                    "Powr\u00f3t" };
+  private String[] columnNames = { "", Lang.get("Tables.DriversDeliv.Name"), Lang.get("Tables.DriversDeliv.RegNumber"),
+		  Lang.get("Tables.DriversDeliv.Vehicle"), Lang.get("Tables.DriversDeliv.Capacity") + " [t]", Lang.get("Tables.DriversDeliv.GoBack") };
   
   /** Liczba wszystkich elementów */
   final private int allElementsNum;                 
@@ -63,7 +64,7 @@ public class DriversDeliveryTableModel extends TableModel<Driver> {
     
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }  
     
@@ -108,7 +109,7 @@ public class DriversDeliveryTableModel extends TableModel<Driver> {
            
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }     
 

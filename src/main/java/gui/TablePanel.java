@@ -34,6 +34,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
+
+import somado.Lang;
 import somado.Settings;
 
 
@@ -203,17 +205,14 @@ public abstract class TablePanel extends EmptyPanel {
     JPanel cntPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     cntPanel.setOpaque(false);
     cntPanel.setBorder(new EmptyBorder(5, 5, 5, 5));    
-    readRecCountLabel = new NormLabel("Znaleziono rekord\u00f3w: " 
-            + String.valueOf(dataModel.getAllElementsCount()) + ".");
+    readRecCountLabel = new NormLabel(Lang.get("Tables.RecordsFound", dataModel.getAllElementsCount()));
     cntPanel.add(readRecCountLabel);
 
     allRecCountLabel = new NormLabel("", true);
     
     if (Integer.parseInt(Settings.getValue("items_per_page"))<dataModel.getAllElementsCount()) {
     
-      allRecCountLabel.setText(" Widoczne rekordy: " + Settings.getValue("items_per_page") +
-              ". U\u017cyj filtr\u00f3w lub zmie\u0144 ustawienia, aby wy\u015bwieli\u0107 "
-              + "pozosta\u0142e.");   
+      allRecCountLabel.setText(Lang.get("Tables.VisibleRecords", Settings.getValue("items_per_page")));
       
     }
     
@@ -230,14 +229,11 @@ public abstract class TablePanel extends EmptyPanel {
           
     ITableModel<? extends IData> dataModel = ((ITableModel<?>)(table.getModel()));  
       
-    readRecCountLabel.setText("Znaleziono rekord\u00f3w: " 
-            + String.valueOf(dataModel.getAllElementsCount()) + ".");
+    readRecCountLabel.setText(Lang.get("Tables.RecordsFound", dataModel.getAllElementsCount()));
 
     if (Integer.parseInt(Settings.getValue("items_per_page"))<dataModel.getAllElementsCount()) {
     
-      allRecCountLabel.setText(" Widoczne rekordy: " + Settings.getValue("items_per_page") +
-              ". U\u017cyj filtr\u00f3w lub zmie\u0144 ustawienia, aby wy\u015bwieli\u0107 "
-              + "pozosta\u0142e.");
+      allRecCountLabel.setText(Lang.get("Tables.VisibleRecords", Settings.getValue("items_per_page")));
       allRecCountLabel.setVisible(true);
       
     }      

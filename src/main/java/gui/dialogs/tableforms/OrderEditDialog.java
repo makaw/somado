@@ -42,6 +42,7 @@ import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.JTabbedPane;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 
 
@@ -177,7 +178,7 @@ public abstract class OrderEditDialog extends SimpleDialog implements IDialogFor
         final JPanel buttonsPanel = new JPanel();
         
         JTabbedPane tabPane = new FormTabbedPane(bgColor);        
-        JPanel tabPane1 = (JPanel)tabPane.add("Dane zam\u00f3wienia", new JPanel());  
+        JPanel tabPane1 = (JPanel)tabPane.add(Lang.get("Gloss.OrderData"), new JPanel());  
         
         
         tabPane1.add(new JLabel(" "));
@@ -188,25 +189,25 @@ public abstract class OrderEditDialog extends SimpleDialog implements IDialogFor
            
            txt = new JLabel(order.getNumber());
            txt.setFont(GUI.BASE_FONT);
-           tabPane1.add(new FormRowPad("Nr zam\u00f3wienia:", txt));  
+           tabPane1.add(new FormRowPad(Lang.get("Gloss.OrderNo") + ":", txt));  
             
         }                
         
         
         txt = new JLabel(Settings.DATETIME_FORMAT.format(order.getDateAdd()));
         txt.setFont(GUI.BASE_FONT);
-        tabPane1.add(new FormRowPad("Data i godzina:", txt));        
+        tabPane1.add(new FormRowPad(Lang.get("Tables.Orders.Datetime") + ":", txt));        
         
         txt = new JLabel(order.getState().toString());
         txt.setForeground(order.getState().getColor());
         txt.setFont(GUI.BASE_FONT);
-        tabPane1.add(new FormRowPad("Stan zam\u00f3wienia:", txt));           
+        tabPane1.add(new FormRowPad(Lang.get("Gloss.OrderState") + ":", txt));           
         
         final CustomerField customerField = new CustomerField(frame, order.getCustomer());
-        tabPane1.add(new FormRowPad("Odbiorca towaru:", customerField));
+        tabPane1.add(new FormRowPad(Lang.get("Tables.Orders.Receiver") + ":", customerField));
         
         final OrderProductsField productsField = new OrderProductsField(frame, order);
-        tabPane1.add(new FormRowPad("Produkty:               ", productsField));            
+        tabPane1.add(new FormRowPad(Lang.get("Tables.Orders.Items") + ":", productsField));            
         
         final JTextArea commentField = new JTextArea(order.getComment());
         commentField.setLineWrap(true);
@@ -218,7 +219,7 @@ public abstract class OrderEditDialog extends SimpleDialog implements IDialogFor
         sp.setMaximumSize(new Dimension(600, 60));
         sp.setPreferredSize(new Dimension(600, 60));
     
-        tabPane1.add(new FormRowPad("Uwagi:                      ", sp));
+        tabPane1.add(new FormRowPad(Lang.get("Gloss.Comment") + ":", sp));
         
         
         add(tabPane);
@@ -228,7 +229,7 @@ public abstract class OrderEditDialog extends SimpleDialog implements IDialogFor
         buttonsPanel.setOpaque(false);
         buttonsPanel.setBorder(new EmptyBorder(12, 0, 2, 0));
 
-        JButton saveButton = new JButton(" Zapisz ");
+        JButton saveButton = new JButton(Lang.get("Save"));
         saveButton.setFocusPainted(false);
                
         saveButton.addActionListener(new ActionListener() {
@@ -262,7 +263,7 @@ public abstract class OrderEditDialog extends SimpleDialog implements IDialogFor
         buttonsPanel.add(saveButton);
         buttonsPanel.add(new JLabel(" "));
         buttonsPanel.add(new JLabel(" "));
-        buttonsPanel.add(new CloseButton(" Anuluj "));        
+        buttonsPanel.add(new CloseButton(Lang.get("Cancel")));        
         add(buttonsPanel);      
         
          

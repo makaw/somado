@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import somado.Database;
+import somado.Lang;
 import somado.User;
 
 /**
@@ -83,8 +84,8 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
          
       } catch (SQLException e) {
       
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
       }    
@@ -138,8 +139,8 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
     
     catch (SQLException e) {
         
-      System.err.println("B\u0142\u0105d SQL: "+e);
-      lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+      System.err.println(Lang.get("Error.Sql", e));
+      lastError = Lang.get("Error.Sql", e.getMessage());
         
     }
     
@@ -187,8 +188,8 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
          
       } catch (SQLException e) {
       
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
       }                
@@ -230,8 +231,8 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
           }
           catch (SQLException ex2) {  System.err.println(ex2); }  
     	  
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
           
       }
@@ -280,7 +281,7 @@ public class GlossVehicles extends Glossary<Vehicle> implements IGlossaryEditabl
          
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }         
     

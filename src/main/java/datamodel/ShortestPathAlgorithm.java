@@ -8,6 +8,7 @@
  */
 package datamodel;
 
+import somado.Lang;
 
 /**
  *
@@ -47,8 +48,8 @@ public enum ShortestPathAlgorithm {
       switch (this) {
           
           default:
-          case A_STAR:  return "Szybszy, ale mo\u017ce nie znale\u017a\u0107 najlepszego rozwi\u0105zania";
-          case DIJKSTRA: return "Wolniejszy, ale zawsze znajduje najlepsze rozwi\u0105zanie";          
+          case A_STAR:  return Lang.get("Data.Algorithm.FasterBut");    
+          case DIJKSTRA: return Lang.get("Data.Algorithm.SlowerBut");          
           
       }        
        

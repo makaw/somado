@@ -16,6 +16,8 @@ import gui.TableMouseAdapter;
 import gui.TablePanel;
 import gui.dialogs.tableforms.VehicleEditModDialog;
 import gui.dialogs.tableforms.VehicleEditNewDialog;
+import somado.Lang;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -113,12 +115,12 @@ public class TableVehiclesPanel extends TablePanel {
   @Override
   protected void setFiltersPanel(JPanel p) {    
       
-    p.add(new JLabel("Model:"));
+    p.add(new JLabel(Lang.get("Tables.VehicleModels.Model") + ":"));
     filters.addField("name", new JTextField(11));
     
     p.add(new JLabel("  "));
     
-    p.add(new JLabel("Nr rejestracyjny:"));
+    p.add(new JLabel(Lang.get("Tables.VehicleModels.RegistrationNumber") + ":"));
     filters.addField("registration_no", new JTextField(11));
     
   }
@@ -166,7 +168,7 @@ public class TableVehiclesPanel extends TablePanel {
     p.setOpaque(false);
     p.setBorder(new EmptyBorder(10, 10, 10, 10));  
     
-    editButton = new JButton("Edytuj pojazd", ImageRes.getIcon("icons/form_edit.png"));
+    editButton = new JButton(Lang.get("Tables.VehicleModels.Edit"), ImageRes.getIcon("icons/form_edit.png"));
     editButton.setEnabled(false);
     editButton.setFocusPainted(false);
     editButton.setMaximumSize(new Dimension(100, 20));
@@ -183,7 +185,7 @@ public class TableVehiclesPanel extends TablePanel {
     p.add(editButton);
     
       
-    addButton = new JButton("Nowy pojazd", ImageRes.getIcon("icons/form_add.png"));
+    addButton = new JButton(Lang.get("Tables.VehicleModels.Add"), ImageRes.getIcon("icons/form_add.png"));
     addButton.setFocusPainted(false);
       
     addButton.addActionListener(new ActionListener() {

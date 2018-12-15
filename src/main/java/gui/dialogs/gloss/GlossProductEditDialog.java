@@ -30,6 +30,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import javax.swing.JCheckBox;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -105,22 +106,22 @@ public abstract class GlossProductEditDialog extends SimpleDialog {
  
      FormPanel() {
          
-        super(frame, "Dane produktu", product);
+        super(frame, Lang.get("Gloss.ItemData"), product);
 
         final JTextField nameField = new JTextField(22);
         nameField.setText(product.getName());
-        dataTabPane.add(new FormRow("Nazwa:", nameField));
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Name") + ":", nameField));
         
         final JTextField weightField = new JTextField(22);
         weightField.setText(String.valueOf(product.getWeight()));
-        dataTabPane.add(new FormRow("Waga [kg]:", weightField));
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Weight") + " [kg]:", weightField));
         
-        final JCheckBox availableField = new JCheckBox("Produkt dost\u0119pny w magazynie");
+        final JCheckBox availableField = new JCheckBox(Lang.get("Gloss.ItemAvailable"));
         availableField.setOpaque(false);
         availableField.setFocusPainted(false);
         availableField.setSelected(product.isAvailable());
         availableField.setFont(GUI.BASE_FONT);
-        dataTabPane.add(new FormRowPad("Dost\u0119pno\u015b\u0107:", availableField));        
+        dataTabPane.add(new FormRowPad(Lang.get("Gloss.Availability") + ":", availableField));        
                
         JPanel p = new JPanel(new FlowLayout());
         p.setPreferredSize(new Dimension(600, 35));
@@ -132,7 +133,7 @@ public abstract class GlossProductEditDialog extends SimpleDialog {
         p.setOpaque(false);
         p.setBorder(new EmptyBorder(12, 0, 2, 0));
 
-        JButton saveButton = new JButton(" Zapisz ");
+        JButton saveButton = new JButton(Lang.get("Save"));
         saveButton.setFocusPainted(false);
   
         final Integer id = product.getId();
@@ -172,7 +173,7 @@ public abstract class GlossProductEditDialog extends SimpleDialog {
         p.add(saveButton);
         p.add(new JLabel(" "));
         p.add(new JLabel(" "));
-        p.add(new CloseButton(" Anuluj "));        
+        p.add(new CloseButton(Lang.get("Cancel")));        
         dataTabPane.add(p);        
 
          

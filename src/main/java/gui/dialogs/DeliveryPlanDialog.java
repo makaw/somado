@@ -46,6 +46,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 import spatial_vrp.DeliveryPlan;
 
@@ -76,7 +77,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
     */     
     public DeliveryPlanDialog(GUI frame, DeliveryPlan deliveryPlan, Date deliveryDate) {
      
-      super(frame, IConf.APP_NAME + " - plan nowej dostawy");      
+      super(frame, IConf.APP_NAME + " - " + Lang.get("Dialogs.DeliveryOpen.PlanningDelivery"));      
       this.deliveryPlan = deliveryPlan;
       this.deliveryDate = deliveryDate;
       showDialog(980, 600);
@@ -110,10 +111,10 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       p0.setOpaque(false);
       JLabel txt = new JLabel(Settings.DATE_FORMAT.format(deliveryDate));
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Data dostawy:            ", txt, 160));  
+      p0.add(new FormRowPad(Lang.get("Tables.DeliveryDate") + ":", txt, 160));  
       txt = new JLabel(Settings.formatTime(deliveryPlan.getMaxDriverWorkTime()));      
       txt.setFont(GUI.BASE_FONT);
-      FormRowPad formRow = new FormRowPad("Maks. czas jazdy kierowcy:", txt, 240);
+      FormRowPad formRow = new FormRowPad(Lang.get("Dialogs.DeliveryPlan.MaxDriverWorkingTime") + ":", txt, 240);
       formRow.setMinimumSize(new Dimension(400, 40));
       p0.add(formRow);
          
@@ -128,11 +129,11 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       int nio = deliveryPlan.getUnassignedOrders().size();
       JLabel orderNumberLabel = new JLabel(" / "+String.valueOf(nio));
       orderNumberLabel.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Zam\u00f3wienia obs\u0142u\u017cone/nieobs\u0142.:", orderNumberLabel, 250));
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryPlan.OrdersDoneUndone") + ":", orderNumberLabel, 250));
       
       txt = new JLabel(String.valueOf(deliveryPlan.getDriversNumber()));
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Liczba zaanga\u017cowanych kierowc\u00f3w:", txt, 280)); 
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryPlan.DriversEngaged") + ":", txt, 280)); 
       
       p0.setMinimumSize(new Dimension(800, 45));
       p0.setSize(new Dimension(800, 45));
@@ -146,7 +147,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       p0 = new JPanel(new FlowLayout(FlowLayout.CENTER));
       p0.setOpaque(false);
       p0.setBorder(new LineBorder(new Color(0xc6c6c6), 1));
-      p0.setBorder(BorderFactory.createTitledBorder(p0.getBorder(), "  Razem:  "));
+      p0.setBorder(BorderFactory.createTitledBorder(p0.getBorder(), Lang.get("Dialogs.Total")));
       p0.setMinimumSize(new Dimension(800, 50));
       p0.setSize(new Dimension(800, 50));
       
@@ -154,19 +155,19 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       totalTimeLabel.setText("00:00:00");
       totalTimeLabel.setFont(GUI.BASE_FONT);
       totalTimeLabel.setBorder(new EmptyBorder(0, 0, 0, 35));
-      p0.add(new JLabel("Czas jazdy: "));
+      p0.add(new JLabel(Lang.get("Dialogs.DeliveryPlan.DriveTime") + ":"));
       p0.add(totalTimeLabel);
       
       JLabel totalDistanceLabel = new JLabel();
       totalDistanceLabel.setText("0 km");
       totalDistanceLabel.setFont(GUI.BASE_FONT);
       totalDistanceLabel.setBorder(new EmptyBorder(0, 0, 0, 35));
-      p0.add(new JLabel("Dystans: "));
+      p0.add(new JLabel(Lang.get("Tables.Distance")));
       p0.add(totalDistanceLabel);  
       
       txt = new JLabel(String.format("%.2f", deliveryPlan.getTotalCost()) + " l");
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new JLabel("    Zu\u017cycie paliwa: "));
+      p0.add(new JLabel(Lang.get("Tables.VehicleModels.FuelConsumption")));
       p0.add(txt);
             
       p0.setAlignmentX(JLabel.LEFT);
@@ -211,7 +212,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
          scroll.setPreferredSize(new Dimension(680, 320));             
          tPanel.add(scroll);
          
-         tabPane.add("Nieobs\u0142u\u017cone ("+String.valueOf(nio)+")", tPanel);
+         tabPane.add(Lang.get("Dialogs.DeliveryPlan.Undone") + " ("+String.valueOf(nio)+")", tPanel);
          
  
       }
@@ -242,7 +243,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
           JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
           p1.setPreferredSize(new Dimension(950, 40));
           p1.setOpaque(false);
-          p1.add(new JLabel("Kierowca:"));
+          p1.add(new JLabel(Lang.get("Dialogs.DeliveryPlan.Driver") + ":"));
           txt = new JLabel(route.getDriver().getSurname() + " "
                   + route.getDriver().getFirstname());
           txt.setMaximumSize(new Dimension(140, 40));
@@ -250,7 +251,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
           txt.setFont(GUI.BASE_FONT);
           txt.setBorder(new EmptyBorder(0, 0, 0, 8));
           p1.add(txt);
-          p1.add(new JLabel("Pojazd:"));
+          p1.add(new JLabel(Lang.get("Gloss.Vehicle") + ":"));
           txt = new JLabel("[max " + String.format("%.2f", route.getDriver().getVehicle().getVehicleModel().getMaximumLoad()) + "t] "
                   + route.getDriver().getVehicle().toString());
           txt.setFont(GUI.BASE_FONT);
@@ -259,8 +260,8 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
           txt.setBorder(new EmptyBorder(0, 0, 0, 8));
           p1.add(txt);
           
-          p1.add(new JLabel("Powr\u00f3t: "));
-          txt = new JLabel(route.getDriver().isReturnToDepot() ? "tak" : "nie");
+          p1.add(new JLabel(Lang.get("Tables.DriversDeliv.GoBack") + ":"));
+          txt = new JLabel((route.getDriver().isReturnToDepot() ? Lang.get("Yes") : Lang.get("No")).toLowerCase());
           txt.setFont(GUI.BASE_FONT);
           if (!route.getDriver().isReturnToDepot()) txt.setForeground(Color.RED);
           txt.setMaximumSize(new Dimension(55, 40));
@@ -277,7 +278,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
           
           // przycisk z podglądem trasy
           if (ordersNumber > 0) {
-            JButton mapButton = new JButton("Podgl\u0105d trasy", ImageRes.getIcon("icons/map.png"));
+            JButton mapButton = new JButton(Lang.get("Dialogs.DeliveryPlan.RoutePreview"), ImageRes.getIcon("icons/map.png"));
             mapButton.setFocusPainted(false);            
             mapButton.addActionListener(new ActionListener() {
                 @Override
@@ -355,7 +356,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       p.add(tabPane);
         
            
-      JButton saveButton = new JButton("Zatwierd\u017a dostaw\u0119");
+      JButton saveButton = new JButton(Lang.get("Dialogs.DeliveryPlan.ConfirmDelivery"));
       saveButton.setEnabled(routesNumber > 0);
       saveButton.setFocusPainted(false);
       saveButton.addActionListener(new ActionListener() {
@@ -363,9 +364,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
          public void actionPerformed(final ActionEvent e) {   
        
            boolean res =
-              new ConfirmDialog(frame, "Czy na pewno zatwierdzi\u0107 now\u0105 dostaw\u0119 ?\n\n"
-              		+ "Stany zam\u00f3wie\u0144 " + (changeStateField.isSelected() ? "" : "nie ") + 
-              		"zostan\u0105 zmienione.\n", 180).isConfirmed();
+              new ConfirmDialog(frame, Lang.get("Dialogs.DeliveryPlan.AreYouSureToConfirmDelivery"), 180).isConfirmed();
            
            if (res) new Loader(frame, DeliveryPlanDialog.this, false).load();
               
@@ -373,7 +372,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       });
       
       
-      JButton againButton = new JButton("Planuj ponownie");
+      JButton againButton = new JButton(Lang.get("Dialogs.DeliveryPlan.PlanAgain"));
       againButton.setFocusPainted(false);
       againButton.addActionListener(new ActionListener() {
          @Override
@@ -386,7 +385,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       });
       
       
-      changeStateField = new JCheckBox("zmie\u0144 stany zam\u00f3wie\u0144", true);
+      changeStateField = new JCheckBox(Lang.get("Dialogs.DeliveryPlan.ChangeOrderStates"), true);
       changeStateField.setFocusPainted(false);
       changeStateField.setFont(GUI.BASE_FONT);
       changeStateField.setBorder(new EmptyBorder(0, 10, 0, 120));
@@ -400,7 +399,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       p2.add(new JLabel("  "));
       p2.add(againButton);
       p2.add(new JLabel(" "));
-      p2.add(new CloseButton("Anuluj"));
+      p2.add(new CloseButton(Lang.get("Cancel")));
             
       p.add(p2);
       
@@ -421,7 +420,7 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
     	  
         deliveryPlan.savePlan(deliveryDate, frame.getUser(), changeState);
         progress.hideComponent();
-        new InfoDialog(frame, "Nowa dostawa zosta\u0142a zatwierdzona.", 140);
+        new InfoDialog(frame, Lang.get("Dialogs.DeliveryPlan.DeliveryConfirmed"), 140);
         frame.getDataPanel(GUI.TAB_ORDERS).setChanged(true);
         frame.getDataPanel(GUI.TAB_DELIVERIES).setChanged(true);
         frame.setSelectedDataPanel(GUI.TAB_DELIVERIES);
@@ -430,8 +429,8 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
       }  
       catch (SQLException ex) {
         progress.hideComponent();
-        System.err.println("B\u0142\u0105d SQL: " + ex);
-        new ErrorDialog(frame, "B\u0142\u0105d SQL: " + ex, true);
+        System.err.println(Lang.get("Error.Sql", ex));
+        new ErrorDialog(frame, Lang.get("Error.Sql", ex), true);
       } 
         
     }

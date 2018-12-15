@@ -9,11 +9,14 @@
 package gui.tablepanels;
 
 
-import gui.GUI;
-import gui.TableContextMenu;
-import gui.dialogs.DeliveryViewDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import gui.GUI;
+import gui.TableContextMenu;
+import gui.dialogs.DeliveryOpenDialog;
+import gui.dialogs.DeliveryViewDialog;
+import somado.Lang;
 
 
 
@@ -36,7 +39,7 @@ public class TableDeliveriesContextMenu extends TableContextMenu {
 
       super(frame);
                 
-      ContextMenuItem item = new ContextMenuItem("Podgl\u0105d dostawy", "icons/map.png");
+      ContextMenuItem item = new ContextMenuItem(Lang.get("Tables.Delivery.Preview"), "icons/map.png");
       item.addActionListener(new ActionListener() {
 
           @Override
@@ -47,6 +50,23 @@ public class TableDeliveriesContextMenu extends TableContextMenu {
           }
       
       });
+      add(item);
+      
+      add(new Separator());
+      
+      
+      item = new ContextMenuItem(Lang.get("Menu.NewDelivery"), "icons/delivery.png");
+      item.addActionListener(new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+           
+        	  new DeliveryOpenDialog(frame);
+              
+          }
+      
+      });
+      
       add(item);
       
        

@@ -38,6 +38,7 @@ import com.graphhopper.jsprit.core.problem.vehicle.Vehicle;
 import somado.AppObserver;
 import somado.Database;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 import somado.SettingsException;
 import spatial_vrp.VRPListener.VehicleCurrentJobs;
@@ -102,7 +103,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
     packArray = new Pack[size];
     algorithm = ShortestPathAlgorithm.get(Settings.getValue("shortest_path_algorithm"));
     
-    new Loader(frame, "Trwa wyznaczanie najkr\u00f3tszych tras", this, true).load();
+    new Loader(frame, Lang.get("Dialogs.Progress.ShortestPath"), this, true).load();
     
   }  
   
@@ -125,8 +126,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
        Pack pack = iterator.next(); 
        Customer c = pack.getCustomer();
        int node = getRoadNodeId(c.getLongitude(), c.getLatitude());
-       if (node == 0) throw new SQLException("Nie mo\u017cna odnale\u017b\u0107 w\u0119z\u0142a "
-               + "sieci drogowej dla lokalizacji:\n" + c);
+       if (node == 0) throw new SQLException(Lang.get("Error.MissingNode") + ":\n" + c);
        c.setRoadNodeId(node);
        c.setIndex(i);
        if (c.getId().equals(Settings.getDepot().getId())) depotIndex = i;       
@@ -203,7 +203,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
           // brak połączenia pomiędzy węzłami
           catch (NullPointerException ex) {
                         
-            throw new SQLException("Brak po\u0142\u0105czenia pomi\u0119dzy w\u0119z\u0142ami sieci drogowej:\n" 
+            throw new SQLException(Lang.get("Error.MissingNodesLink ") + ":\n" 
                                   + customersArray[i].toString() + "\n" + customersArray[j].toString());
            
           }
@@ -505,7 +505,7 @@ public class CostMatrix extends AbstractForwardVehicleRoutingTransportCosts impl
     }
     catch (SQLException | ParseException e) {
         
-      new ErrorDialog(frame, "B\u0142\u0105d bazy danych przestrzennych: " + e, true);  
+      new ErrorDialog(frame, Lang.get("Error.SqlSpatial", e), true);  
      
     }    
      

@@ -9,6 +9,7 @@
 package gui.dialogs;
 
 import gui.ImageRes;
+import somado.Lang;
 import gui.GUI;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -36,9 +37,9 @@ public class InfoDialog extends SimpleInfoDialog {
        switch (this) {
            
            default:
-           case INFO: return "informacja";
-           case WARNING: return "ostrze\u017cenie";
-           case ERROR: return "b\u0142\u0105d";
+           case INFO: return Lang.get("Dialogs.Info");
+           case WARNING: return Lang.get("Dialogs.Warning");
+           case ERROR: return Lang.get("Dialogs.Error");
            
        }  
 
@@ -50,8 +51,8 @@ public class InfoDialog extends SimpleInfoDialog {
            
            default:
            case INFO: return "   ";
-           case WARNING: return "Uwaga:          ";
-           case ERROR: return "Wyst\u0105pi\u0142 b\u0142\u0105d:";
+           case WARNING: return Lang.get("Dialogs.Info.Header") + ":          ";
+           case ERROR: return Lang.get("Dialogs.Error.Header") + ":";
            
        }  
 

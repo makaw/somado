@@ -12,6 +12,7 @@ package gui.dialogs.tableforms;
 import datamodel.Driver;
 import datamodel.glossaries.GlossDrivers;
 import gui.GUI;
+import somado.Lang;
 
 
 /**
@@ -31,7 +32,7 @@ public class DriverEditModDialog extends DriverEditDialog {
     */
    public DriverEditModDialog(GUI frame) {
        
-     super(frame, "Edycja kierowcy", true);  
+     super(frame, Lang.get("Gloss.EditDriver"), true);  
        
    }    
    

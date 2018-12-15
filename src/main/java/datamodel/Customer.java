@@ -11,6 +11,8 @@ package datamodel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import somado.Lang;
+
 /**
  *
  * Szablon obiektu reprezentującego odbiorcę towaru (pozycja ze słownika)
@@ -222,8 +224,8 @@ public class Customer implements IDataEditable {
     @Override
     public void verify() throws Exception {
       
-      if (name.isEmpty())  throw new Exception("Nie podano nazwy odbiorcy towaru.");
-      if (city.isEmpty())  throw new Exception("Nie podano miasta odbiorcy towaru.");
+      if (name.isEmpty())  throw new Exception(Lang.get("Data.Customer.MissingReceiverName"));
+      if (city.isEmpty())  throw new Exception(Lang.get("Data.Customer.MissingReceiverCity"));
       
     }        
 

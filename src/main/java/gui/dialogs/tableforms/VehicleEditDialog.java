@@ -41,6 +41,7 @@ import java.awt.FlowLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -173,21 +174,21 @@ public abstract class VehicleEditDialog extends SimpleDialog implements IDialogF
         final JPanel buttonsPanel = new JPanel();
         
         JTabbedPane tabPane = new FormTabbedPane(bgColor);        
-        JPanel tabPane1 = (JPanel)tabPane.add("Dane pojazdu", new JPanel());
+        JPanel tabPane1 = (JPanel)tabPane.add(Lang.get("Gloss.VehicleData"), new JPanel());
         
         
         tabPane1.add(new JLabel(" "));
         
         final VehicleModelField vmField = new VehicleModelField(frame, vehicle.getVehicleModel());
-        tabPane1.add(new FormRowPad("Model pojazdu:", vmField));
+        tabPane1.add(new FormRowPad(Lang.get("Tables.VehicleModels.Model") + ":", vmField));
         
         final JTextField yearField = new JTextField(22);
         yearField.setText(String.valueOf(vehicle.getYear()));
-        tabPane1.add(new FormRowPad("Rok produkcji:", yearField));
+        tabPane1.add(new FormRowPad(Lang.get("Tables.VehicleModels.ProductionYear") + ":", yearField));
         
         final JTextField regNoField = new JTextField(22);
         regNoField.setText(vehicle.getRegistrationNo());
-        tabPane1.add(new FormRowPad("Nr rejestracyjny:", regNoField));        
+        tabPane1.add(new FormRowPad(Lang.get("Tables.VehicleModels.RegistrationNumber") + ":", regNoField));        
         
         final JTextArea commentField = new JTextArea(vehicle.getComment());
         commentField.setLineWrap(true);
@@ -199,14 +200,14 @@ public abstract class VehicleEditDialog extends SimpleDialog implements IDialogF
         sp.setMaximumSize(new Dimension(600, 60));
         sp.setPreferredSize(new Dimension(600, 60));
     
-        tabPane1.add(new FormRowPad("Uwagi:                      ", sp));
+        tabPane1.add(new FormRowPad(Lang.get("Gloss.Comment") + ":", sp));
         
-        final JCheckBox capableField = new JCheckBox("Pojazd dost\u0119pny");
+        final JCheckBox capableField = new JCheckBox(Lang.get("Gloss.VehicleAvailable"));
         capableField.setSelected(vehicle.isCapable());
         capableField.setOpaque(false);
         capableField.setFocusPainted(false);
         capableField.setFont(GUI.BASE_FONT);
-        tabPane1.add(new FormRowPad("Dost\u0119pno\u015b\u0107: ", capableField));
+        tabPane1.add(new FormRowPad(Lang.get("Gloss.Availability") + ":", capableField));
         
        
         add(tabPane);
@@ -216,7 +217,7 @@ public abstract class VehicleEditDialog extends SimpleDialog implements IDialogF
         buttonsPanel.setOpaque(false);
         buttonsPanel.setBorder(new EmptyBorder(12, 0, 2, 0));
 
-        JButton saveButton = new JButton(" Zapisz ");
+        JButton saveButton = new JButton(Lang.get("Save"));
         saveButton.setFocusPainted(false);
         
         saveButton.addActionListener(new ActionListener() {
@@ -255,7 +256,7 @@ public abstract class VehicleEditDialog extends SimpleDialog implements IDialogF
         buttonsPanel.add(saveButton);
         buttonsPanel.add(new JLabel(" "));
         buttonsPanel.add(new JLabel(" "));
-        buttonsPanel.add(new CloseButton(" Anuluj "));        
+        buttonsPanel.add(new CloseButton(Lang.get("Cancel")));        
         add(buttonsPanel);      
         
          

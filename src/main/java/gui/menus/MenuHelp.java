@@ -10,7 +10,9 @@ package gui.menus;
 
 
 import gui.GUI;
-import gui.dialogs.AboutDialog; 
+import gui.dialogs.AboutDialog;
+import somado.Lang;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
@@ -35,11 +37,10 @@ public class MenuHelp extends JMenu {
     */    
    public MenuHelp(final GUI frame) {
        
-    super("Pomoc ");
-    setMnemonic(KeyEvent.VK_P);    
+    super(Lang.get("Menu.Help") + " ");
+    setMnemonic(super.getText().contains("P") ? KeyEvent.VK_P : KeyEvent.VK_H);    
     
-    JMenuItem menuItem = new JMenuItem("O programie");
-    menuItem.setMnemonic(KeyEvent.VK_O);
+    JMenuItem menuItem = new JMenuItem(Lang.get("Menu.About"));
     add(menuItem);
     menuItem.addActionListener(new ActionListener() {
       @Override

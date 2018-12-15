@@ -13,6 +13,8 @@ import datamodel.Customer;
 import datamodel.glossaries.GlossCustomers;
 import gui.GUI;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +51,7 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
      */
     public GlossCustomersDialog(GUI frame) {
         
-        this(frame, "S\u0142ownik odbiorc\u00f3w towaru");
+        this(frame, Lang.get("Gloss.GlossReceivers"));
         
     }
     
@@ -80,7 +82,7 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
     
     public GlossCustomersDialog(GUI frame, int customerId) {
         
-        super(frame, "S\u0142ownik odbiorc\u00f3w towaru", customerId);
+        super(frame, Lang.get("Gloss.GlossReceivers"), customerId);
         
     }            
     
@@ -134,7 +136,7 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
         
       JPanel p = new JPanel(new GridLayout(1,4));
       
-      chooseButton = new JButton("Wybierz");
+      chooseButton = new JButton(Lang.get("Choose"));
       chooseButton.setEnabled(false);
       chooseButton.setFocusPainted(false);
             
@@ -150,7 +152,7 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
       
       p.add(chooseButton);
       
-      editButton = new JButton("Edytuj");
+      editButton = new JButton(Lang.get("Edit"));
       editButton.setEnabled(false);
       editButton.setFocusPainted(false);
       
@@ -165,7 +167,7 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
       
       p.add(editButton);
       
-      JButton addButton = new JButton("Dodaj nowy");
+      JButton addButton = new JButton(Lang.get("AddNew"));
       addButton.setFocusPainted(false);
       
       addButton.addActionListener(new ActionListener() {
@@ -196,9 +198,9 @@ public class GlossCustomersDialog extends GlossDialog<Customer> {
     @Override
     protected void setFiltersFormPanel(JPanel p) {
       
-      p.add(new JLabel("Nazwa:"));
+      p.add(new JLabel(Lang.get("Gloss.Name") + ":"));
       filters.addField("name", new JTextField(12));
-      p.add(new JLabel("Miejscowo\u015b\u0107:"));
+      p.add(new JLabel(Lang.get("Gloss.City") + ":"));
       filters.addField("city", new JTextField(12));
         
     }

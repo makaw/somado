@@ -8,6 +8,8 @@
  */
 package somado;
 
+import java.util.Locale;
+
 /**
  *
  * Interfejs konfiguracyjny
@@ -20,8 +22,12 @@ public interface IConf {
   /** Nazwa aplikacji */
   String APP_NAME = "Somado";
   /** Wersja aplikacji */
-  String APP_VERSION = "1.02 lite [12/2016]";        
+  String APP_VERSION = "1.03 lite [12/2018]";        
   
+  /** Dost�pne ustawienia lokalne */
+  Locale[] LOCALES = { new Locale("pl", "PL"), new Locale("en", "EN")};
+  /** Domy�lne ustawienie lokalne (indeks) */
+  int DEFAULT_LOCALE_INDEX = 1;
     
   /** Minimalna wymagana długość hasła */
   int MIN_PASS_LEN = 5;  

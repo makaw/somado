@@ -15,6 +15,7 @@ import gui.dialogs.gloss.GlossCustomersDialog;
 import gui.dialogs.gloss.GlossProductsDialog;
 import gui.dialogs.gloss.GlossVehicleModelsDialog;
 import gui.dialogs.tableforms.OrderEditNewDialog;
+import somado.Lang;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -43,13 +44,12 @@ public class MenuDeliveries extends JMenu {
     */    
    public MenuDeliveries(final GUI frame) {
        
-    super("Dostawy ");
+    super(Lang.get("Menu.Deliveries") + " ");
     setMnemonic(KeyEvent.VK_D);
     
     
-    JMenuItem menuItem = new JMenuItem("Nowe zam\u00f3wienie");
+    JMenuItem menuItem = new JMenuItem(Lang.get("Menu.NewOrder"));
     menuItem.setPreferredSize(new Dimension(190, 20));
-    menuItem.setMnemonic(KeyEvent.VK_Z);
     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
     add(menuItem);
     menuItem.addActionListener(new ActionListener() {
@@ -63,9 +63,8 @@ public class MenuDeliveries extends JMenu {
     });             
     
     
-    menuItem = new JMenuItem("Nowa dostawa");
+    menuItem = new JMenuItem(Lang.get("Menu.NewDelivery"));
     menuItem.setPreferredSize(new Dimension(160, 20));
-    menuItem.setMnemonic(KeyEvent.VK_D);
     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
     add(menuItem);
     menuItem.addActionListener(new ActionListener() {
@@ -80,9 +79,8 @@ public class MenuDeliveries extends JMenu {
     
     add(new JSeparator());
     
-    menuItem = new JMenuItem("Modele pojazd\u00f3w");
+    menuItem = new JMenuItem(Lang.get("Menu.CarModels"));
     menuItem.setPreferredSize(new Dimension(160, 20));
-    menuItem.setMnemonic(KeyEvent.VK_M);
     add(menuItem);    
     menuItem.addActionListener(new ActionListener() {
      @Override
@@ -94,8 +92,7 @@ public class MenuDeliveries extends JMenu {
      });          
      
      
-    menuItem = new JMenuItem("Produkty");
-    menuItem.setMnemonic(KeyEvent.VK_P);
+    menuItem = new JMenuItem(Lang.get("Menu.Products"));
     add(menuItem);    
     menuItem.addActionListener(new ActionListener() {
      @Override
@@ -106,8 +103,7 @@ public class MenuDeliveries extends JMenu {
        }
      });    
      
-    menuItem = new JMenuItem("Odbiorcy towaru");
-    menuItem.setMnemonic(KeyEvent.VK_O);
+    menuItem = new JMenuItem(Lang.get("Menu.Receivers"));
     add(menuItem);    
     menuItem.addActionListener(new ActionListener() {
      @Override

@@ -30,6 +30,7 @@ import gui.formfields.FormRowPad;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -104,22 +105,21 @@ public abstract class GlossVehicleModelEditDialog extends SimpleDialog {
  
      FormPanel() {
          
-        super(frame, "Dane modelu pojazdu", vehicleModel);
+        super(frame, Lang.get("Gloss.VehicleModelData"), vehicleModel);
 
         final JTextField nameField = new JTextField(22);
         nameField.setText(vehicleModel.getName());
-        dataTabPane.add(new FormRow("Nazwa:", nameField));
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Name") + ":", nameField));
 
         final SliderField maximumLoadField = new SliderField("", 2, IConf.MIN_VEHICLE_MAXLOAD, 
                 IConf.MAX_VEHICLE_MAXLOAD, "t   ");
         maximumLoadField.setValue(vehicleModel.getMaximumLoad());
-        dataTabPane.add(new FormRow("\u0141adowno\u015b\u0107:", maximumLoadField));
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Capacity") + ":", maximumLoadField));
         
         final SliderField avgFuelConsumptionField = new SliderField("", 2, IConf.MIN_VEHICLE_FUEL_CONSUMPTION,
                 IConf.MAX_VEHICLE_FUEL_CONSUMPTION, "l   ");
         avgFuelConsumptionField.setValue(vehicleModel.getAvgFuelConsumption());
-        dataTabPane.add(new FormRowPad("<html>\u015ar. zu\u017cycie<br />paliwa /100km:</html>:",
-                avgFuelConsumptionField));        
+        dataTabPane.add(new FormRowPad("<html>" + Lang.get("Gloss.AverageFuelConsumption") + " /100km:</html>:", avgFuelConsumptionField));        
                
         JPanel p = new JPanel(new FlowLayout());
         p.setPreferredSize(new Dimension(600, 35));
@@ -131,7 +131,7 @@ public abstract class GlossVehicleModelEditDialog extends SimpleDialog {
         p.setOpaque(false);
         p.setBorder(new EmptyBorder(12, 0, 2, 0));
 
-        JButton saveButton = new JButton(" Zapisz ");
+        JButton saveButton = new JButton(Lang.get("Save"));
         saveButton.setFocusPainted(false);
   
         final Integer id = vehicleModel.getId();
@@ -165,7 +165,7 @@ public abstract class GlossVehicleModelEditDialog extends SimpleDialog {
         p.add(saveButton);
         p.add(new JLabel(" "));
         p.add(new JLabel(" "));
-        p.add(new CloseButton(" Anuluj "));        
+        p.add(new CloseButton(Lang.get("Cancel")));        
         dataTabPane.add(p);        
 
          

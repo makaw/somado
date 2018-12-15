@@ -18,6 +18,8 @@ import gui.TablePanel;
 import gui.dialogs.ConfirmDialog;
 import gui.dialogs.tableforms.VehicleEditModDialog;
 import gui.dialogs.tableforms.VehicleEditNewDialog;
+import somado.Lang;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JSeparator;
@@ -46,7 +48,7 @@ public class TableVehiclesContextMenu extends TableContextMenu {
       
       
     
-      ContextMenuItem item = new ContextMenuItem("Edycja pojazdu", "icons/form_edit.png");
+      ContextMenuItem item = new ContextMenuItem(Lang.get("Tables.VehicleModels.Edit"), "icons/form_edit.png");
       item.addActionListener(new ActionListener() {
 
           @Override
@@ -59,7 +61,7 @@ public class TableVehiclesContextMenu extends TableContextMenu {
       });
       add(item);
       
-      item = new ContextMenuItem("Usu\u0144 pojazd", "icons/form_del.png");
+      item = new ContextMenuItem(Lang.get("Tables.VehicleModels.Delete"), "icons/form_del.png");
       item.addActionListener(new ActionListener() {
 
           @Override
@@ -70,8 +72,7 @@ public class TableVehiclesContextMenu extends TableContextMenu {
              Vehicle vTmp = 
                 new Vehicle(dModel.getElement(parentTable.convertRowIndexToModel(parentTable.getSelectedRow()))); 
               
-             if ((new ConfirmDialog(frame, "Czy na pewno usun\u0105\u0107 pojazd:\n"
-                     + vTmp.toString() + " ?", 170)).isConfirmed()) {
+             if ((new ConfirmDialog(frame, Lang.get("Tables.VehicleModels.Delete.AreYouSure", vTmp.toString()), 170)).isConfirmed()) {
                             
                 if (new GlossVehicles(frame.getDatabase()).deleteItem(vTmp, frame.getUser())) {
                     ((TablePanel) frame.getActiveDataPanel()).refreshTable();
@@ -89,7 +90,7 @@ public class TableVehiclesContextMenu extends TableContextMenu {
       
       add(new JSeparator());
      
-      item = new ContextMenuItem("Dodaj nowy pojazd", "icons/form_add.png");
+      item = new ContextMenuItem(Lang.get("Tables.VehicleModels.Add"), "icons/form_add.png");
       item.addActionListener(new ActionListener() {
 
           @Override

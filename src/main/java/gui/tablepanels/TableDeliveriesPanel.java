@@ -16,6 +16,8 @@ import gui.TableMouseAdapter;
 import gui.TablePanel;
 import gui.dialogs.DeliveryOpenDialog;
 import gui.dialogs.DeliveryViewDialog;
+import somado.Lang;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -126,17 +128,17 @@ public class TableDeliveriesPanel extends TablePanel {
   @Override
   protected void setFiltersPanel(JPanel p) {             
       
-    p.add(new JLabel("Data dostawy:"));
+    p.add(new JLabel(Lang.get("Tables.DeliveryDate") + ":"));
     filters.addField("delivery_date", new JTextField(11));    
     
     p.add(new JLabel("      "));  
       
     JComboBox<String> stateField  = new JComboBox<>();      
-    stateField.setModel(new DefaultComboBoxModel<>(new String[]{"Aktywna      ", "Zako\u0144czona  "}));
+    stateField.setModel(new DefaultComboBoxModel<>(new String[]{Lang.get("Tables.Delivery.Active") + "   ", Lang.get("Tables.Delivery.Done") + "   " }));
     stateField.setFont(GUI.BASE_FONT);
     stateField.setSelectedIndex(0);
             
-    p.add(new JLabel("Stan:"));
+    p.add(new JLabel(Lang.get("Tables.Status") + ":"));
     filters.addField("state_id", stateField);  
     
   }
@@ -185,7 +187,7 @@ public class TableDeliveriesPanel extends TablePanel {
     p.setBorder(new EmptyBorder(10, 10, 10, 10));          
   
     
-    viewButton = new JButton("Podgl\u0105d dostawy", ImageRes.getIcon("icons/map.png"));
+    viewButton = new JButton(Lang.get("Tables.Delivery.Preview"), ImageRes.getIcon("icons/map.png"));
     viewButton.setEnabled(false);
     viewButton.setFocusPainted(false);
     viewButton.setMaximumSize(new Dimension(100, 20));
@@ -202,7 +204,7 @@ public class TableDeliveriesPanel extends TablePanel {
     p.add(viewButton);
     
       
-    addButton = new JButton("Nowa dostawa", ImageRes.getIcon("icons/delivery.png"));
+    addButton = new JButton(Lang.get("Menu.NewDelivery"), ImageRes.getIcon("icons/delivery.png"));
     addButton.setFocusPainted(false);
       
     addButton.addActionListener(new ActionListener() {

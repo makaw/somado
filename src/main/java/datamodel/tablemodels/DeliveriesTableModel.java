@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import org.jxmapviewer.viewer.GeoPosition;
 import somado.Database;
+import somado.Lang;
 import somado.Settings;
 
 /**
@@ -36,8 +37,10 @@ import somado.Settings;
 public class DeliveriesTableModel extends TableModel<Delivery> {
        
   /** Nazwy (nagłówki) kolumn tabeli */
-  private String[] columnNames = { "Data dostawy", "Kierowcy", "Zamówienia", "Dostarczono",
-                                   "Waga[t]", "Paliwo[l]", "Czas", "Dystans [km]", "Stan" };
+  private String[] columnNames = { Lang.get("Tables.DeliveryDate"), Lang.get("Tables.Drivers"), Lang.get("Tables.Orders"),
+		  Lang.get("Tables.Delivered"), Lang.get("Tables.Weight") + " [t]", Lang.get("Tables.Fuel") + " [l]", 
+		  Lang.get("Tables.Time"), Lang.get("Tables.Distance") + " [km]", Lang.get("Tables.Status") };
+                                
   /** Nazwy pól filtrów */
   private String[] filterNames = { "delivery_date", "state_id" };
 
@@ -100,7 +103,7 @@ public class DeliveriesTableModel extends TableModel<Delivery> {
     
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }  
     
@@ -180,7 +183,7 @@ public class DeliveriesTableModel extends TableModel<Delivery> {
            
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }     
 
@@ -249,7 +252,7 @@ public class DeliveriesTableModel extends TableModel<Delivery> {
         try {
           Thread.sleep(2);
         } catch (InterruptedException ex) {
-          throw new SQLException("Przerwano wczytywanie dostawy."); 
+          throw new SQLException(Lang.get("Error.StopDelivery")); 
         }
         
     }

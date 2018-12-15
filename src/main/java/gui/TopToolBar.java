@@ -8,11 +8,7 @@
  */
 package gui;
 
-import gui.dialogs.AboutDialog;
-import gui.dialogs.ConfirmDialog;
-import gui.dialogs.DeliveryOpenDialog;
-import gui.dialogs.SettingsDialog;
-import gui.dialogs.tableforms.OrderEditNewDialog;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -20,13 +16,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import javax.swing.Box;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
+
+import gui.dialogs.AboutDialog;
+import gui.dialogs.ConfirmDialog;
+import gui.dialogs.DeliveryOpenDialog;
+import gui.dialogs.SettingsDialog;
+import gui.dialogs.tableforms.OrderEditNewDialog;
+import somado.IConf;
+import somado.Lang;
 import somado.User;
 
 
@@ -41,12 +51,11 @@ import somado.User;
 @SuppressWarnings("serial")
 public class TopToolBar extends JToolBar {
     
-  /** Etykieta z nazwą zalogowanego użytkownika */  
-  private final JLabel userLabel;
-  /** Etykieta z nazwą wybranej bazy danych */
-  private final JLabel dbLabel;
   /** Lista przycisków tylko dla admina (do zablokowania) */
   private final List<JButton> adminButtons;
+  /** Przyciski */
+  private final ToolBarButton orderBtn, delivBtn, settBtn, aboutBtn, quitBtn;
+  
   
   /**
    * Wewnętrzna klasa budująca pojedynczy przycisk na pasku narzędziowym
@@ -76,12 +85,12 @@ public class TopToolBar extends JToolBar {
     adminButtons = new ArrayList<>();
     
     JPanel toolBarElem = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    toolBarElem.setOpaque(false);
+    toolBarElem.setOpaque(false);    
     
-    ToolBarButton tbButton = new ToolBarButton(ImageRes.getIcon("icons/form_add.png"), "Nowe zam\u00f3wienie");
-    toolBarElem.add(tbButton);
+    orderBtn = new ToolBarButton(ImageRes.getIcon("icons/form_add.png"), Lang.get("Menu.NewOrder"));
+    toolBarElem.add(orderBtn);
     toolBarElem.add(new JLabel(" "));
-    tbButton.addActionListener(new ActionListener() {
+    orderBtn.addActionListener(new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -91,12 +100,11 @@ public class TopToolBar extends JToolBar {
             
         }  
     
-    });
-        
+    });        
     
     
-    tbButton = new ToolBarButton(ImageRes.getIcon("icons/delivery.png"), "Nowa dostawa");
-    tbButton.addActionListener(new ActionListener() {
+    delivBtn = new ToolBarButton(ImageRes.getIcon("icons/delivery.png"), Lang.get("Menu.NewDelivery"));
+    delivBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
        
@@ -104,13 +112,13 @@ public class TopToolBar extends JToolBar {
           
       }
     });      
-    toolBarElem.add(tbButton);    
+    toolBarElem.add(delivBtn);    
     toolBarElem.add(new JLabel(" "));             
     
     
-    tbButton = new ToolBarButton(ImageRes.getIcon("icons/tools.png"), "Ustawienia");
-    adminButtons.add(tbButton);
-    tbButton.addActionListener(new ActionListener() {
+    settBtn = new ToolBarButton(ImageRes.getIcon("icons/tools.png"), Lang.get("Menu.Settings"));
+    adminButtons.add(settBtn);
+    settBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
           
@@ -118,11 +126,11 @@ public class TopToolBar extends JToolBar {
         
       }
     });      
-    toolBarElem.add(tbButton);    
+    toolBarElem.add(settBtn);    
     toolBarElem.add(new JLabel(" ")); 
     
-    tbButton = new ToolBarButton(ImageRes.getIcon("icons/help.png"), "O programie");
-    tbButton.addActionListener(new ActionListener() {
+    aboutBtn = new ToolBarButton(ImageRes.getIcon("icons/help.png"), Lang.get("Menu.About"));
+    aboutBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
        
@@ -130,62 +138,59 @@ public class TopToolBar extends JToolBar {
         
       }
     });            
-    toolBarElem.add(tbButton);
+    toolBarElem.add(aboutBtn);
     toolBarElem.add(new JLabel(" "));
     
-    tbButton = new ToolBarButton(ImageRes.getIcon("icons/exit.png"), "Koniec");
-    tbButton.addActionListener(new ActionListener() {
+    quitBtn = new ToolBarButton(ImageRes.getIcon("icons/exit.png"), Lang.get("Menu.Quit"));
+    quitBtn.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(final ActionEvent e) {
           
-        boolean res = new ConfirmDialog(frame, "Czy na pewno zako\u0144czy\u0107 ?").isConfirmed();        
+        boolean res = new ConfirmDialog(frame, Lang.get("Menu.Quit.AreYouSure")).isConfirmed();        
         if (res) frame.quitApp();
         
       }
     });      
-    toolBarElem.add(tbButton);
+    toolBarElem.add(quitBtn);
     
     add(toolBarElem);
     add(Box.createHorizontalGlue());
-
-    userLabel = new JLabel(ImageRes.getIcon("icons/user.png"));
-    userLabel.setFont(GUI.BASE_FONT);
-    userLabel.setBorder(new EmptyBorder(0, 0, 0, 15));
-    userLabel.setVisible(false);
-    userLabel.setToolTipText("Zalogowany u\u017cytkownik");
-    add(userLabel);   
+     
     
-    dbLabel = new JLabel(ImageRes.getIcon("icons/database.png"));
-    dbLabel.setFont(GUI.BASE_FONT);
-    dbLabel.setBorder(new EmptyBorder(0, 10, 0, 15));
-    dbLabel.setVisible(false);
-    dbLabel.setToolTipText("Stan po\u0142\u0105czenia z baz\u0105 danych");
-    add(dbLabel);  
-            
+    JComboBox<Locale> langList = new JComboBox<>(IConf.LOCALES);    
+    langList.setSelectedIndex(IConf.DEFAULT_LOCALE_INDEX);
+    langList.setFont(GUI.BASE_FONT);
+    langList.setBorder(new EmptyBorder(0, 10, 0, 15));
+    langList.setEditable(false);
+    langList.setRenderer(new ListCellRenderer<Locale>() {
+		@Override
+		public Component getListCellRendererComponent(JList<? extends Locale> list, Locale value, int index,
+			boolean isSelected, boolean cellHasFocus) {
+			DefaultListCellRenderer listRenderer = new DefaultListCellRenderer();
+			JLabel c = (JLabel) listRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); 
+			c.setText(value.getDisplayLanguage(value));	
+			c.setIcon(Lang.getIcon(value));
+			return c;
+		}
+	});
+    langList.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Lang.setLocale(langList.getSelectedIndex());
+			frame.refreshAfterLangChange();
+			frame.repaint();			
+		}
+	});
+
+    langList.setMaximumSize(new Dimension(150, 24));
+    add(langList);        
+    
     setMaximumSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width,35));
       
   }
   
-  /**
-   * Metoda zwraca referencję do etykiety z nazwą zalogowanego użytkownika
-   * @return Referencja do etykiety z nazwą zalogowanego użytkownika
-   */
-  protected JLabel getUserLabel() {
-   
-    return userLabel;  
-      
-  }
-  
-  /**
-   * Metoda zwraca referencję do etykiety ze stanem połączenia z bazą danych
-   * @return Referencja do etykiety ze stanem połączenia z bazą danych
-   */  
-  protected JLabel getDbLabel() {
-      
-    return dbLabel;  
-      
-  }
-  
+
   /**
    * Metoda w razie potrzeby blokuje przyciski tylko dla administratora
    * @param user Obiekt zalogowanego użytkownika
@@ -194,6 +199,18 @@ public class TopToolBar extends JToolBar {
       
      for (JButton b: adminButtons) b.setEnabled(user.isAdmin());
       
+  }
+  
+  
+  
+  public void setBtnCaptions() {
+	  	    
+	 orderBtn.setToolTipText(Lang.get("Menu.NewOrder"));
+	 delivBtn.setToolTipText(Lang.get("Menu.NewDelivery"));
+	 settBtn.setToolTipText(Lang.get("Menu.Settings"));
+	 aboutBtn.setToolTipText(Lang.get("Menu.About"));
+	 quitBtn.setToolTipText(Lang.get("Menu.Quit"));
+	 
   }
   
     

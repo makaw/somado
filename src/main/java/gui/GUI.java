@@ -39,6 +39,7 @@ import javax.swing.plaf.metal.OceanTheme;
 import somado.AppObserver;
 import somado.Database;
 import somado.IConf;
+import somado.Lang;
 import somado.Somado;
 import somado.User;
 
@@ -73,6 +74,9 @@ public class GUI extends JFrame implements Observer {
   
   /** Liczba bocznych zakładek */
   private static final int TABS_COUNT = 4;
+  
+  /** Boczne etykiety */
+  private JLabel labTab0, labTab1, labTab2, labTab3;
   
   /** Górny pasek narzędziowy */
   private TopToolBar topToolBar;
@@ -180,22 +184,22 @@ public class GUI extends JFrame implements Observer {
     for (int i=0;i<TABS_COUNT;i++)  tabPane.addTab(null, new EmptyPanel());
 
     // Boczne zakładki
-    JLabel labTab0 = new JLabel("Pojazdy", JLabel.CENTER);
+    labTab0 = new JLabel(Lang.get("GUI.Cars"), JLabel.CENTER);
     labTab0.setUI(new VerticalLabelUI(false));
     tabPane.setTabComponentAt(TAB_VEHICLES, labTab0); 
     labTab0.setPreferredSize(new Dimension(11,105));    
     
-    JLabel labTab1 = new JLabel("Kierowcy",  JLabel.CENTER);
+    labTab1 = new JLabel(Lang.get("GUI.Drivers"),  JLabel.CENTER);
     labTab1.setUI(new VerticalLabelUI(false)); 
     tabPane.setTabComponentAt(TAB_DRIVERS, labTab1); 
     labTab1.setPreferredSize(new Dimension(11,105));
 
-    JLabel labTab2 = new JLabel("Zam\u00f3wienia", JLabel.CENTER);
+    labTab2 = new JLabel(Lang.get("GUI.Orders"), JLabel.CENTER);
     labTab2.setUI(new VerticalLabelUI(false));
     tabPane.setTabComponentAt(TAB_ORDERS, labTab2); 
     labTab2.setPreferredSize(new Dimension(11,105));
 
-    JLabel labTab3 = new JLabel("Dostawy", JLabel.CENTER);
+    labTab3 = new JLabel(Lang.get("GUI.Deliveries"), JLabel.CENTER);
     labTab3.setUI(new VerticalLabelUI(false));
     tabPane.setTabComponentAt(TAB_DELIVERIES, labTab3); 
     labTab3.setPreferredSize(new Dimension(11,105));    
@@ -222,22 +226,22 @@ public class GUI extends JFrame implements Observer {
               
               case TAB_VEHICLES:  
                   
-                tabPane.setComponentAt(TAB_VEHICLES, new TableVehiclesPanel("Lista pojazd\u00f3w", GUI.this));  
+                tabPane.setComponentAt(TAB_VEHICLES, new TableVehiclesPanel(Lang.get("GUI.CarsList"), GUI.this));  
                 break;
                   
               case TAB_DRIVERS:  
                   
-                tabPane.setComponentAt(TAB_DRIVERS, new TableDriversPanel("Lista kierowc\u00f3w", GUI.this));                
+                tabPane.setComponentAt(TAB_DRIVERS, new TableDriversPanel(Lang.get("GUI.DriversList"), GUI.this));                
                 break;
                   
               case TAB_ORDERS:  
                   
-                tabPane.setComponentAt(TAB_ORDERS, new TableOrdersPanel("Lista zam\u00f3wie\u0144", GUI.this));
+                tabPane.setComponentAt(TAB_ORDERS, new TableOrdersPanel(Lang.get("GUI.OrdersList"), GUI.this));
                 break;  
                   
               case TAB_DELIVERIES: 
                   
-                tabPane.setComponentAt(TAB_DELIVERIES, new TableDeliveriesPanel("Lista dostaw", GUI.this));
+                tabPane.setComponentAt(TAB_DELIVERIES, new TableDeliveriesPanel(Lang.get("GUI.DeliveriesList"), GUI.this));
                 break;                                        
     
               
@@ -265,14 +269,37 @@ public class GUI extends JFrame implements Observer {
   /**
    * Odswiezenie zawartosci wszystkich zakladek bocznych
    */
-  public void refreshTabPanels() {
-      
+  public void refreshTabPanels() {      	  
+	    
     getActiveDataPanel().setChanged(true);
     int sel = getSelectedDataPanel();
     setSelectedDataPanel(sel > 0 ? 0 : 1);                 
-    for (int i=0;i<TABS_COUNT;i++) getDataPanel(i).setChanged(true);      
+    for (int i=0;i<TABS_COUNT;i++) {
+    	
+    	getDataPanel(i).setChanged(true);      
+    }
     setSelectedDataPanel(sel);            
       
+  }
+  
+  
+  public void refreshAfterLangChange() {
+
+	labTab0.setText(Lang.get("GUI.Cars"));
+	labTab1.setText(Lang.get("GUI.Drivers"));
+	labTab2.setText(Lang.get("GUI.Orders"));
+	labTab3.setText(Lang.get("GUI.Deliveries"));
+		
+	menu.removeAll();
+	menu.add(new MenuApplication(this));
+	menu.add(new MenuDeliveries(this));
+	menu.add(new MenuHelp(this));
+	setJMenuBar(menu);   
+	
+	topToolBar.setBtnCaptions();
+	
+	refreshTabPanels();
+	
   }
   
   
@@ -284,23 +311,9 @@ public class GUI extends JFrame implements Observer {
       
     this.user = user;
     topToolBar.lockButtons(user);
-    setDbLabel(true);
-    topToolBar.getDbLabel().setVisible(true);
     
   }  
   
-  
-  /**
-   * Ustawienie etykiety stanu połączenia ze zdalną bazą danych
-   * @param connected True jeżeli OK
-   */
-  public void setDbLabel(boolean connected) {
-      
-    topToolBar.getDbLabel().setText(connected ? " OK  " : " ERR");
-    topToolBar.getDbLabel().setForeground(connected ?  new Color(0x009933) : Color.red);
-      
-      
-  }
   
   
   /**

@@ -23,6 +23,8 @@ import javax.swing.JPanel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+
+import somado.Lang;
 import somado.Settings;
 
 /**
@@ -77,9 +79,9 @@ public class DateField extends JPanel implements IFormField {
      final UtilDateModel model = new UtilDateModel();
      
      Properties pr = new Properties();
-     pr.put("text.today", "Dzi\u015b");
-     pr.put("text.month", "Miesi\u0105c");
-     pr.put("text.year", "Rok");    
+     pr.put("text.today", Lang.get("Today"));
+     pr.put("text.month", Lang.get("Month"));
+     pr.put("text.year", Lang.get("Year"));    
  
      JDatePanelImpl datePanel = new JDatePanelImpl(model, pr);
      datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
@@ -98,7 +100,7 @@ public class DateField extends JPanel implements IFormField {
      datePicker.setButtonFocusable(false);
      
      changeButton = (JButton) datePicker.getComponent(1);
-     changeButton.setToolTipText("Ustaw dat\u0119");
+     changeButton.setToolTipText(Lang.get("Fields.SetDate"));
      changeButton.setText("");
      changeButton.setIcon(ImageRes.getIcon("icons/calendar.png"));
      changeButton.setPreferredSize(new Dimension(30, 30));

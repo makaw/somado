@@ -115,7 +115,7 @@ public class Settings extends HashMap<String, String> {
     	}
     	catch (IOException | NullPointerException ex2) {
           System.err.println(ex2);
-          throw new SettingsException("Nie mo\u017cna odczyta\u0107 podstawowej konfiguracji (b\u0142\u0105d I/O).");
+          throw new SettingsException(Lang.get("Error.MissingConf"));
     	}
       }
     }    
@@ -131,7 +131,7 @@ public class Settings extends HashMap<String, String> {
       southBoxCoord = Double.valueOf(props.getProperty("coordsbox.south"));
     }
     catch (Exception e) {
-      throw new SettingsException("Nieprawid\u0142owe wsp\u0142\u00f3rz\u0119dne graniczne obs\u0142ugiwanego obszaru.");  
+      throw new SettingsException(Lang.get("Error.WrongGeoCoords"));  
     }
     
     this.put("tms_url", props.getProperty("tms.url"));

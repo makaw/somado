@@ -17,6 +17,8 @@ import gui.ImageRes;
 import gui.dialogs.ConfirmDialog;
 import gui.dialogs.ErrorDialog;
 import gui.dialogs.tableforms.OrderItemAddDialog;
+import somado.Lang;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -89,7 +91,7 @@ public class OrderProductsField extends JPanel implements IFormField {
             boolean isSelected, boolean cellHasFocus) {
         
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        Color bg = value.toString().equals("(brak)") ? Color.gray : Color.black;     
+        Color bg = value.toString().equals(Lang.get("Undefined")) ? Color.gray : Color.black;     
         setForeground(bg);
         setOpaque(true); 
         return this; 
@@ -132,8 +134,8 @@ public class OrderProductsField extends JPanel implements IFormField {
      add(sp);
          
      add(new JLabel(" "));
-     addButton = new IconButton(ImageRes.getIcon("icons/form_add.png"), "Dodaj produkt");
-     deleteButton = new IconButton(ImageRes.getIcon("icons/form_del.png"), "Usu\u0144 produkt");
+     addButton = new IconButton(ImageRes.getIcon("icons/form_add.png"), Lang.get("Fields.AddItem"));
+     deleteButton = new IconButton(ImageRes.getIcon("icons/form_del.png"), Lang.get("Fields.DeleteItem"));
      deleteButton.setEnabled(false);
             
      add(addButton);
@@ -178,8 +180,7 @@ public class OrderProductsField extends JPanel implements IFormField {
                if (iterator.next().getProduct().getId().equals(tmp.getProduct().getId())) err = true;
             }
             
-            if (err) new ErrorDialog(frame, "Produkt:\n" + tmp.getProduct().toString() + "\nju\u017c "
-                       + "znajduje si\u0119 na li\u015bcie.");
+            if (err) new ErrorDialog(frame, Lang.get("Fields.ItemOnListAlready", tmp.getProduct().toString()));
             
             else {            
               order.getProducts().add(tmp);
@@ -198,7 +199,7 @@ public class OrderProductsField extends JPanel implements IFormField {
        public void actionPerformed(ActionEvent e) {
                 
           // usuniecie, odswiezenie listy w formularzu i tabeli 
-          if ((new ConfirmDialog(frame,"Czy na pewno usun\u0105\u0107 ?")).isConfirmed()) {
+          if (new ConfirmDialog(frame, Lang.get("Fields.AreYouSureToDelete")).isConfirmed()) {
                    
               int index = -1; 
               Iterator<OrderItem> iterator = order.getProducts().iterator();

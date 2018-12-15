@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 
 
@@ -222,16 +223,14 @@ public class Order implements IDataEditable {
    @Override
    public void verify() throws Exception {
         
-      if (customer.getId()==0)  throw new Exception("Nie wybrano odbiorcy towaru.");    
-      if (products.isEmpty()) throw new Exception("Nie wybrano produkt\u00f3w.");  
+      if (customer.getId()==0)  throw new Exception(Lang.get("Data.Order.MissingReceiver"));    
+      if (products.isEmpty()) throw new Exception(Lang.get("Data.Order.MissingItems"));
 
       double totalWeight = getTotalWeight();
       
-      if (totalWeight > IConf.MAX_VEHICLE_MAXLOAD*1000.0) 
-        throw new Exception("\u0141\u0105czna waga produkt\u00f3w to:\n" + String.format("%.2f", totalWeight)
-                  + " kg.\n\u0141\u0105czna waga produkt\u00f3w nie mo\u017ce przekracza\u0107 "
-                  + "maksymalnej \u0142adowno\u015bci pojazdu "
-                  + "(" + String.format("%.2f", IConf.MAX_VEHICLE_MAXLOAD) + " t).");
+      if (totalWeight > IConf.MAX_VEHICLE_MAXLOAD * 1000.0) 
+        throw new Exception(Lang.get("Data.Order.ItemsTooHeavy", 
+        		String.format("%.2f", totalWeight) + "kg", String.format("%.2f", IConf.MAX_VEHICLE_MAXLOAD) + " t"));
         
     }
     

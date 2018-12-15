@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import somado.Database;
+import somado.Lang;
 import somado.Settings;
 
 /**
@@ -35,8 +36,10 @@ import somado.Settings;
 public class OrdersTableModel extends TableModel<Order> {
        
   /** Nazwy (nagłówki) kolumn tabeli */
-  private String[] columnNames = { "Data i godzina", "Numer", "Odbiorca", "Stan", "Produkty",
-                                   "Waga [kg]", "Uwagi" };
+  private String[] columnNames = { Lang.get("Tables.Orders.Datetime"), Lang.get("Tables.Orders.Number"), 
+		  Lang.get("Tables.Orders.Receiver"), Lang.get("Tables.Orders.Status"), Lang.get("Tables.Orders.Items"), 
+		  Lang.get("Tables.Orders.Weight") + " [kg]", Lang.get("Tables.Orders.Remarks") };
+  
   /** Nazwy pól filtrów */
   private String[] filterNames = { "number", "customer_name", "customer_city", "state_id" };
 
@@ -98,7 +101,7 @@ public class OrdersTableModel extends TableModel<Order> {
     
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }  
     
@@ -174,7 +177,7 @@ public class OrdersTableModel extends TableModel<Order> {
            
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }     
 

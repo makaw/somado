@@ -12,6 +12,7 @@ package datamodel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -137,9 +138,9 @@ public class VehicleModel implements IDataEditable {
    @Override
    public void verify() throws Exception {
     
-      if (name.isEmpty())  throw new Exception("Nie podano nazwy modelu pojazdu.");       
+      if (name.isEmpty())  throw new Exception(Lang.get("Data.VehicleModel.MissingName"));       
       if (maximumLoad<IConf.MIN_VEHICLE_MAXLOAD || maximumLoad>IConf.MAX_VEHICLE_MAXLOAD) 
-          throw new Exception("Nieprawid\u0142owa \u0142adowno\u015b\u0107 pojazdu.");
+          throw new Exception(Lang.get("Data.VehicleModel.WrongCapacity"));
        
    }
     

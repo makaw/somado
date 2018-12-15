@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import somado.Database;
+import somado.Lang;
 import somado.User;
 
 
@@ -56,7 +57,7 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
       if (rs.next()) return new VehicleModel(rs);
           
     } catch (SQLException e) {
-       System.err.println("B\u0142\u0105d SQL: "+e);
+       System.err.println(Lang.get("Error.Sql", e));
     }
      
     return null;
@@ -97,7 +98,7 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
          
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }         
     
@@ -156,8 +157,8 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
          
       } catch (SQLException e) {
       
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
       }    
@@ -201,8 +202,8 @@ public class GlossVehicleModels extends Glossary<VehicleModel> implements IGloss
           
       } catch (SQLException e) {
       
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
       }    

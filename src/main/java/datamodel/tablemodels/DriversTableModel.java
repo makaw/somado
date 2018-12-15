@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import somado.Database;
+import somado.Lang;
 import somado.Settings;
 
 /**
@@ -31,8 +32,11 @@ import somado.Settings;
 public class DriversTableModel extends TableModel<Driver> {
        
   /** Nazwy (nagłówki) kolumn tabeli */
-  private String[] columnNames = { "Nazwisko", "Imi\u0119", "Model pojazdu", "Nr rejestr.",
-                                   "Uwagi", "Dost\u0119pny", "Pojazd dost." };
+  private String[] columnNames = { Lang.get("Tables.Drivers.Surname"), Lang.get("Tables.Drivers.Firstname"),
+		  		Lang.get("Tables.Drivers.CarModel"), Lang.get("Tables.Drivers.RegNumber.Short"), 
+		  		Lang.get("Tables.Drivers.Remarks"), Lang.get("Tables.Drivers.Available"), 
+		  		Lang.get("Tables.Drivers.CarAvailable") };
+		  		
   /** Nazwy pól filtrów */
   private String[] filterNames = { "surname", "registration_no" };
 
@@ -84,7 +88,7 @@ public class DriversTableModel extends TableModel<Driver> {
     
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }  
     
@@ -124,8 +128,8 @@ public class DriversTableModel extends TableModel<Driver> {
          data[i][2] = rs.getString("vehicle_model_name") == null ? "-" : rs.getString("vehicle_model_name");         
          data[i][3] = rs.getString("vehicle_registration_no") == null ? "-" : rs.getString("vehicle_registration_no");
          data[i][4] = rs.getString("comment");
-         data[i][5] = rs.getBoolean("available") ? "Tak" : "Nie";
-         data[i][6] = rs.getBoolean("vehicle_capable") ? "Tak" : "Nie";
+         data[i][5] = rs.getBoolean("available") ? Lang.get("Yes") : Lang.get("No");
+         data[i][6] = rs.getBoolean("vehicle_capable") ? Lang.get("Yes") : Lang.get("No");
                  
          items.add(i, new Driver(rs));
          
@@ -137,7 +141,7 @@ public class DriversTableModel extends TableModel<Driver> {
            
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }     
 

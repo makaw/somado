@@ -29,6 +29,7 @@ import com.graphhopper.jsprit.core.problem.solution.route.activity.TourActivity;
 import org.jxmapviewer.viewer.GeoPosition;
 import somado.Database;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 import somado.SettingsException;
 import somado.User;
@@ -308,7 +309,7 @@ public class DeliveryPlan {
       ps.executeUpdate();
      
       ResultSet rs = ps.getGeneratedKeys();
-      if (!rs.next())  throw new SQLException("b\u0142ad zapisu");  
+      if (!rs.next())  throw new SQLException(Lang.get("Error.Save"));  
       int deliveryId = rs.getInt(1);
       rs.close();
         
@@ -326,7 +327,7 @@ public class DeliveryPlan {
          ps.executeUpdate();
        
          rs = ps.getGeneratedKeys();
-         if (!rs.next()) throw new SQLException("b\u0142ad zapisu");          
+         if (!rs.next()) throw new SQLException(Lang.get("Error.Save"));          
          int driverId = rs.getInt(1);
          rs.close();     
          
@@ -361,7 +362,7 @@ public class DeliveryPlan {
             ps.executeUpdate();
            
             rs = ps.getGeneratedKeys();
-            if (!rs.next()) throw new SQLException("b\u0142ad zapisu"); 
+            if (!rs.next()) throw new SQLException(Lang.get("Error.Save")); 
             int orderId = rs.getInt(1);
             rs.close();
             
@@ -411,7 +412,7 @@ public class DeliveryPlan {
            Thread.sleep(2);
          }
          catch (InterruptedException ex) {
-           throw new SQLException("Przerwano proces zapisu dostawy.");  
+           throw new SQLException(Lang.get("Error.StopDeliverySave"));  
          }
           
       }        

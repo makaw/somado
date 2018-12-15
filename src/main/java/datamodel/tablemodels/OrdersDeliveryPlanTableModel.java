@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import somado.Database;
+import somado.Lang;
 import somado.Settings;
 
 /**
@@ -39,10 +40,12 @@ import somado.Settings;
 public class OrdersDeliveryPlanTableModel extends TableModel<Order> {
        
   /** Nazwy (nagłówki) kolumn tabeli */
-  private String[] columnNames = { "", "Data i godzina", "Numer", "Odbiorca", "Waga [kg]" };
+  private String[] columnNames = { "", Lang.get("Tables.Orders.Datetime"), Lang.get("Tables.Orders.Number"),
+		  Lang.get("Tables.Orders.Receiver"), Lang.get("Tables.Orders.Weight") + " [kg]" };
   
   /** Nazwy (nagłówki) kolumn tabeli dla modelu tworzonego z listy */
-  private String[] columnNamesFromList = { "Data i godzina", "Numer", "Odbiorca", "Waga [kg]" };  
+  private String[] columnNamesFromList = { Lang.get("Tables.Orders.Datetime"), Lang.get("Tables.Orders.Number"),
+		  Lang.get("Tables.Orders.Receiver"), Lang.get("Tables.Orders.Weight") + " [kg]"  };  
   
   /** Liczba wszystkich elementów */
   final private int allElementsNum;                 
@@ -81,7 +84,7 @@ public class OrdersDeliveryPlanTableModel extends TableModel<Order> {
     
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }  
     
@@ -147,7 +150,7 @@ public class OrdersDeliveryPlanTableModel extends TableModel<Order> {
            
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }     
 

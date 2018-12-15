@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -86,7 +87,7 @@ public abstract class SimpleDialog extends JDialog {
 
      public CloseButton() {
            
-        this("Zamknij"); 
+        this(Lang.get("Close")); 
            
      }       
     
@@ -119,7 +120,7 @@ public abstract class SimpleDialog extends JDialog {
 
      public QuitButton() {
            
-        this("Zako\u0144cz"); 
+        this(Lang.get("Quit")); 
            
      }       
     

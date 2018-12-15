@@ -13,6 +13,8 @@ import gui.GUI;
 import gui.IconButton;
 import gui.ImageRes;
 import gui.dialogs.gloss.GlossCustomersDialog;
+import somado.Lang;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -70,7 +72,7 @@ public class CustomerField extends JPanel implements IFormField {
     textField.setCaretPosition(0);
     add(textField);
         
-    changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), "Zmie\u0144 odbiorc\u0119 towaru");
+    changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), Lang.get("Fields.ChangeReceiver"));
     
     changeButton.addActionListener(new ActionListener() {
 

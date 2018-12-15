@@ -13,6 +13,8 @@ import datamodel.Product;
 import datamodel.glossaries.GlossProducts;
 import gui.GUI;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -53,7 +55,7 @@ public class GlossProductsDialog extends GlossDialog<Product> {
      */
     public GlossProductsDialog(GUI frame) {
         
-        this(frame, "S\u0142ownik produkt\u00f3w");
+        this(frame, Lang.get("Gloss.GlossItems"));
         
     }
     
@@ -84,7 +86,7 @@ public class GlossProductsDialog extends GlossDialog<Product> {
     
     public GlossProductsDialog(GUI frame, int productId) {
         
-        super(frame, "S\u0142ownik produkt\u00f3w", productId);
+        super(frame, Lang.get("Gloss.GlossItems"), productId);
         
     }            
     
@@ -138,7 +140,7 @@ public class GlossProductsDialog extends GlossDialog<Product> {
         
       JPanel p = new JPanel(new GridLayout(1,4));
       
-      chooseButton = new JButton("Wybierz");
+      chooseButton = new JButton(Lang.get("Choose"));
       chooseButton.setEnabled(false);
       chooseButton.setFocusPainted(false);
             
@@ -154,7 +156,7 @@ public class GlossProductsDialog extends GlossDialog<Product> {
       
       p.add(chooseButton);
       
-      editButton = new JButton("Edytuj");
+      editButton = new JButton(Lang.get("Edit"));
       editButton.setEnabled(false);
       editButton.setFocusPainted(false);
       
@@ -169,7 +171,7 @@ public class GlossProductsDialog extends GlossDialog<Product> {
       
       p.add(editButton);
       
-      JButton addButton = new JButton("Dodaj nowy");
+      JButton addButton = new JButton(Lang.get("AddNew"));
       addButton.setFocusPainted(false);
       
       addButton.addActionListener(new ActionListener() {
@@ -200,7 +202,7 @@ public class GlossProductsDialog extends GlossDialog<Product> {
     @Override
     protected void setFiltersFormPanel(JPanel p) {
       
-      p.add(new JLabel("Nazwa:"));
+      p.add(new JLabel(Lang.get("Gloss.Name") + ":"));
       filters.addField("name", new JTextField(12));
         
     }

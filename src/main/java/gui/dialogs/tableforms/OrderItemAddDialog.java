@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -51,7 +52,7 @@ public class OrderItemAddDialog extends SimpleDialog implements IDialogForm {
    */
   public OrderItemAddDialog(GUI frame) {
         
-    super(frame, IConf.APP_NAME + " - dodanie pozycji zam\u00f3wienia");
+    super(frame, IConf.APP_NAME + " - " + Lang.get("Gloss.AddOrderItem"));
     orderItem = new OrderItem();
     super.showDialog(480, 145);
          
@@ -69,18 +70,18 @@ public class OrderItemAddDialog extends SimpleDialog implements IDialogForm {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         final ProductField productField = new ProductField(frame, orderItem.getProduct());        
-        add(new FormRowPad("Produkt:", productField));   
+        add(new FormRowPad(Lang.get("Gloss.Item"), productField));   
         
         final JTextField numberField = new JTextField(10);
         numberField.setText(String.valueOf(orderItem.getItemsNumber()));
-        add(new FormRowPad("Liczba szt.:", numberField));                   
+        add(new FormRowPad(Lang.get("Gloss.ItemsAmount"), numberField));                   
      
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.X_AXIS));
         p.setOpaque(false);
         p.setBorder(new EmptyBorder(12, 0, 2, 0));
 
-        JButton saveButton = new JButton(" Dodaj ");
+        JButton saveButton = new JButton(Lang.get("Add"));
         saveButton.setFocusPainted(false);
         
         saveButton.addActionListener(new ActionListener() {
@@ -93,14 +94,14 @@ public class OrderItemAddDialog extends SimpleDialog implements IDialogForm {
             if (itemsNumber<1) throw new NumberFormatException();
           }
           catch (NumberFormatException ex) {
-            new ErrorDialog(frame, "Nieprawid\u0142owa liczba sztuk produktu.");  
+            new ErrorDialog(frame, Lang.get("Gloss.Error.WrongItemsAmount"));  
             return;                
           }
                   
           Product product = (Product)productField.getSelectedElement();
           
           if (product == null || product.getId()==0) {
-            new ErrorDialog(frame, "Nie wybrano produktu.");
+            new ErrorDialog(frame, Lang.get("Gloss.Error.MissingItem"));
             return;              
           }
            
@@ -115,7 +116,7 @@ public class OrderItemAddDialog extends SimpleDialog implements IDialogForm {
         p.add(saveButton);
         p.add(new JLabel(" "));
         p.add(new JLabel(" "));
-        p.add(new CloseButton(" Anuluj "));        
+        p.add(new CloseButton(Lang.get("Cancel")));        
         add(p);        
          
      }

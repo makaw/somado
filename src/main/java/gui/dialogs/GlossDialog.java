@@ -32,6 +32,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -173,7 +174,7 @@ public abstract class GlossDialog<E extends IData> extends SimpleDialog implemen
       
       JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
       Border grayLine = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-      p.setBorder(BorderFactory.createTitledBorder(grayLine, "Filtrowanie"));
+      p.setBorder(BorderFactory.createTitledBorder(grayLine, Lang.get("Filters")));
       p.setOpaque(false);
       JPanel p0 = new JPanel(new GridLayout());
       p0.setBorder(new EmptyBorder(10, 10, 10, 10));

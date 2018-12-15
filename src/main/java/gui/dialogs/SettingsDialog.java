@@ -44,6 +44,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import somado.Database;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 import somado.SettingsException;
 import somado.User;
@@ -71,7 +72,7 @@ public class SettingsDialog extends SimpleDialog {
      */          
     public SettingsDialog(GUI frame) {
      
-      super(frame,  IConf.APP_NAME + " - Ustawienia");
+      super(frame,  IConf.APP_NAME + " - " + Lang.get("Dialogs.Settings"));
       this.database = frame.getDatabase();
       this.user = frame.getUser();
       if (!user.isAdmin()) return;
@@ -93,7 +94,7 @@ public class SettingsDialog extends SimpleDialog {
         
        
        final JTabbedPane tabPane = new FormTabbedPane(bgColor);        
-       JPanel tabPane1 =  (JPanel)tabPane.add("Ustawienia", new JPanel());
+       JPanel tabPane1 =  (JPanel)tabPane.add(Lang.get("Dialogs.Settings"), new JPanel());
    
        tabPane1.setPreferredSize(new Dimension(500, 460));
        
@@ -122,12 +123,12 @@ public class SettingsDialog extends SimpleDialog {
        sc.setPreferredSize(new Dimension(280, 50));
        depotPanel.add(sc);        
        
-       final IconButton mapButton = new IconButton(ImageRes.getIcon("icons/map.png"), "Zobacz na mapie");              
+       final IconButton mapButton = new IconButton(ImageRes.getIcon("icons/map.png"), Lang.get("Dialogs.Settings.MapPreview"));              
        mapButton.addActionListener(new ActionListener() {
            @Override
            public void actionPerformed(ActionEvent e) {
             
-              new MapDialog(frame, "mapa: magazyn", Settings.getDepot().getLongitude(), 
+              new MapDialog(frame,  Lang.get("Dialogs.Settings.MapDepot"), Settings.getDepot().getLongitude(), 
                       Settings.getDepot().getLatitude());
                
            }
@@ -138,7 +139,7 @@ public class SettingsDialog extends SimpleDialog {
        depotPanel.add(mapButton);
 
        
-       final IconButton changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), "Zmie\u0144 dane");            
+       final IconButton changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), Lang.get("ChangeData"));            
        changeButton.addActionListener(new ActionListener() {
 
            @Override
@@ -160,7 +161,7 @@ public class SettingsDialog extends SimpleDialog {
       
        depotPanel.add(changeButton);        
         
-       tabPane1.add(new FormRow("<html>Magazyn:<br /><br /><br /><br /></html>", depotPanel));                    
+       tabPane1.add(new FormRow("<html>" + Lang.get("Dialogs.Settings.Depot") + ":<br /><br /><br /><br /></html>", depotPanel));                    
        
        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
        p.setMaximumSize(new Dimension(600, 40));
@@ -186,7 +187,7 @@ public class SettingsDialog extends SimpleDialog {
        p0.add(algorithmField);
        p0.add(algDescField);
        
-       p.add(new FormRow("<html>Algorytm najkr\u00f3t-<br />szej \u015bcie\u017cki:</html>", p0));
+       p.add(new FormRow("<html>" + Lang.get("Dialogs.Settings.ShortestPathAlgorithm") + ":</html>", p0));
        tabPane1.add(p);
        
        algorithmField.addItemListener(new ItemListener() {
@@ -205,16 +206,13 @@ public class SettingsDialog extends SimpleDialog {
        catch (NumberFormatException e) {}
        workTimeField.setValue(maxWorkTime);
        workTimeField.setBorder(new EmptyBorder(10, 0, 0, 0));
-       tabPane1.add(new FormRowPad("<html>Maksymalny czas<br />jazdy kierowcy<br />w 1 dostawie:</html>",
+       tabPane1.add(new FormRowPad("<html>" + Lang.get("Dialogs.Settings.MaxDriverWorkTime") + ":</html>",
                workTimeField));
        
        p0 = new JPanel(new FlowLayout(FlowLayout.LEFT));
        p0.setOpaque(false);
        p0.setPreferredSize(new Dimension(600, 70));
-       final JCheckBox addGeoField = new JCheckBox("<html> &nbsp; dodatkowa geometria dr\u00f3g, u\u015bci\u015bla "
-               + "geometri\u0119<br /> &nbsp; niekt\u00f3rych odcink\u00f3w oraz odleg\u0142o\u015bci, mo\u017ce "
-               + "poprawia\u0107<br />&nbsp;  jako\u015b\u0107 rozwi\u0105za\u0144, "
-               + "ale wyd\u0142u\u017ca czas oblicze\u0144</html>");
+       final JCheckBox addGeoField = new JCheckBox("<html> &nbsp; " + Lang.get("Dialogs.Settings.AdditionalGeometry.Desc") + "</html>");
        try {
          addGeoField.setSelected(Settings.getIntValue("additional_geometry")==1);
        }
@@ -223,10 +221,10 @@ public class SettingsDialog extends SimpleDialog {
        addGeoField.setFocusPainted(false);
        addGeoField.setFont(GUI.BASE_FONT);
        p0.add(addGeoField);
-       tabPane1.add(new FormRowPad("<html>Dodatkowa<br />geometria: <br />&nbsp; </html>", p0));       
+       tabPane1.add(new FormRowPad("<html>" + Lang.get("Dialogs.Settings.AdditionalGeometry") + "<br />&nbsp; </html>", p0));       
        
        p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-       p.add(new JLabel("Maksymalna wy\u015bwietlana ilo\u015b\u0107 wierszy:                      ", JLabel.LEFT));
+       p.add(new JLabel(Lang.get("Dialogs.Settings.MaxRowCount") + ":                      ", JLabel.LEFT));
        p.setOpaque(false);
        tabPane1.add(p);
        
@@ -235,17 +233,17 @@ public class SettingsDialog extends SimpleDialog {
        
        final JTextField itemsPerPageField = new JTextField(7);  
        itemsPerPageField.setText(Settings.getValue("items_per_page")); 
-       p0.add(new FormRowPad("<html>Tabela danych:<br /> &nbsp; </html>", itemsPerPageField));
+       p0.add(new FormRowPad("<html>" + Lang.get("Dialogs.Settings.MaxRowCount.DataTable") + ":<br /> &nbsp; </html>", itemsPerPageField));
        itemsPerPageField.setMaximumSize(new Dimension(140, 25));
        
        final JTextField itemsPerPageGlossField = new JTextField(7);
        itemsPerPageGlossField.setText(Settings.getValue("items_per_page_gloss")); 
-       p0.add(new FormRowPad("<html> &nbsp; &nbsp; S\u0142ownik (lista):<br /> &nbsp; </html>:",
+       p0.add(new FormRowPad("<html>" + Lang.get("Dialogs.Settings.MaxRowCount.GlossList") + ":<br /> &nbsp; </html>:",
                itemsPerPageGlossField));
        itemsPerPageGlossField.setMaximumSize(new Dimension(140, 25));                  
        p.add(p0);
        
-       buttonChange = new JButton("Zastosuj");
+       buttonChange = new JButton(Lang.get("Apply"));
        buttonChange.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(final ActionEvent e) { 
@@ -284,13 +282,12 @@ public class SettingsDialog extends SimpleDialog {
              
              catch (NumberFormatException e1) {
                                
-               new ErrorDialog(frame, "Podano niepoprawne dane.");  
+               new ErrorDialog(frame, Lang.get("Error.WrongData"));  
                  
              }             
              catch (SQLException e2) {
                  
-               String error = "Wyst\u0105pi\u0142 b\u0142\u0105d SQL: " + e2.getMessage() + "\n"                       
-                  + "Spr\u00f3buj ponownie, lub skontaktuj si\u0119 z administratorem.";
+               String error = Lang.get("Error.Sql", e2.getMessage()) + "\n" ;
                new ErrorDialog(frame, error, true); 
                  
              }
@@ -301,7 +298,7 @@ public class SettingsDialog extends SimpleDialog {
           }
        });
        
-       JButton buttonCancel = new CloseButton("Anuluj");
+       JButton buttonCancel = new CloseButton(Lang.get("Cancel"));
              
        
        buttonsPanel.setBorder(new EmptyBorder(5, 0, 5, 0)); 

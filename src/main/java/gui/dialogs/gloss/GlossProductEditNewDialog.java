@@ -13,6 +13,7 @@ package gui.dialogs.gloss;
 import datamodel.Product;
 import gui.GUI;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
 
 
 /**
@@ -37,7 +38,7 @@ public class GlossProductEditNewDialog extends GlossProductEditDialog {
    */  
   public GlossProductEditNewDialog(GUI frame, GlossDialog<Product> parentDialog) {
         
-    super(frame, parentDialog, "S\u0142ownik produkt\u00f3w - nowy produkt");
+    super(frame, parentDialog, Lang.get("Gloss.GlossItems") + " - " + Lang.get("Gloss.AddItem"));
          
   }
   

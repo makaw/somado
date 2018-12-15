@@ -13,6 +13,7 @@ import datamodel.Customer;
 import gui.GUI;
 import gui.TablePanel;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
 
 
 /**
@@ -38,7 +39,7 @@ public class GlossCustomerEditModDialog extends GlossCustomerEditDialog {
    */  
   public GlossCustomerEditModDialog(GUI frame, GlossDialog<Customer> parentDialog, int cIndex) {
         
-    super(frame, parentDialog, "S\u0142ownik odbiorc\u00f3w towaru - edycja odbiorcy", cIndex);
+    super(frame, parentDialog, Lang.get("Gloss.GlossReceivers") + " - " + Lang.get("Gloss.EditReceiver"), cIndex);
          
   }
   

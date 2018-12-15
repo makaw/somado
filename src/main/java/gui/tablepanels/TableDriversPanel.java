@@ -16,6 +16,8 @@ import gui.TableMouseAdapter;
 import gui.TablePanel;
 import gui.dialogs.tableforms.DriverEditModDialog;
 import gui.dialogs.tableforms.DriverEditNewDialog;
+import somado.Lang;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -121,12 +123,12 @@ public class TableDriversPanel extends TablePanel {
   @Override
   protected void setFiltersPanel(JPanel p) {    
       
-    p.add(new JLabel("Nazwisko:"));
+    p.add(new JLabel(Lang.get("Tables.Drivers.Surname") + ":"));
     filters.addField("surname", new JTextField(11));
     
     p.add(new JLabel("  "));
     
-    p.add(new JLabel("Nr rejestracyjny:"));
+    p.add(new JLabel(Lang.get("Tables.Drivers.RegNumber") + ":"));
     filters.addField("registration_no", new JTextField(11));
     
   }
@@ -175,7 +177,7 @@ public class TableDriversPanel extends TablePanel {
     p.setBorder(new EmptyBorder(10, 10, 10, 10));          
   
     
-    editButton = new JButton("Edytuj kierowc\u0119", ImageRes.getIcon("icons/form_edit.png"));
+    editButton = new JButton(Lang.get("Tables.Drivers.Edit"), ImageRes.getIcon("icons/form_edit.png"));
     editButton.setEnabled(false);
     editButton.setFocusPainted(false);
     editButton.setMaximumSize(new Dimension(100, 20));
@@ -192,7 +194,7 @@ public class TableDriversPanel extends TablePanel {
     p.add(editButton);
     
       
-    addButton = new JButton("Nowy kierowca", ImageRes.getIcon("icons/form_add.png"));
+    addButton = new JButton(Lang.get("Tables.Drivers.Add"), ImageRes.getIcon("icons/form_add.png"));
     addButton.setFocusPainted(false);
       
     addButton.addActionListener(new ActionListener() {

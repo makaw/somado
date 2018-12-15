@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import somado.Database;
+import somado.Lang;
 import somado.Settings;
 
 /**
@@ -33,8 +34,10 @@ import somado.Settings;
 public class VehiclesTableModel extends TableModel<Vehicle> {
        
   /** Nazwy (nagłówki) kolumn tabeli */
-  private String[] columnNames = { "Model", "\u0141adowno\u015b\u0107 [t]", "Zu\u017cycie paliwa [l/100km]]", 
-                                   "Rok prod.", "Nr rejestr.", "Uwagi", "Dost\u0119pny" };
+  private String[] columnNames = { Lang.get("Tables.VehicleModels.Model"), Lang.get("Tables.VehicleModels.Capacity") + " [t]", 
+		  Lang.get("Tables.VehicleModels.FuelConsumption") + " [l/100km]", Lang.get("Tables.VehicleModels.ProductionYear"), 
+		  Lang.get("Tables.VehicleModels.RegNumber"), Lang.get("Tables.VehicleModels.Remarks"), Lang.get("Tables.VehicleModels.Available") };
+
   /** Nazwy pól filtrów */
   private String[] filterNames = { "name", "registration_no" };
   
@@ -81,7 +84,7 @@ public class VehiclesTableModel extends TableModel<Vehicle> {
     
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }  
     
@@ -119,7 +122,7 @@ public class VehiclesTableModel extends TableModel<Vehicle> {
          data[i][3] = rs.getInt("year");       
          data[i][4] = rs.getString("registration_no");
          data[i][5] = rs.getString("comment");
-         data[i][6] = rs.getBoolean("capable") ? "Tak" : "Nie";
+         data[i][6] = rs.getBoolean("capable") ? Lang.get("Yes") : Lang.get("No");
                   
          items.add(new Vehicle(rs, new VehicleModel(rs, "vm_")));
          
@@ -131,7 +134,7 @@ public class VehiclesTableModel extends TableModel<Vehicle> {
            
     } catch (SQLException e) {
        
-        System.err.println("B\u0142\u0105d SQL: "+e);
+        System.err.println(Lang.get("Error.Sql", e));
        
     }     
 

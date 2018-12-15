@@ -20,6 +20,8 @@ import gui.dialogs.DeliveryOpenDialog;
 import gui.dialogs.tableforms.OrderEditModDialog;
 import gui.dialogs.tableforms.OrderEditNewDialog;
 import gui.mapview.MapDialog;
+import somado.Lang;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -140,17 +142,17 @@ public class TableOrdersPanel extends TablePanel {
   @Override
   protected void setFiltersPanel(JPanel p) {    
       
-    p.add(new JLabel("Numer:"));
+    p.add(new JLabel(Lang.get("Tables.Orders.Number") + ":"));
     filters.addField("number", new JTextField(11));
     
     p.add(new JLabel("  "));
     
-    p.add(new JLabel("Nazwa odbiorcy:"));
+    p.add(new JLabel(Lang.get("Tables.Orders.ReceiverName") + ":"));
     filters.addField("customer_name", new JTextField(11));
     
     p.add(new JLabel("  "));
     
-    p.add(new JLabel("Miejscowo\u015b\u0107:"));
+    p.add(new JLabel(Lang.get("Tables.Orders.City") + ":"));
     filters.addField("customer_city", new JTextField(11));    
     
     p.add(new JLabel("  "));
@@ -160,7 +162,7 @@ public class TableOrdersPanel extends TablePanel {
     stateField.setFont(GUI.BASE_FONT);
     stateField.setSelectedIndex(0);
             
-    p.add(new JLabel("Stan:"));
+    p.add(new JLabel(Lang.get("Tables.Orders.Status") + ":"));
     filters.addField("state_id", stateField);        
     
   }
@@ -209,7 +211,7 @@ public class TableOrdersPanel extends TablePanel {
     p.setBorder(new EmptyBorder(10, 10, 10, 10));         
   
     
-    editButton = new JButton("Edytuj zam\u00f3wienie", ImageRes.getIcon("icons/form_edit.png"));
+    editButton = new JButton(Lang.get("Tables.Orders.Edit"), ImageRes.getIcon("icons/form_edit.png"));
     editButton.setEnabled(false);
     editButton.setFocusPainted(false);
     editButton.setMaximumSize(new Dimension(100, 20));
@@ -226,7 +228,7 @@ public class TableOrdersPanel extends TablePanel {
     p.add(editButton);
     
       
-    addButton = new JButton("Nowe zam\u00f3wienie", ImageRes.getIcon("icons/form_add.png"));
+    addButton = new JButton(Lang.get("Tables.Orders.Add"), ImageRes.getIcon("icons/form_add.png"));
     addButton.setFocusPainted(false);
       
     addButton.addActionListener(new ActionListener() {
@@ -241,7 +243,7 @@ public class TableOrdersPanel extends TablePanel {
     p.add(addButton);    
       
     
-    mapButton = new JButton("Zobacz na mapie", ImageRes.getIcon("icons/map.png"));
+    mapButton = new JButton(Lang.get("Tables.Orders.MapPreview"), ImageRes.getIcon("icons/map.png"));
     mapButton.setFocusPainted(false);
     mapButton.setEnabled(false);  
     
@@ -263,7 +265,7 @@ public class TableOrdersPanel extends TablePanel {
     p.add(new JLabel(" "));
     
     
-    deliveryButton = new JButton("Nowa dostawa", ImageRes.getIcon("icons/delivery.png"));
+    deliveryButton = new JButton(Lang.get("Menu.NewDelivery"), ImageRes.getIcon("icons/delivery.png"));
     deliveryButton.setFocusPainted(false);
     deliveryButton.addActionListener(new ActionListener() {
         @Override

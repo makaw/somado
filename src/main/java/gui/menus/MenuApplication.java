@@ -11,6 +11,8 @@ package gui.menus;
 import gui.GUI;
 import gui.dialogs.ConfirmDialog;
 import gui.dialogs.SettingsDialog;
+import somado.Lang;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,14 +39,13 @@ public class MenuApplication extends JMenu {
    */    
   public MenuApplication(final GUI frame) {
        
-    super("Aplikacja");
+    super(Lang.get("Menu.Application"));
     setMnemonic(KeyEvent.VK_A);    
       
     
-    JMenuItem menuItem = new JMenuItem("Ustawienia");
-    menuItem.setPreferredSize(new Dimension(160, 20));
-    menuItem.setMnemonic(KeyEvent.VK_T);
-    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+    JMenuItem menuItem = new JMenuItem(Lang.get("Menu.Settings"));
+    menuItem.setPreferredSize(new Dimension(160, 20));    
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
     add(menuItem);
     menuItem.addActionListener(new ActionListener() {
     @Override
@@ -57,15 +58,14 @@ public class MenuApplication extends JMenu {
         
     
     
-    menuItem = new JMenuItem("Koniec");
-    menuItem.setMnemonic(KeyEvent.VK_K);
-    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
+    menuItem = new JMenuItem(Lang.get("Menu.Quit"));
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
     add(menuItem);
     menuItem.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(final ActionEvent e) {
            
-        boolean res = new ConfirmDialog(frame, "Czy na pewno zako\u0144czy\u0107 ?").isConfirmed();
+        boolean res = new ConfirmDialog(frame, Lang.get("Menu.Quit.AreYouSure")).isConfirmed();
         if (res) frame.quitApp();
           
        }

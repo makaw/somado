@@ -12,6 +12,7 @@ import datamodel.VehicleModel;
 import gui.GUI;
 import gui.TablePanel;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
 
 
 /**
@@ -37,7 +38,7 @@ public class GlossVehicleModelEditModDialog extends GlossVehicleModelEditDialog 
    */  
   public GlossVehicleModelEditModDialog(GUI frame, GlossDialog<VehicleModel> parentDialog, int vmIndex) {
         
-    super(frame, parentDialog, "S\u0142ownik modeli pojazd\u00f3w - edycja modelu pojazdu", vmIndex);
+    super(frame, parentDialog, Lang.get("Gloss.VehicleModelsGloss") + " - " +  Lang.get("Gloss.EditVehicleModel"), vmIndex);
          
   }
   

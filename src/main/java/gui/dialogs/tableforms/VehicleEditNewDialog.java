@@ -11,6 +11,7 @@ package gui.dialogs.tableforms;
 import datamodel.Vehicle;
 import datamodel.glossaries.GlossVehicles;
 import gui.GUI;
+import somado.Lang;
 
 
 /**
@@ -30,7 +31,7 @@ public class VehicleEditNewDialog extends VehicleEditDialog {
     */ 
    public VehicleEditNewDialog(GUI frame) {
        
-     super(frame, "Nowy pojazd", false);  
+     super(frame, Lang.get("Gloss.AddVehicle"), false);  
        
    }    
    

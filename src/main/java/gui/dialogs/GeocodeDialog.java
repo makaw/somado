@@ -34,6 +34,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import somado.Database;
 import somado.IConf;
+import somado.Lang;
 import spatial_vrp.Geocoding;
 
 
@@ -71,7 +72,7 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
     */ 
    public GeocodeDialog(GUI frame, String request, String simpleRequest) {
         
-     super(frame, IConf.APP_NAME + "- wyniki geokodowania");
+     super(frame, IConf.APP_NAME + " - " + Lang.get("Dialogs.Geocoding"));
      selected = false;
      this.request = request;    
       
@@ -97,7 +98,7 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
         
       JLabel txt = new JLabel(request);
       txt.setFont(GUI.BASE_FONT);
-      p.add(new FormRowPad("Zapytanie: ", txt));      
+      p.add(new FormRowPad(Lang.get("Dialogs.Geocoding.Query") + ": ", txt));      
            
       DefaultListModel<GeoAddress> addrModel = new DefaultListModel<>();
       
@@ -116,9 +117,9 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
       scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
       scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
      
-      p.add(new FormRowPad("Wyniki:", scroll));  
+      p.add(new FormRowPad(Lang.get("Dialogs.Geocoding.Results") + ":", scroll));  
       
-      final JButton mapButton = new JButton("Zobacz na mapie");
+      final JButton mapButton = new JButton(Lang.get("Dialogs.Settings.MapPreview"));
       mapButton.setEnabled(false);
       mapButton.setFocusPainted(false);
       mapButton.addActionListener(new ActionListener() {
@@ -132,7 +133,7 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
       });
       
       
-      final JButton chooseButton = new JButton("Wybierz lokalizacj\u0119");
+      final JButton chooseButton = new JButton(Lang.get("Dialogs.Geocoding.ChooseLocation"));
       chooseButton.setEnabled(false);
       chooseButton.setFocusPainted(false);
       chooseButton.addActionListener(new ActionListener() {
@@ -160,7 +161,7 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
       p2.add(new JLabel(" "));
       p2.add(chooseButton);
       p2.add(new JLabel(" "));
-      p2.add(new CloseButton("Anuluj"));
+      p2.add(new CloseButton(Lang.get("Cancel")));
             
       p.add(p2);
       
@@ -204,7 +205,7 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
          addresses = new Geocoding(database, simpleRequest).getResponse();
        }
              
-       if (addresses.isEmpty()) throw new Exception("brak danych");       
+       if (addresses.isEmpty()) throw new Exception(Lang.get("NoData"));       
        progress.hideComponent();   
                   
      }      
@@ -214,7 +215,7 @@ public class GeocodeDialog extends SimpleDialog implements IProgressInvoker {
         progress.hideComponent(); 
         if (!(ex instanceof InterruptedException)) {
            System.err.println(ex);
-           new ErrorDialog(frame, "Wyst\u0105pi\u0142 b\u0142\u0105d: " + ex.getMessage(), true);        
+           new ErrorDialog(frame, Lang.get("Dialogs.Error.Header") + ": " + ex.getMessage(), true);        
         }
         dispose();
         isDone = false;

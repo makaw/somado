@@ -13,6 +13,8 @@ import gui.GUI;
 import gui.IconButton;
 import gui.ImageRes;
 import gui.dialogs.gloss.GlossVehicleModelsDialog;
+import somado.Lang;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -71,7 +73,7 @@ public class VehicleModelField extends JPanel implements IFormField {
     textField.setPreferredSize(new Dimension(400, 30));
     add(textField);
         
-    changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), "Zmie\u0144 model pojazdu");
+    changeButton = new IconButton(ImageRes.getIcon("icons/form_edit.png"), Lang.get("Fields.ChangeVehicleModel"));
     
     changeButton.addActionListener(new ActionListener() {
 

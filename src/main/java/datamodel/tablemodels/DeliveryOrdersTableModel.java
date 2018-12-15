@@ -13,6 +13,8 @@ import datamodel.DeliveryDriverOrder;
 import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
+
+import somado.Lang;
 import somado.Settings;
 
 /**
@@ -27,8 +29,9 @@ import somado.Settings;
 public class DeliveryOrdersTableModel extends TableModel<DeliveryDriverOrder> {
 
   /** Nazwy (nagłówki) kolumn tabeli  */
-  private String[] columnNames = { "\u0023", "Odbiorca", "Nr zam.", "Waga [kg]", "\u0141adunek [t]", 
-      "Czas", "\u0141\u0105czny czas", "km", "\u03a3 km"};  
+  private String[] columnNames = { "\u0023", Lang.get("Tables.DeliveryOrders.Receiver"), Lang.get("Tables.DeliveryOrders.OrderNumber"),
+		  Lang.get("Tables.DeliveryOrders.Weight") + " [kg]", Lang.get("Tables.DeliveryOrders.Lading") + " [t]", 
+		  Lang.get("Tables.DeliveryOrders.Time"), Lang.get("Tables.DeliveryOrders.TotalTime"), "km", "\u03a3 km"};  
   
   /** Liczba wszystkich elementów */
   final private int allElementsNum;               

@@ -13,6 +13,7 @@ import datamodel.Product;
 import gui.GUI;
 import gui.TablePanel;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
 
 
 /**
@@ -38,7 +39,7 @@ public class GlossProductEditModDialog extends GlossProductEditDialog {
    */  
   public GlossProductEditModDialog(GUI frame, GlossDialog<Product> parentDialog, int pIndex) {
         
-    super(frame, parentDialog, "S\u0142ownik produkt\u00f3w - edycja produktu", pIndex);
+    super(frame, parentDialog, Lang.get("Gloss.GlossItems") + " - " + Lang.get("Gloss.EditItem"), pIndex);
          
   }
   

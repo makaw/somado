@@ -86,38 +86,30 @@ public final class Somado implements Observer {
           
      } catch (FileNotFoundException e) {
         
-         String error = "Nie mo\u017cna odczyta\u0107 podstawowej konfiguracji "
-                 + " (brak pliku .conf).\n"
-                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n";
-          
-          new ErrorDialog(gui, error, true);             
-          quitApp();         
+         String error = Lang.get("Error.MissingConf") + "\n" + Lang.get("Error.Aborting") + "\n\n";
+         new ErrorDialog(gui, error, true);             
+         quitApp();         
           
      } catch (SettingsException e) {
        
-          String error = e.getMessage() + "\n"
-                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n";
+         String error = e.getMessage() + "\n" + Lang.get("Error.Aborting") + "\n\n";
           
-          new ErrorDialog(gui, error, true);             
-          quitApp();
+         new ErrorDialog(gui, error, true);             
+         quitApp();
            
      }  catch (SQLException e) {
                
-          System.err.println("Problem z po\u0142\u0105czeniem z baz\u0105 danych: "+e);
-          String error = "Problem z po\u0142\u0105czeniem z baz\u0105 danych. "
-                  + "Program teraz zako\u0144czy dzia\u0142anie.\n\n";
-          new ErrorDialog(gui, error, true);
-          quitApp();
-                  
+         System.err.println(Lang.get("Error.DbConnection") + "\n" +e);
+         String error = Lang.get("Error.DbConnection") + "\n" + Lang.get("Error.Aborting") + "\n\n";
+         new ErrorDialog(gui, error, true);
+         quitApp();                  
          
      } catch (ClassNotFoundException | NullPointerException e) {
           
-          System.err.println("Problem ze sterownikiem bazy danych: "+e);
-          String error = "Problem ze sterownikiem bazy danych, "
-                  + "program teraz zako\u0144czy dzia\u0142anie.\n\n";
-          
-          new ErrorDialog(gui, error, true);
-          quitApp();
+    	 System.err.println(Lang.get("Error.DbDriver") + "\n" +e);
+         String error = Lang.get("Error.DbDriver") + "\n" + Lang.get("Error.Aborting") + "\n\n";
+         new ErrorDialog(gui, error, true);
+         quitApp();
           
      }
      
@@ -175,8 +167,7 @@ public final class Somado implements Observer {
         testTMS();   
      } catch(Exception e){
         System.err.println(e); 
-        new WarningDialog(gui, "Nie mo\u017cna po\u0142\u0105czy\u0107 si\u0119 z us\u0142ug\u0105 TMS. "
-                + "Mapy nie b\u0119d\u0105 wy\u015bwietlane nieprawid\u0142owo.\n\n" + e, 200);        
+        new WarningDialog(gui, Lang.get("Error.MissingTms") + "\n\n" + e, 200);        
      }
       
   }
@@ -243,7 +234,6 @@ public final class Somado implements Observer {
    * uruchamia interfejs graficzny, przesyla do GUI odpowiednie referencje.
    * @param args Argumenty przekazane do aplikacji.
    */
-  //@SuppressWarnings("CallToPrintStackTrace")
   public static void main(final String[] args) {
     
      GUI.setLookAndFeel();
@@ -254,8 +244,7 @@ public final class Somado implements Observer {
         
      } catch (InterruptedException | InvocationTargetException e) {
          
-        System.err.println("Problem podczas wywo\u0142ania interfejsu graficznego: "+e);
-        e.printStackTrace();
+        System.err.println(e);
         
      }
         

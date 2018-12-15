@@ -26,6 +26,7 @@ import javax.swing.JSeparator;
 import javax.swing.border.EmptyBorder;
 import org.jxmapviewer.viewer.GeoPosition;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 import somado.Somado;
 
@@ -72,8 +73,7 @@ public class MapDialog extends SimpleDialog {
        } catch (Exception e){
            
          System.err.println(e + "\nURL: " + Settings.getValue("tms_url"));
-         new ErrorDialog(frame, "Nie mo\u017cna po\u0142\u0105czy\u0107 si\u0119 z us\u0142ug\u0105 TMS. "
-               + "Mapy s\u0105 niedost\u0119pne.\n\n" + e, true);  
+         new ErrorDialog(frame, Lang.get("Error.MissingTms") + "\n\n" + e, true);  
          tmsErr = true;
          return;
          
@@ -107,7 +107,7 @@ public class MapDialog extends SimpleDialog {
     */     
     public MapDialog(GUI frame, double longitude, double latitude) {
         
-      this(frame, "podgl\u0105d mapy", longitude, latitude);  
+      this(frame, Lang.get("Dialogs.MapPreview"), longitude, latitude);  
         
     }
     
@@ -131,7 +131,7 @@ public class MapDialog extends SimpleDialog {
     */     
     public MapDialog(GUI frame, Route route) {    
         
-      this(frame, "podgl\u0105d trasy " + route.getDriver().getVehicle().getRegistrationNo(),
+      this(frame, Lang.get("Dialogs.RoutePreview") + " " + route.getDriver().getVehicle().getRegistrationNo(),
             route.getPoints().get(0).getOrder().getCustomer().getLongitude(),
             route.getPoints().get(0).getOrder().getCustomer().getLatitude(), false);
       this.planRoute = route.getPoints();
@@ -147,7 +147,7 @@ public class MapDialog extends SimpleDialog {
     */     
     public MapDialog(GUI frame, DeliveryDriver deliveryDriver) {    
         
-      this(frame, "podgl\u0105d trasy " + deliveryDriver.getVehicleRegistrationNo(), 
+      this(frame, Lang.get("Dialogs.RoutePreview") + " " + deliveryDriver.getVehicleRegistrationNo(), 
             deliveryDriver.getOrders().get(0).getCustomerLongitude(), 
             deliveryDriver.getOrders().get(0).getCustomerLatitude(), false);
       this.orders = deliveryDriver.getOrders();
@@ -177,7 +177,7 @@ public class MapDialog extends SimpleDialog {
        JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
        p.setPreferredSize(new Dimension(500, 40));
        p.setBorder(new EmptyBorder(5, 0, 5, 0));
-       p.add(new CloseButton("Zamknij"));
+       p.add(new CloseButton(Lang.get("Close")));
        add(p);      
       
     }

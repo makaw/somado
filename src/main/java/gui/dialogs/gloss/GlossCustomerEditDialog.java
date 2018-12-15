@@ -30,6 +30,7 @@ import gui.mapview.MapDialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 
 
@@ -93,7 +94,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
    */
   public GlossCustomerEditDialog(GUI frame) {
       
-    this(frame, null, "Edycja danych magazynu", -2);  
+    this(frame, null, Lang.get("Gloss.EditStockData"), -2);  
       
   }
    
@@ -124,32 +125,32 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
      
      FormPanel() {
          
-        super(frame, (customer.getId().equals(Settings.getDepot().getId()) ? "Dane magazynu" : 
-                "Dane odbiorcy towaru"), customer);        
+        super(frame, (customer.getId().equals(Settings.getDepot().getId()) ? Lang.get("Gloss.StockData") : 
+                Lang.get("Gloss.ReceiverData")), customer);        
 
         final JTextField nameField = new JTextField(22);
         nameField.setText(customer.getName());
-        dataTabPane.add(new FormRow("Nazwa:", nameField));
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Name") + ":", nameField));
         
         final JTextField streetField = new JTextField(22);
         streetField.setText(customer.getStreet());
-        dataTabPane.add(new FormRow("Ulica i nr:", streetField));        
+        dataTabPane.add(new FormRow(Lang.get("Gloss.StreetNo") + ":", streetField));        
         
         final JTextField cityField = new JTextField(22);
         cityField.setText(customer.getCity());
-        dataTabPane.add(new FormRow("Miejscowo\u015b\u0107:", cityField)); 
+        dataTabPane.add(new FormRow(Lang.get("Gloss.City") + ":", cityField)); 
         
         final JTextField postcodeField = new JTextField(12);
         postcodeField.setText(customer.getPostcode());
-        dataTabPane.add(new FormRow("Kod pocztowy:", postcodeField));        
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Postcode") + ":", postcodeField));        
         
         longitudeField = new JTextField(12);
         longitudeField.setText(String.format("%.8f", customer.getLongitude()));
-        dataTabPane.add(new FormRow("D\u0142ugo\u015b\u0107 geogr.:", longitudeField));   
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Longitude") + ":", longitudeField));   
         
         latitudeField = new JTextField(12);
         latitudeField.setText(String.format("%.8f", customer.getLatitude()));
-        dataTabPane.add(new FormRow("Szeroko\u015b\u0107 geogr.:", latitudeField));          
+        dataTabPane.add(new FormRow(Lang.get("Gloss.Latitude") + ":", latitudeField));          
 
         JPanel p = new JPanel(new FlowLayout());
         p.setPreferredSize(new Dimension(600, 35));
@@ -162,7 +163,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
         p.setBorder(new EmptyBorder(12, 0, 2, 0));
         
   
-        JButton mapButton = new JButton("Na mapie");
+        JButton mapButton = new JButton(Lang.get("Gloss.OnMap"));
         mapButton.setFocusPainted(false);
         mapButton.addActionListener(new ActionListener() {
           @Override
@@ -175,8 +176,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
             } 
             catch (Exception ex) {
                 
-              new ErrorDialog(frame, "Nieprawid\u0142owa d\u0142ugo\u015b\u0107 lub szeroko\u015b\u0107 geograficzna.\n"
-                      + Settings.infoBoxCoords());
+              new ErrorDialog(frame, Lang.get("Gloss.Error.WrongLongitudeOrLatitude") + "\n" + Settings.infoBoxCoords());
               return;
                 
             }
@@ -187,7 +187,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
         });
       
         
-        JButton geocodeButton = new JButton("Wyznacz wsp.geogr.");
+        JButton geocodeButton = new JButton(Lang.get("Gloss.GetGeoCoords"));
         geocodeButton.setFocusPainted(false);
         
         geocodeButton.addActionListener(new ActionListener() {
@@ -197,7 +197,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
               String request = cityField.getText() + " " + streetField.getText(); 
               String simpleRequest = !cityField.getText().isEmpty() ? cityField.getText() : streetField.getText();
               if (request.isEmpty() || request.length()<3) {
-                 new ErrorDialog(frame, "Nie wype\u0142niono \u017cadnego z p\u00f3l: ulica, miasto.");
+                 new ErrorDialog(frame, Lang.get("Gloss.Error.MissingCityStreet"));
                  return; 
               }
              
@@ -212,7 +212,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
         
         
 
-        JButton saveButton = new JButton(" Zapisz ");
+        JButton saveButton = new JButton(Lang.get("Save"));
         saveButton.setFocusPainted(false);
   
         final Integer id = customer.getId();
@@ -229,8 +229,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
             }
             catch (Exception ex) {
                 
-              new ErrorDialog(frame, "Nieprawid\u0142owa d\u0142ugo\u015b\u0107 lub szeroko\u015b\u0107 geograficzna.\n"
-                      + Settings.infoBoxCoords());
+              new ErrorDialog(frame, Lang.get("Gloss.Error.WrongLongitudeOrLatitude") + "\n" + Settings.infoBoxCoords());
               return;
                 
             }
@@ -262,7 +261,7 @@ public abstract class GlossCustomerEditDialog extends SimpleDialog {
         p.add(new JLabel(" "));
         p.add(saveButton);
         p.add(new JLabel(" "));
-        p.add(new CloseButton(" Anuluj "));        
+        p.add(new CloseButton(Lang.get("Cancel")));        
         
         dataTabPane.add(p);        
 

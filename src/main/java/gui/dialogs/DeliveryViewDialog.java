@@ -44,6 +44,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 
 
@@ -67,9 +68,9 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
     */     
     public DeliveryViewDialog(GUI frame) {
      
-      super(frame, IConf.APP_NAME + " - podgl\u0105d dostawy");           
+      super(frame, IConf.APP_NAME + " - " + Lang.get("Dialogs.DeliveryView.Preview"));           
     
-      new Loader(frame, "Trwa wczytywanie danych ", this, false).load();
+      new Loader(frame, Lang.get("Dialogs.Progress.DeliveryDataReading") + " ", this, false).load();
         
     }    
    
@@ -88,20 +89,20 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       
       JPanel p0 = new JPanel(new GridLayout(1, 3, 50, 0));
       p0.setOpaque(false);
-      JLabel txt = new JLabel(delivery.isActive() ? "Aktywna" : "Zako\u0144czona");
+      JLabel txt = new JLabel(delivery.isActive() ? Lang.get("Tables.Delivery.Active") : Lang.get("Tables.Delivery.Done"));
       if (delivery.isActive()) txt.setForeground(new Color(0x336600));
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Stan dostawy: ", txt, 120));  
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryView.DeliveryState") + ":", txt, 120));  
       
       txt = new JLabel(Settings.DATETIME_NS_FORMAT.format(delivery.getDateAdd()));
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Zatwierdzenie: ", txt, 160));  
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryView.ConfirmedAt") + ":", txt, 160));  
       
       if (!delivery.isActive()) {
           
         txt = new JLabel(Settings.DATETIME_NS_FORMAT.format(delivery.getDateEnd()));
         txt.setFont(GUI.BASE_FONT);
-        p0.add(new FormRowPad("Zamkni\u0119cie: ", txt, 160));    
+        p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryView.ClosedAt") + ":", txt, 160));    
           
       }
       else p0.add(new JLabel());
@@ -111,13 +112,13 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       p0.setOpaque(false);
       txt = new JLabel(Settings.DATE_FORMAT.format(delivery.getDeliveryDate()));
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Data dostawy: ", txt, 120));  
+      p0.add(new FormRowPad(Lang.get("Tables.DeliveryDate") + ":", txt, 120));  
       txt = new JLabel(Settings.formatTime(delivery.getDriverMaxWorkTime()));
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Maks. czas jazdy kierowcy:", txt, 200));
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryPlan.MaxDriverWorkingTime") + ":", txt, 200));
       txt = new JLabel(delivery.getShortestPathAlgorithm().toString());
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Algorytm najkr.\u015bcie\u017cek:", txt, 190));      
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryView.ShortestPathAlgoritm") + ":", txt, 190));      
          
       p0.setMinimumSize(new Dimension(800, 45));
       p0.setSize(new Dimension(800, 45));
@@ -129,15 +130,15 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       
       JLabel orderNumberLabel = new JLabel();
       orderNumberLabel.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Zam\u00f3wienia:", orderNumberLabel, 120));
+      p0.add(new FormRowPad(Lang.get("Tables.Orders") + ":", orderNumberLabel, 120));
       
       txt = new JLabel(String.valueOf(delivery.getDrivers().size()));
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Liczba kierowc\u00f3w:", txt, 200)); 
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryView.DriversNumber") + ":", txt, 200)); 
       
-      txt = new JLabel(delivery.isAdditionalGeometry() ? "tak" : "nie");
+      txt = new JLabel((delivery.isAdditionalGeometry() ? Lang.get("Yes") : Lang.get("No")).toLowerCase());
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new FormRowPad("Dodatkowa geometria:", txt, 190));  
+      p0.add(new FormRowPad(Lang.get("Dialogs.DeliveryView.AdditionalGeometry") + ":", txt, 190));  
       
       p0.setMinimumSize(new Dimension(800, 45));
       p0.setSize(new Dimension(800, 45));
@@ -151,7 +152,7 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       p0 = new JPanel(new FlowLayout(FlowLayout.CENTER));
       p0.setOpaque(false);
       p0.setBorder(new LineBorder(new Color(0xc6c6c6), 1));
-      p0.setBorder(BorderFactory.createTitledBorder(p0.getBorder(), "  Razem:  "));
+      p0.setBorder(BorderFactory.createTitledBorder(p0.getBorder(), " " + Lang.get("Dialogs.Total") + " "));
       p0.setMinimumSize(new Dimension(800, 50));
       p0.setSize(new Dimension(800, 50));
       
@@ -159,19 +160,19 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       totalTimeLabel.setText("00:00:00");
       totalTimeLabel.setFont(GUI.BASE_FONT);
       totalTimeLabel.setBorder(new EmptyBorder(0, 0, 0, 35));
-      p0.add(new JLabel("Czas jazdy: "));
+      p0.add(new JLabel(Lang.get("Dialogs.DeliveryPlan.DriveTime") + ":"));
       p0.add(totalTimeLabel);
       
       JLabel totalDistanceLabel = new JLabel();
       totalDistanceLabel.setText("0 km");
       totalDistanceLabel.setFont(GUI.BASE_FONT);
       totalDistanceLabel.setBorder(new EmptyBorder(0, 0, 0, 35));
-      p0.add(new JLabel("Dystans: "));
+      p0.add(new JLabel(Lang.get("Tables.Distance") + ":"));
       p0.add(totalDistanceLabel);  
       
       txt = new JLabel(String.format("%.2f", delivery.getTotalCost()) + " l");
       txt.setFont(GUI.BASE_FONT);
-      p0.add(new JLabel("    Zu\u017cycie paliwa: "));
+      p0.add(new JLabel(Lang.get("Tables.VehicleModels.FuelConsumption")));
       p0.add(txt);
             
       p0.setAlignmentX(JLabel.LEFT);
@@ -207,14 +208,14 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
           JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
           p1.setPreferredSize(new Dimension(950, 40));
           p1.setOpaque(false);
-          p1.add(new JLabel("Kierowca:"));
+          p1.add(new JLabel(Lang.get("Dialogs.DeliveryPlan.Driver") + ":"));
           txt = new JLabel(driver.getDriverDesc());
           txt.setMaximumSize(new Dimension(140, 40));
           txt.setPreferredSize(new Dimension(140, 40));
           txt.setFont(GUI.BASE_FONT);
           txt.setBorder(new EmptyBorder(0, 0, 0, 8));
           p1.add(txt);
-          p1.add(new JLabel("Pojazd:"));
+          p1.add(new JLabel(Lang.get("Gloss.Vehicle") + ":"));
           txt = new JLabel(driver.getVehicleDesc());
           txt.setFont(GUI.BASE_FONT);
           txt.setMaximumSize(new Dimension(355, 40));
@@ -222,8 +223,8 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
           txt.setBorder(new EmptyBorder(0, 0, 0, 8));
           p1.add(txt);
           
-          p1.add(new JLabel("Powr\u00f3t: "));
-          txt = new JLabel(driver.isReturnToDepot() ? "tak" : "nie");
+          p1.add(new JLabel(Lang.get("Tables.DriversDeliv.GoBack") + ":"));
+          txt = new JLabel((driver.isReturnToDepot() ? Lang.get("Yes") : Lang.get("No")).toLowerCase());
           txt.setFont(GUI.BASE_FONT);
           if (!driver.isReturnToDepot()) txt.setForeground(Color.RED);
           txt.setMaximumSize(new Dimension(55, 40));
@@ -234,7 +235,7 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
           
           // przycisk z podglądem trasy
           if (ordersNumber > 0) {
-            JButton mapButton = new JButton("Podgl\u0105d trasy", ImageRes.getIcon("icons/map.png"));
+            JButton mapButton = new JButton(Lang.get("Dialogs.DeliveryPlan.RoutePreview"), ImageRes.getIcon("icons/map.png"));
             mapButton.setFocusPainted(false);            
             mapButton.addActionListener(new ActionListener() {
                 @Override
@@ -317,20 +318,20 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       p2.setOpaque(false);
       p2.setBorder(new EmptyBorder(10, 0, 5, 0)); 
 
-      JButton endButton = new JButton("Zako\u0144cz dostaw\u0119");
+      JButton endButton = new JButton(Lang.get("Dialogs.DeliveryView.CloseDelivery"));
       endButton.setFocusPainted(false);
       endButton.setEnabled(delivery.isActive());
       endButton.addActionListener(new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
       
-            boolean res = new ConfirmDialog(frame, "Czy na pewno zako\u0144czy\u0107 dostaw\u0119 ?").isConfirmed();
+            boolean res = new ConfirmDialog(frame, Lang.get("Dialogs.DeliveryView.AreYouSureToCloseDelivery")).isConfirmed();
             if (res) {
                 
               GlossDeliveries gloss = new GlossDeliveries(frame.getDatabase());
               if (gloss.deleteItem(delivery, frame.getUser())) {
               
-                new InfoDialog(frame, "Dostawa zosta\u0142a zako\u0144czona.", 140);                
+                new InfoDialog(frame, Lang.get("Dialogs.DeliveryView.DeliveryHasBeenClosed"), 140);                
                 frame.getDataPanel(GUI.TAB_ORDERS).setChanged(true);
                 frame.getDataPanel(GUI.TAB_DELIVERIES).setChanged(true);
                 frame.setSelectedDataPanel(GUI.TAB_DELIVERIES);
@@ -339,7 +340,7 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
                 
               }
               
-              else new ErrorDialog(frame, "B\u0142\u0105d SQL:" + gloss.getLastError(), true);                
+              else new ErrorDialog(frame, Lang.get("Error.Sql", gloss.getLastError()), true);                
               
                 
             }
@@ -351,7 +352,7 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       
       p2.add(new JLabel("  "));
       
-      p2.add(new CloseButton("Zamknij"));
+      p2.add(new CloseButton(Lang.get("Close")));
             
       p.add(p2);
       
@@ -377,11 +378,11 @@ public class DeliveryViewDialog extends SimpleDialog implements IProgressInvoker
       }
       catch (SQLException e) {
         progress.hideComponent();
-        new ErrorDialog(frame, "B\u0142\u0105d SQL: " + e, true);  
+        new ErrorDialog(frame, Lang.get("Error.Sql", e), true);  
       }        
       catch (NullPointerException e) {
         progress.hideComponent();
-        new ErrorDialog(frame, "B\u0142\u0105d: brak danych dostawy", true); 
+        new ErrorDialog(frame, Lang.get("Error.NoDeliveryData"), true); 
       }
         
         

@@ -36,6 +36,7 @@ import com.graphhopper.jsprit.core.reporting.SolutionPrinter.Print;
 import com.graphhopper.jsprit.core.util.Solutions;
 import somado.AppObserver;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 
 
@@ -82,7 +83,7 @@ public class VRPSolver implements IProgressInvoker {
      catch (NumberFormatException e) {}
      maxDriverWorkTime *= 3600.0;
      
-     new Loader(frame, "Trwa rozwi\u0105zywanie problemu VRP", this, false).load();   
+     new Loader(frame, Lang.get("Dialogs.Progress.VRP"), this, false).load();   
       
   }  
   

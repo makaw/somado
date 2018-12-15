@@ -33,6 +33,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import somado.IConf;
+import somado.Lang;
 import somado.Settings;
 import spatial_vrp.DeliveryPlan;
 
@@ -63,7 +64,7 @@ public class DeliveryOpenDialog extends SimpleDialog {
     */ 
    public DeliveryOpenDialog(GUI frame) {
         
-     super(frame, IConf.APP_NAME + "- planowanie nowej dostawy");
+     super(frame, IConf.APP_NAME + "- " + Lang.get("Dialogs.DeliveryOpen.PlanningDelivery"));
      super.showDialog(750, 480);
             
    } 
@@ -120,8 +121,7 @@ public class DeliveryOpenDialog extends SimpleDialog {
       JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
       p1.setOpaque(false);
       p1.setMaximumSize(new Dimension(800, 32));
-      p1.add(new JLabel("Zam\u00f3wienia \"" + OrderState.NEW.toString() + "\" z dost\u0119pnymi produktami (" 
-              + String.valueOf(ordersModel.getAllElementsCount()) + "):"));
+      p1.add(new JLabel(Lang.get("Dialogs.DeliveryOpen.OrdersList", OrderState.NEW.toString(), ordersModel.getAllElementsCount()) + ":"));    		
       p.add(p1);
       
       p.add(scroll);
@@ -162,17 +162,17 @@ public class DeliveryOpenDialog extends SimpleDialog {
       p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
       p1.setOpaque(false);
       p1.setMaximumSize(new Dimension(800, 32));
-      p1.add(new JLabel("Dost\u0119pni kierowcy (" + String.valueOf(driversModel.getAllElementsCount()) + "):"));
+      p1.add(new JLabel(Lang.get("Dialogs.DeliveryOpen.AvailableDrivers", driversModel.getAllElementsCount()) + ":"));    		 
       p.add(p1);
       
       p.add(scroll);
                   
       
       final DateField deliveryDateField = new DateField(new Date());
-      p.add(new FormRowPad("Data dostawy: ", deliveryDateField));
+      p.add(new FormRowPad(Lang.get("Tables.DeliveryDate") + ":", deliveryDateField));
       
       
-      JButton startButton = new JButton("Planuj dostaw\u0119");      
+      JButton startButton = new JButton(Lang.get("Dialogs.DeliveryOpen.PlanDelivery"));      
       startButton.setFocusPainted(false);
       startButton.addActionListener(new ActionListener() {
          @Override
@@ -186,21 +186,19 @@ public class DeliveryOpenDialog extends SimpleDialog {
             if (((Date)deliveryDateField.getSelectedElement()).before(cal.getTime())) {
                 
               cal.add(Calendar.DATE, 1);  
-              new ErrorDialog(frame, "Podano nieprawid\u0142ow\u0105 dat\u0119 dostawy. Prosz\u0119 wybra\u0107 "
-                      + "dat\u0119 dzisiejsz\u0105 (" + Settings.DATE_FORMAT.format(cal.getTime()) + ") "
-                      + "lub p\u00f3\u017aniejsz\u0105.");  
+              new ErrorDialog(frame, Lang.get("Dialogs.DeliveryOpen.Error.WrongDate", Settings.DATE_FORMAT.format(cal.getTime())));
                 
             }
             
             else if (packsList.isEmpty()) {
                 
-               new ErrorDialog(frame, "Nie wybrano \u017cadnego zam\u00f3wienia.");                 
+               new ErrorDialog(frame, Lang.get("Dialogs.DeliveryOpen.Error.MissingOrders"));                 
                 
             }
             
             else if (driversList.isEmpty()) {
                 
-               new ErrorDialog(frame, "Nie wybrano \u017cadnego kierowcy.");                 
+               new ErrorDialog(frame, Lang.get("Dialogs.DeliveryOpen.Error.MissingDrivers"));                 
                 
             }            
             
@@ -227,7 +225,7 @@ public class DeliveryOpenDialog extends SimpleDialog {
       p2.setBorder(new EmptyBorder(10, 0, 5, 0)); 
       p2.add(startButton);
       p2.add(new JLabel(" "));
-      p2.add(new CloseButton("Anuluj"));
+      p2.add(new CloseButton(Lang.get("Cancel")));
             
       p.add(p2);
       

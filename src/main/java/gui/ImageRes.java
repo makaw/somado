@@ -45,6 +45,7 @@ public final class ImageRes  {
        }
        catch (NullPointerException ex) {
          System.err.println("Brak pliku /resources/img/"+fileName);
+         icon = new ImageIcon();
        }
     }
         

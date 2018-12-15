@@ -11,6 +11,7 @@ package gui.dialogs.tableforms;
 import datamodel.Order;
 import datamodel.glossaries.GlossOrders;
 import gui.GUI;
+import somado.Lang;
 
 
 /**
@@ -30,7 +31,7 @@ public class OrderEditNewDialog extends OrderEditDialog {
     */
    public OrderEditNewDialog(GUI frame) {
        
-     super(frame, "Nowe zam\u00f3wienie", false);  
+     super(frame, Lang.get("Gloss.AddOrder"), false);  
        
    }    
    

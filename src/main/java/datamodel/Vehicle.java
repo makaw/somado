@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -115,7 +116,7 @@ public class Vehicle implements IDataEditable {
    @Override
    public String toString() {
        
-      if (id==0) return "(brak pojazdu)"; 
+      if (id==0) return "(" + Lang.get("Data.Vehicle.NoVehicle") + ")"; 
       return registrationNo + ": " + vehicleModel.getName() + " (" + String.valueOf(year) + ")";
        
    }
@@ -183,10 +184,10 @@ public class Vehicle implements IDataEditable {
     @Override
     public void verify() throws Exception {
         
-      if (vehicleModel.getId()==0) throw new Exception("Nie wybrano modelu pojazdu.");  
-      if (registrationNo.isEmpty())  throw new Exception("Nie podano nr rejestracyjnego pojazdu.");  
+      if (vehicleModel.getId()==0) throw new Exception(Lang.get("Data.Vehicle.MissingModel"));  
+      if (registrationNo.isEmpty())  throw new Exception(Lang.get("Data.Vehicle.MissingRegNumber"));  
       if (year<IConf.MIN_VEHICLE_YEAR || year>Calendar.getInstance().get(Calendar.YEAR))
-          throw new Exception("Nieprawid\u0142owy rok produkcji pojazdu.");
+          throw new Exception(Lang.get("Data.Vehicle.WrongProdYear"));
  
     }
 

@@ -18,6 +18,8 @@ import gui.TablePanel;
 import gui.dialogs.ConfirmDialog;
 import gui.dialogs.tableforms.DriverEditModDialog;
 import gui.dialogs.tableforms.DriverEditNewDialog;
+import somado.Lang;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JSeparator;
@@ -45,7 +47,7 @@ public class TableDriversContextMenu extends TableContextMenu {
 
       super(frame);
                 
-      ContextMenuItem item = new ContextMenuItem("Edycja kierowcy", "icons/form_edit.png");
+      ContextMenuItem item = new ContextMenuItem(Lang.get("Tables.Drivers.Edit"), "icons/form_edit.png");
       item.addActionListener(new ActionListener() {
 
           @Override
@@ -58,7 +60,7 @@ public class TableDriversContextMenu extends TableContextMenu {
       });
       add(item);
       
-      item = new ContextMenuItem("Usu\u0144 kierowc\u0119", "icons/form_del.png");
+      item = new ContextMenuItem(Lang.get("Tables.Drivers.Delete"), "icons/form_del.png");
       item.addActionListener(new ActionListener() {
 
           @Override
@@ -69,8 +71,7 @@ public class TableDriversContextMenu extends TableContextMenu {
              Driver dTmp = 
                 new Driver(dModel.getElement(parentTable.convertRowIndexToModel(parentTable.getSelectedRow()))); 
               
-             if ((new ConfirmDialog(frame, "Czy na pewno usun\u0105\u0107 kierowc\u0119:\n"
-                     + dTmp.toString() + " ?", 170)).isConfirmed()) {
+             if ((new ConfirmDialog(frame, Lang.get("Tables.Drivers.Delete.AreYouSure", dTmp.toString()), 170)).isConfirmed()) {
                             
                 if (new GlossDrivers(frame.getDatabase()).deleteItem(dTmp, frame.getUser())) {
                     ((TablePanel) frame.getActiveDataPanel()).refreshTable();
@@ -87,7 +88,7 @@ public class TableDriversContextMenu extends TableContextMenu {
       
       add(new JSeparator());
      
-      item = new ContextMenuItem("Dodaj nowego kierowc\u0119", "icons/form_add.png");
+      item = new ContextMenuItem(Lang.get("Tables.Drivers.Add"), "icons/form_add.png");
       item.addActionListener(new ActionListener() {
 
           @Override

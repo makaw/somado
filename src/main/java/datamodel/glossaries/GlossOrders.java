@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import somado.Database;
+import somado.Lang;
 import somado.User;
 
 /**
@@ -83,7 +84,7 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          ResultSet rs = ps.getGeneratedKeys();
          if (!rs.next()) {         
            database.rollback();
-           throw new SQLException("b\u0142ad zapisu"); 
+           throw new SQLException(Lang.get("Error.Save")); 
          }             
          order.setId(rs.getInt(1));  
          rs.close();
@@ -100,8 +101,8 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          }
          catch (SQLException ex2) {  System.err.println(ex2); } 
     	  
-         System.err.println("B\u0142\u0105d SQL: "+e);
-         lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+         System.err.println(Lang.get("Error.Sql", e));
+         lastError = Lang.get("Error.Sql", e.getMessage());
          return false;
        
       }          
@@ -193,8 +194,8 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
     
     catch (SQLException e) {
         
-      System.err.println("B\u0142\u0105d SQL: "+e);
-      lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+      System.err.println(Lang.get("Error.Sql", e));
+      lastError = Lang.get("Error.Sql", e.getMessage());
         
     }
     
@@ -227,8 +228,8 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
       
     } catch (SQLException e) {
       
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
     }                
@@ -286,8 +287,8 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          }
          catch (SQLException ex2) {  System.err.println(ex2); }  
     	  
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
       }                
@@ -328,8 +329,8 @@ public class GlossOrders extends Glossary<Order> implements IGlossaryEditable<Or
          }
          catch (SQLException ex2) {  System.err.println(ex2); }  
     	  
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
           
       }

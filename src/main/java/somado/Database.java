@@ -37,11 +37,9 @@ public class Database {
     public Database() throws SQLException, ClassNotFoundException, NullPointerException, SettingsException {
         
         File f = new File(Settings.getValue("db_name"));
-        if(!f.exists() || f.isDirectory()) throw new SettingsException("Brak pliku lokalnej bazy danych "
-                + f.getPath());        
+        if(!f.exists() || f.isDirectory()) throw new SettingsException(Lang.get("Error.MissingDbFile", f.getPath()));        
         f = new File(Settings.getValue("db_spatial_name"));
-        if(!f.exists() || f.isDirectory()) throw new SettingsException("Brak pliku lokalnej bazy danych "
-                + "przestrzennych: " + f.getPath());
+        if(!f.exists() || f.isDirectory()) throw new SettingsException(Lang.get("Error.MissingSpatialDbFile", f.getPath()));
        
          
         Class.forName("org.sqlite.JDBC");         

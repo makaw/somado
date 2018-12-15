@@ -17,28 +17,20 @@ package somado;
  * @version 1.0
  * 
  */
-public class User {
-                
-   /** ID użytkownika (baza danych) */
-   private int id = 1;
+public class User {     
 
    public Integer getId() {
-       return id;
+       return 1;
    }
 
-   /**
-    * Czy użytkownik zautoryzowany
-    * @return True jeżeli tak
-    */
+   
    public boolean isAuthorized() {
-       return id>0;
+       return true;
    }
    
    
    public boolean isAdmin() {
 	   return true;
-   }
-   
-    
+   }       
     
 }

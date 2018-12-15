@@ -13,6 +13,7 @@ package datamodel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import somado.IConf;
+import somado.Lang;
 
 
 /**
@@ -137,11 +138,10 @@ public class Product implements IDataEditable {
     @Override
     public void verify() throws Exception {
         
-      if (name.isEmpty())  throw new Exception("Nie podano nazwy produktu.");    
+      if (name.isEmpty())  throw new Exception(Lang.get("Data.Product.MissingName"));    
       if (weight<IConf.MIN_PRODUCT_WEIGHT || weight>IConf.MAX_PRODUCT_WEIGHT) 
-          throw new Exception("Nieprawid\u0142owa waga produktu ("
-                  + String.format("%.2f", IConf.MIN_PRODUCT_WEIGHT) + " - "
-                  + String.format("%.2f", IConf.MAX_PRODUCT_WEIGHT)+")");
+          throw new Exception(Lang.get("Data.Product.WrongWeight", String.format("%.2f", IConf.MIN_PRODUCT_WEIGHT), 
+        		  String.format("%.2f", IConf.MAX_PRODUCT_WEIGHT)));
         
     }
     

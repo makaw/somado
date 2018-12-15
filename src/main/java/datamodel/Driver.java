@@ -11,6 +11,8 @@ package datamodel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import somado.Lang;
+
 /**
  *
  * Szablon obiektu reprezentującego kierowcę
@@ -194,7 +196,7 @@ public class Driver implements IDataEditable {
     @Override
     public void verify() throws Exception {
     
-      if (surname.isEmpty()) throw new Exception("Nie podano nazwiska.");	
+      if (surname.isEmpty()) throw new Exception(Lang.get("Data.Driver.MissingSurname"));	
     	
     }
     

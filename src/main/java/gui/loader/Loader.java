@@ -10,6 +10,8 @@ package gui.loader;
 
 
 import gui.GUI;
+import somado.Lang;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SwingWorker;
@@ -79,7 +81,7 @@ public class Loader extends SwingWorker<Boolean, Object> {
     */
    public Loader(GUI frame, final IProgressInvoker invoker, boolean determinate) {
        
-     this(frame, "Trwa wykonywanie \u017c\u0105danej operacji", invoker, determinate);
+     this(frame, Lang.get("PleaseWait"), invoker, determinate);
      
    }
    

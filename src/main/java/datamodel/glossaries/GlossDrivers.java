@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import somado.Database;
+import somado.Lang;
 import somado.User;
 
 /**
@@ -83,8 +84,8 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
          
       } catch (SQLException e) {
       
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
       }    
@@ -123,9 +124,7 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
     ResultSet rs = ps.executeQuery();
     int num = rs.next() ? rs.getInt("num") : 1;
     rs.close();
-    if (num > 0) 
-      throw new Exception("Pojazd " + driver.getVehicle().getRegistrationNo() + " ju\u017c przyporz\u0105dkowano "
-              + "do innego kierowcy.");          
+    if (num > 0) throw new Exception(Lang.get("Error.OtherDriverVehicle", driver.getVehicle().getRegistrationNo()));
       
   }
   
@@ -164,8 +163,8 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
     
     catch (SQLException e) {
         
-      System.err.println("B\u0142\u0105d SQL: "+e);
-      lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+      System.err.println(Lang.get("Error.Sql", e));
+      lastError = Lang.get("Error.Sql", e.getMessage());
         
     }
     
@@ -245,8 +244,8 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
         }
         catch (SQLException ex2) {  System.err.println(ex2); }
         
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
        
       }                
@@ -274,8 +273,8 @@ public class GlossDrivers extends Glossary<Driver> implements IGlossaryEditable<
         
       } catch (SQLException e) {
           
-        System.err.println("B\u0142\u0105d SQL: "+e);
-        lastError = "B\u0142\u0105d SQL: "+e.getMessage();
+        System.err.println(Lang.get("Error.Sql", e));
+        lastError = Lang.get("Error.Sql", e.getMessage());
         return false;
           
       }

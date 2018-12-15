@@ -13,6 +13,8 @@ import datamodel.VehicleModel;
 import datamodel.glossaries.GlossVehicleModels;
 import gui.GUI;
 import gui.dialogs.GlossDialog;
+import somado.Lang;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +51,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
      */
     public GlossVehicleModelsDialog(GUI frame) {
         
-        this(frame, "S\u0142ownik modeli pojazd\u00f3w");
+        this(frame, Lang.get("Gloss.VehicleModelsGloss"));
         
     }
     
@@ -80,7 +82,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
     
     public GlossVehicleModelsDialog(GUI frame, int vmId) {
         
-        super(frame, "S\u0142ownik modeli pojazd\u00f3w", vmId);
+        super(frame, Lang.get("Gloss.VehicleModelsGloss"), vmId);
         
     }            
     
@@ -134,7 +136,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
         
       JPanel p = new JPanel(new GridLayout(1,4));
       
-      chooseButton = new JButton("Wybierz");
+      chooseButton = new JButton(Lang.get("Choose"));
       chooseButton.setEnabled(false);
       chooseButton.setFocusPainted(false);
             
@@ -150,7 +152,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
       
       p.add(chooseButton);
       
-      editButton = new JButton("Edytuj");
+      editButton = new JButton(Lang.get("Edit"));
       editButton.setEnabled(false);
       editButton.setFocusPainted(false);
       
@@ -165,7 +167,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
       
       p.add(editButton);
       
-      JButton addButton = new JButton("Dodaj nowy");
+      JButton addButton = new JButton(Lang.get("AddNew"));
       addButton.setFocusPainted(false);
       
       addButton.addActionListener(new ActionListener() {
@@ -196,7 +198,7 @@ public class GlossVehicleModelsDialog extends GlossDialog<VehicleModel> {
     @Override
     protected void setFiltersFormPanel(JPanel p) {
       
-      p.add(new JLabel("Nazwa:"));
+      p.add(new JLabel(Lang.get("Gloss.Name") + ":"));
       filters.addField("name", new JTextField(12));
         
     }

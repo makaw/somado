@@ -10,6 +10,8 @@ package datamodel;
 
 import java.awt.Color;
 
+import somado.Lang;
+
 
 /**
  *
@@ -58,10 +60,10 @@ public enum OrderState implements IData {
      switch (this) {
          
          default:
-         case NEW: return "nowe";
-         case DELIVERY: return "w dostawie";
-         case DONE: return "dostarczone";
-         case CANCELLED: return "anulowane";
+         case NEW: return Lang.get("Data.OrderState.New");
+         case DELIVERY: return Lang.get("Data.OrderState.Delivery");
+         case DONE: return Lang.get("Data.OrderState.Done");
+         case CANCELLED: return Lang.get("Data.OrderState.Cancelled");
          
      }  
     

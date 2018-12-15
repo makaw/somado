@@ -10,6 +10,8 @@ package gui.dialogs;
 
 import gui.GUI;
 import gui.ImageRes;
+import somado.Lang;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,7 +68,7 @@ public class ConfirmDialog extends SimpleInfoDialog {
    protected JPanel buttonPanel() {
        
       // przygotowanie przycisków Tak/Nie
-      JButton buttonYes = new JButton("Tak");
+      JButton buttonYes = new JButton(Lang.get("Yes"));
       buttonYes.setFocusPainted(false);
       buttonYes.addActionListener(new ActionListener() {
          @Override
@@ -76,7 +78,7 @@ public class ConfirmDialog extends SimpleInfoDialog {
          }
       });
        
-      JButton buttonNo = new CloseButton("Nie");
+      JButton buttonNo = new CloseButton(Lang.get("No"));
       
       JPanel p = new JPanel(new FlowLayout());
       p.setOpaque(false);
