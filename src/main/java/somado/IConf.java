@@ -22,11 +22,11 @@ public interface IConf {
   /** Nazwa aplikacji */
   String APP_NAME = "Somado";
   /** Wersja aplikacji */
-  String APP_VERSION = "1.03 lite [12/2018]";        
+  String APP_VERSION = "1.03 lite [07/2019]";        
   
-  /** Dost�pne ustawienia lokalne */
+  /** Dost�pne ustawienia lokalne */
   Locale[] LOCALES = { new Locale("pl", "PL"), new Locale("en", "EN")};
-  /** Domy�lne ustawienie lokalne (indeks) */
+  /** Domy�lne ustawienie lokalne (indeks) */
   int DEFAULT_LOCALE_INDEX = 1;
     
   /** Minimalna wymagana długość hasła */
@@ -53,5 +53,8 @@ public interface IConf {
   
   /** Domyślny maksymalny czas przejazdu kierowcy w jednej dostawie */
   double DEFAULT_MAX_DRIVER_WORK_TIME = 8.0;
+  
+  /** User-agent dla polaczenia z TMS */
+  String TILE_USER_AGENT = "pl.net.kaw.somado";
            
 }

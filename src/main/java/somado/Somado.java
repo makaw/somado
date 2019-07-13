@@ -183,10 +183,11 @@ public final class Somado implements Observer {
     URL url = new URL(Settings.getValue("tms_url"));
     HttpURLConnection connection = (HttpURLConnection)url.openConnection();
     connection.setRequestMethod("GET");
+    connection.setRequestProperty("User-Agent", IConf.TILE_USER_AGENT);
     connection.connect();
     int code = connection.getResponseCode();
     if (code != HttpURLConnection.HTTP_OK) {
-      throw new Exception("HTTP "+String.valueOf(code));
+      throw new Exception("HTTP " + String.valueOf(code));
     }               
       
   }

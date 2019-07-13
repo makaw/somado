@@ -27,6 +27,8 @@ import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
+
+import somado.IConf;
 import somado.Settings;
 import spatial_vrp.RoadFixedGeometry;
 
@@ -69,8 +71,10 @@ public class MapPanel extends JXMapKit {
          return this.baseURL + "/" + (this.getTotalMapZoom()-zoom) + "/" + x + "/" + y + ".png";
        }                      
     }; 
-           
-    setTileFactory(new DefaultTileFactory(tileFactoryInfo));  
+    
+    DefaultTileFactory tileFactory = new DefaultTileFactory(tileFactoryInfo);
+    tileFactory.setUserAgent(IConf.TILE_USER_AGENT);          
+    setTileFactory(tileFactory);  
      
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridx = 0;
@@ -135,7 +139,7 @@ public class MapPanel extends JXMapKit {
     // dla całego zestawu punktów nie działa ...
     Set<GeoPosition> pos = new HashSet<>();
     pos.add(new GeoPosition(Settings.getDepot().getLatitude(), Settings.getDepot().getLongitude()));
-    getMainMap().zoomToBestFit(pos, 0.3);
+    getMainMap().zoomToBestFit(pos, 0.7);
    
     for (WaypointPainter<Waypoint> p : wpPainters) painters.add(p);
 		
