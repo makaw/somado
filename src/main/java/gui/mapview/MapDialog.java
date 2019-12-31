@@ -9,22 +9,23 @@
 package gui.mapview;
 
 
-import datamodel.Customer;
-import datamodel.DeliveryDriver;
-import datamodel.DeliveryDriverOrder;
-import spatial_vrp.Route;
-import spatial_vrp.RoutePoint;
-import gui.GUI;
-import gui.SimpleDialog;
-import gui.dialogs.ErrorDialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.EmptyBorder;
+
 import org.jxmapviewer.viewer.GeoPosition;
+
+import datamodel.Customer;
+import datamodel.IAddressPoint;
+import datamodel.IRoute;
+import gui.GUI;
+import gui.SimpleDialog;
+import gui.dialogs.ErrorDialog;
 import somado.IConf;
 import somado.Lang;
 import somado.Settings;
@@ -46,10 +47,8 @@ public class MapDialog extends SimpleDialog {
    private final GeoPosition centerPosition;    
    /** Panel mapy */
    private MapPanel mapPanel;   
-   /** Trasa do wyświetlenia dla planu dostawy */
-   private List<RoutePoint> planRoute = null;
-   /** Trasa do wyświetlenia dla zatwierdzonej dostawy */
-   private List<DeliveryDriverOrder> orders = null;
+   /** Trasa do wyświetlenia */
+   private List<? extends IAddressPoint> route;
    /** Czy wystąpił błąd połączenia z TMS */
    private boolean tmsErr = false;
    
@@ -122,40 +121,22 @@ public class MapDialog extends SimpleDialog {
       this(frame, customer.toString(), customer.getLongitude(), customer.getLatitude());
         
     }    
-    
+   
     
    /**
-    * Konstruktor, mapa z trasą (dla planu dostawy)
+    * Konstruktor, mapa z trasą 
     * @param frame Referencja do GUI
-    * @param route Trasa (lista punktów trasy)
+    * @param route Kierowca i jego zamówienia
     */     
-    public MapDialog(GUI frame, Route route) {    
+    public MapDialog(GUI frame, IRoute route) {    
         
-      this(frame, Lang.get("Dialogs.RoutePreview") + " " + route.getDriver().getVehicle().getRegistrationNo(),
-            route.getPoints().get(0).getOrder().getCustomer().getLongitude(),
-            route.getPoints().get(0).getOrder().getCustomer().getLatitude(), false);
-      this.planRoute = route.getPoints();
+      this(frame, Lang.get("Dialogs.RoutePreview") + " " + route.getVehicleRegistrationNo(), 
+            route.getAddressPoints().get(0).getCustomerLongitude(), route.getAddressPoints().get(0).getCustomerLatitude(), false);
+      this.route = route.getAddressPoints();
       if (!tmsErr) super.showDialog(800, 600);  
         
     }
-    
-    
-   /**
-    * Konstruktor, mapa z trasą (dla zatwierdzonej dostawy)
-    * @param frame Referencja do GUI
-    * @param deliveryDriver Kierowca i jego zamówienia
-    */     
-    public MapDialog(GUI frame, DeliveryDriver deliveryDriver) {    
-        
-      this(frame, Lang.get("Dialogs.RoutePreview") + " " + deliveryDriver.getVehicleRegistrationNo(), 
-            deliveryDriver.getOrders().get(0).getCustomerLongitude(), 
-            deliveryDriver.getOrders().get(0).getCustomerLatitude(), false);
-      this.orders = deliveryDriver.getOrders();
-      if (!tmsErr) super.showDialog(800, 600);  
-        
-    }
-              
-    
+                  
     
    /**
     * Metoda wyświetlająca zawartość okienka
@@ -165,10 +146,13 @@ public class MapDialog extends SimpleDialog {
         
        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
        
-       mapPanel = new MapPanel(Settings.getValue("tms_url"), centerPosition);          
-       if (planRoute != null) mapPanel.setRoute(planRoute);  
-       else if (orders != null) mapPanel.setFinalRoute(orders);
-       else mapPanel.setAddressPoint(centerPosition);  
+       mapPanel = new MapPanel(Settings.getValue("tms_url")); 
+       if (route != null) {  
+    	   mapPanel.setRoute(route); 
+       }       
+       else { 
+    	   mapPanel.setAddressPoint(centerPosition);  
+       }
        
        add(mapPanel); 
        

@@ -8,15 +8,15 @@
  */
 package gui.mapview;
 
-import com.vividsolutions.jts.geom.Geometry;
-import datamodel.DeliveryDriverOrder;
-import spatial_vrp.RoutePoint;
 import java.awt.GridBagConstraints;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.jxmapviewer.JXMapKit;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.CompoundPainter;
@@ -26,11 +26,9 @@ import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
-import org.jxmapviewer.viewer.WaypointPainter;
 
+import datamodel.IAddressPoint;
 import somado.IConf;
-import somado.Settings;
-import spatial_vrp.RoadFixedGeometry;
 
 
 /**
@@ -44,36 +42,26 @@ import spatial_vrp.RoadFixedGeometry;
 @SuppressWarnings("serial")
 public class MapPanel extends JXMapKit {  
     
-  /** Współrzędne centralnego punktu mapy */
-  @SuppressWarnings("unused")
-  private final GeoPosition centerPosition;  
- 
-    
+
   /**
    * Konstruktor
    * @param host URL usługi TMS
-   * @param centerPosition Współrzędne centralnego punktu mapy
    */
-  public MapPanel(String host, GeoPosition centerPosition) {
+  public MapPanel(String host) {
       
     super();                  
             
-    this.centerPosition = centerPosition;
-    
-    // niezaimplementowane w JXMapKit...
     setDataProviderCreditShown(false);
-    
-    
+        
     TileFactoryInfo tileFactoryInfo = new TileFactoryInfo(2, 16, 18, 256, true, true, host, "x", "y", "z") {
        @Override
-       public String getTileUrl(int x, int y, int zoom) {                   
-         //return this.baseURL +"?x="+x+"&y="+y+"&z="+(this.getTotalMapZoom()-zoom);
+       public String getTileUrl(int x, int y, int zoom) {                           
          return this.baseURL + "/" + (this.getTotalMapZoom()-zoom) + "/" + x + "/" + y + ".png";
        }                      
     }; 
     
     DefaultTileFactory tileFactory = new DefaultTileFactory(tileFactoryInfo);
-    tileFactory.setUserAgent(IConf.TILE_USER_AGENT);          
+    tileFactory.setUserAgent(IConf.TILE_USER_AGENT);       
     setTileFactory(tileFactory);  
      
     GridBagConstraints gbc = new GridBagConstraints();
@@ -84,8 +72,7 @@ public class MapPanel extends JXMapKit {
     gbc.anchor = GridBagConstraints.NORTHEAST;                
       
     getMainMap().add(new OSMCreditPanel(), gbc);    
-    
-    
+        
   }    
   
   
@@ -98,104 +85,79 @@ public class MapPanel extends JXMapKit {
   public void setAddressPoint(GeoPosition point) {
       
     setAddressLocation(point);
-    HashSet<GeoPosition> pos = new HashSet<>();
-    pos.add(point);
-    getMainMap().zoomToBestFit(pos, 0.9);
+    getMainMap().setZoom(5);
                         
-  }
+  }        
   
   
-  
-     
   /**
-   * Wyświetlenie trasy na mapie dla planu dostawy
+   * Wyświetlenie trasy na mapie 
    * @param routePoints Trasa (lista punktów odbioru z geometrią)
+   * @param <T> Klasa punktu adresowego
    */  
-  public void setRoute(List<RoutePoint> routePoints) {
+  public <T extends IAddressPoint> void setRoute(List<T> routePoints) {
             
     List<Painter<JXMapViewer>> painters = new ArrayList<>();  
-    List<WaypointPainter<Waypoint>> wpPainters = new ArrayList<>(); 
+    Set<GeoPosition> pos = new HashSet<>();
     
-    RoadFixedGeometry fixed = new RoadFixedGeometry(routePoints);
-    
-    Iterator<RoutePoint> iterator = routePoints.iterator();    
+    Iterator<T> iterator = routePoints.iterator();    
  
     while (iterator.hasNext()) {
         
-      RoutePoint point = iterator.next();      
+      T point = iterator.next();      
       
-      Geometry additionalGeometry = fixed.getFixedAdditionalGeometry(point.getId());
-      if (additionalGeometry != null) painters.add(new RoutePainter(RoutePoint.getCoordsList(additionalGeometry))); 
+      if (point.getAdditionalGeometryCoords() != null && !point.getAdditionalGeometryCoords().isEmpty()) {
+        painters.add(new RoutePainter(point.getAdditionalGeometryCoords()));
+      }
       
-      Geometry geometry = fixed.getFixedGeometry(point.getId());
-      if (geometry != null) painters.add(new RoutePainter(RoutePoint.getCoordsList(geometry)));       
+      if (point.getGeometryCoords() != null && !point.getGeometryCoords().isEmpty()) {
+        painters.add(new RoutePainter(point.getGeometryCoords()));       
+      }
       
-      if (point.getOrder() != null) 
-        wpPainters.add(new WaypointLabelPainter<Waypoint>(new DefaultWaypoint(new GeoPosition(point.getOrder().getCustomer().getLatitude(),
-                  point.getOrder().getCustomer().getLongitude())), point.getLabel()));      
+      if (point.isOnRoute()) {
+        GeoPosition pointPos = new GeoPosition(point.getCustomerLatitude(), point.getCustomerLongitude());
+        pos.add(pointPos);
+        painters.add(new WaypointLabelPainter<Waypoint>(new DefaultWaypoint(pointPos), point.getCustomerLabel()));
+      }
       
     }    
+        
+    pos.add(new GeoPosition(routePoints.get(0).getCustomerLatitude(), routePoints.get(0).getCustomerLongitude()));
     
-    // dla całego zestawu punktów nie działa ...
-    Set<GeoPosition> pos = new HashSet<>();
-    pos.add(new GeoPosition(Settings.getDepot().getLatitude(), Settings.getDepot().getLongitude()));
-    getMainMap().zoomToBestFit(pos, 0.7);
-   
-    for (WaypointPainter<Waypoint> p : wpPainters) painters.add(p);
+    finishRoute(painters, pos);
 		
-    CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
-    getMainMap().setOverlayPainter(painter); 
-    
-  
   }  
   
   
 
-  /**
-   * Wyświetlenie trasy na mapie dla zatwierdzonej dostawy
-   * @param routePoints Trasa (lista punktów odbioru z geometrią)
-   */  
-  public void setFinalRoute(List<DeliveryDriverOrder> routePoints) {
-            
-    List<Painter<JXMapViewer>> painters = new ArrayList<>();  
-    List<WaypointPainter<Waypoint>> wpPainters = new ArrayList<>(); 
-    
-    Iterator<DeliveryDriverOrder> iterator = routePoints.iterator();    
- 
-    while (iterator.hasNext()) {
-        
-      DeliveryDriverOrder point = iterator.next();      
-      
-      if (point.getAdditionalGeometryCoords() != null)
-        painters.add(new RoutePainter(point.getAdditionalGeometryCoords())); 
-      
-      if (point.getGeometryCoords() != null)
-        painters.add(new RoutePainter(point.getGeometryCoords()));       
-      
-      wpPainters.add(new WaypointLabelPainter<Waypoint>(new DefaultWaypoint(new GeoPosition(point.getCustomerLatitude(),
-                point.getCustomerLongitude())), point.getCustomerLabel()));      
-      
-    }    
-    
-    // dla całego zestawu punktów nie działa ...
-    Set<GeoPosition> pos = new HashSet<>();
-    pos.add(new GeoPosition(routePoints.get(0).getCustomerLatitude(), 
-    		routePoints.get(0).getCustomerLongitude()));
-    getMainMap().zoomToBestFit(pos, 0.3);
-   
-    for (WaypointPainter<Waypoint> p : wpPainters) painters.add(p);
-		
-    CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
-    getMainMap().setOverlayPainter(painter); 
-    
   
-  }  
+  private void finishRoute(List<Painter<JXMapViewer>> painters, Set<GeoPosition> pos) {
+	  
+	CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
+	getMainMap().setOverlayPainter(painter);    		
+	  
+	ComponentListener listener = new ComponentListener() {
+			
+		@Override
+		public void componentShown(ComponentEvent arg0) {}
+			
+		@Override
+		public void componentResized(ComponentEvent arg0) {
+		  getMainMap().zoomToBestFit(pos, 0.7);			
+		  getMainMap().removeComponentListener(this);			
+		}
+
+		@Override
+		public void componentHidden(ComponentEvent e) {}
+
+		@Override
+		public void componentMoved(ComponentEvent e) {}
+	}; 
+	
+	getMainMap().addComponentListener(listener);
+	  	  
+  }
   
-  
-           
-  
-  
-    
   
 }
 

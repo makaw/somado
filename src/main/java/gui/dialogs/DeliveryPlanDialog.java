@@ -8,21 +8,6 @@
  */
 package gui.dialogs;
 
-import datamodel.IData;
-import spatial_vrp.Route;
-import spatial_vrp.RoutePoint;
-import datamodel.tablemodels.OrdersDeliveryPlanTableModel;
-import datamodel.tablemodels.RoutePointsTableModel;
-import gui.GUI;
-import gui.ImageRes;
-import gui.SimpleDialog;
-import gui.formfields.FormRowPad;
-import gui.formfields.FormTabbedPane;
-import gui.loader.IProgress;
-import gui.loader.IProgressInvoker;
-import gui.loader.Loader;
-import gui.mapview.MapDialog;
-import gui.tablepanels.TableDeliveriesPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -32,7 +17,9 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -45,10 +32,27 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import datamodel.IData;
+import datamodel.tablemodels.OrdersDeliveryPlanTableModel;
+import datamodel.tablemodels.RoutePointsTableModel;
+import gui.GUI;
+import gui.ImageRes;
+import gui.SimpleDialog;
+import gui.formfields.FormRowPad;
+import gui.formfields.FormTabbedPane;
+import gui.loader.IProgress;
+import gui.loader.IProgressInvoker;
+import gui.loader.Loader;
+import gui.mapview.MapDialog;
+import gui.tablepanels.TableDeliveriesPanel;
 import somado.IConf;
 import somado.Lang;
 import somado.Settings;
 import spatial_vrp.DeliveryPlan;
+import spatial_vrp.RoadFixedGeometry;
+import spatial_vrp.Route;
+import spatial_vrp.RoutePoint;
 
 
 /**
@@ -282,10 +286,8 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
             mapButton.setFocusPainted(false);            
             mapButton.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-            
-                  new MapDialog(frame, route);
-                    
+                public void actionPerformed(ActionEvent e) {            
+                  new MapDialog(frame, addRouteGeometry(route));                    
                 }
             });            
             p1.add(mapButton);          
@@ -438,6 +440,23 @@ public class DeliveryPlanDialog extends SimpleDialog implements IData, IProgress
     
     @Override
     public Integer getId() {  return 1; }  
+    
+    
+    private Route addRouteGeometry(Route route) {
+    	
+       RoadFixedGeometry fixed = new RoadFixedGeometry(route.getPoints());
+       List<RoutePoint> points = new LinkedList<>();
+ 	   for (RoutePoint point: route.getPoints()) {
+ 	      point.setAdditionalGeometry(fixed.getFixedAdditionalGeometry(point.getId()));
+ 	      point.setGeometry(fixed.getFixedGeometry(point.getId()));
+ 	      points.add(point);
+ 	   }    	     
+       route.setPoints(points);
+       return route;
+    	
+    }
+    
+    
     
 }
 

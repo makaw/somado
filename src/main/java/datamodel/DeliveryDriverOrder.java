@@ -22,7 +22,7 @@ import org.jxmapviewer.viewer.GeoPosition;
  * @version 1.0
  * 
  */
-public class DeliveryDriverOrder implements IData {
+public class DeliveryDriverOrder implements IAddressPoint {
     
    /** ID rekordu w BD */    
    private final Integer id;
@@ -152,10 +152,12 @@ public class DeliveryDriverOrder implements IData {
     public void setAdditionalGeometryCoords(List<GeoPosition> additionalGeometryCoords) {
         this.additionalGeometryCoords = additionalGeometryCoords;
     }
-   
-   
-   
-   
+
+
+	@Override
+	public boolean isOnRoute() {
+		return true;
+	}            
    
     
 }

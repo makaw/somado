@@ -9,6 +9,9 @@
 package spatial_vrp;
 
 import datamodel.Driver;
+import datamodel.IAddressPoint;
+import datamodel.IRoute;
+
 import java.util.List;
 
 
@@ -20,7 +23,7 @@ import java.util.List;
  * @version 1.0
  * 
  */
-public class Route {
+public class Route implements IRoute {
     
    /** Kierowca dla którego wyznaczono trasę */
    private Driver driver;
@@ -54,6 +57,17 @@ public class Route {
     public void setPoints(List<RoutePoint> points) {
         this.points = points;
     }
+
+
+	@Override
+	public String getVehicleRegistrationNo() {
+	  return driver != null && driver.getVehicle() != null ? driver.getVehicle().getRegistrationNo() : "";
+	}
+
+	@Override
+	public List<? extends IAddressPoint> getAddressPoints() {
+	  return points;
+	}
 
     
 }

@@ -20,7 +20,7 @@ import java.util.List;
  * @version 1.0
  * 
  */
-public class DeliveryDriver implements IData {
+public class DeliveryDriver implements IData, IRoute {
     
    /** ID rekordu w BD */   
    private final Integer id;
@@ -88,6 +88,12 @@ public class DeliveryDriver implements IData {
         
      return driverDesc + ", " + vehicleDesc;
         
+   }
+
+
+   @Override
+   public List<? extends IAddressPoint> getAddressPoints() {
+	 return orders;
    }
     
     

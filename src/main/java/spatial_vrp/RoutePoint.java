@@ -8,13 +8,16 @@
  */
 package spatial_vrp;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.jxmapviewer.viewer.GeoPosition;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import datamodel.IData;
+
+import datamodel.IAddressPoint;
 import datamodel.Order;
-import java.util.ArrayList;
-import java.util.List;
-import org.jxmapviewer.viewer.GeoPosition;
 
 
 /**
@@ -26,7 +29,7 @@ import org.jxmapviewer.viewer.GeoPosition;
  * @version 1.0
  * 
  */
-public class RoutePoint implements IData {
+public class RoutePoint implements IAddressPoint {
     
     /** Identyfikator punktu trasy */
     private Integer id;
@@ -148,10 +151,10 @@ public class RoutePoint implements IData {
    * @return Lista koordynat
    */
   public static List<GeoPosition> getCoordsList(Geometry geometry) {
-      
-    if (geometry == null) return null;  
-    List<GeoPosition> route = new ArrayList<>();
- 
+         
+    List<GeoPosition> route = new LinkedList<>();
+    if (geometry == null) return route;
+    
     for (int i=0; i < geometry.getNumGeometries(); i++){
         
       Geometry lineGeometry = geometry.getGeometryN(i);
@@ -164,6 +167,37 @@ public class RoutePoint implements IData {
      
     return route;  
       
+  }
+  
+
+  @Override
+  public List<GeoPosition> getAdditionalGeometryCoords() {
+	return getCoordsList(additionalGeometry);
+  }
+
+  @Override
+  public List<GeoPosition> getGeometryCoords() {
+	return getCoordsList(geometry);
+  }
+
+  @Override
+  public double getCustomerLatitude() {
+   return order != null ? order.getCustomer().getLatitude() : -1.0;
+  }
+
+  @Override
+  public double getCustomerLongitude() {
+	return order != null ? order.getCustomer().getLongitude() : -1.0;
+  }
+
+  @Override
+  public String getCustomerLabel() {
+	return label;
+  }
+
+  @Override
+  public boolean isOnRoute() {
+	return order != null;
   }
     
     

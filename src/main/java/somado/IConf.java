@@ -22,7 +22,7 @@ public interface IConf {
   /** Nazwa aplikacji */
   String APP_NAME = "Somado";
   /** Wersja aplikacji */
-  String APP_VERSION = "1.03 lite [07/2019]";        
+  String APP_VERSION = "1.03 lite [12/2019]";        
   
   /** Dost�pne ustawienia lokalne */
   Locale[] LOCALES = { new Locale("pl", "PL"), new Locale("en", "EN")};
