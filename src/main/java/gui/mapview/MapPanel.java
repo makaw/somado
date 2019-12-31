@@ -42,6 +42,7 @@ import somado.IConf;
 @SuppressWarnings("serial")
 public class MapPanel extends JXMapKit {  
     
+  private final JXMapViewer map = getMainMap();
 
   /**
    * Konstruktor
@@ -71,7 +72,7 @@ public class MapPanel extends JXMapKit {
     gbc.gridheight = 1;
     gbc.anchor = GridBagConstraints.NORTHEAST;                
       
-    getMainMap().add(new OSMCreditPanel(), gbc);    
+    map.add(new OSMCreditPanel(), gbc);    
         
   }    
   
@@ -85,7 +86,7 @@ public class MapPanel extends JXMapKit {
   public void setAddressPoint(GeoPosition point) {
       
     setAddressLocation(point);
-    getMainMap().setZoom(5);
+    map.setZoom(5);
                         
   }        
   
@@ -122,20 +123,18 @@ public class MapPanel extends JXMapKit {
       
     }    
         
-    pos.add(new GeoPosition(routePoints.get(0).getCustomerLatitude(), routePoints.get(0).getCustomerLongitude()));
-    
-    finishRoute(painters, pos);
+    CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
+	map.setOverlayPainter(painter);    		
+	  
+	zoomToBestFitOnLoad(pos, 0.7);
 		
   }  
   
   
 
   
-  private void finishRoute(List<Painter<JXMapViewer>> painters, Set<GeoPosition> pos) {
-	  
-	CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
-	getMainMap().setOverlayPainter(painter);    		
-	  
+  private void zoomToBestFitOnLoad(Set<GeoPosition> pos, double maxFraction) {
+	  	
 	ComponentListener listener = new ComponentListener() {
 			
 		@Override
@@ -143,8 +142,8 @@ public class MapPanel extends JXMapKit {
 			
 		@Override
 		public void componentResized(ComponentEvent arg0) {
-		  getMainMap().zoomToBestFit(pos, 0.7);			
-		  getMainMap().removeComponentListener(this);			
+		  map.zoomToBestFit(pos, maxFraction);			
+		  map.removeComponentListener(this);			
 		}
 
 		@Override
@@ -154,7 +153,7 @@ public class MapPanel extends JXMapKit {
 		public void componentMoved(ComponentEvent e) {}
 	}; 
 	
-	getMainMap().addComponentListener(listener);
+	map.addComponentListener(listener);
 	  	  
   }
   
